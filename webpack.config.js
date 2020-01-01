@@ -6,12 +6,12 @@ const ScriptExtHTMLWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  // mode: 'development',
-  // devtool: 'inline-source-map',
-  mode: 'production',
-  devtool: 'source-map',
+  mode: 'development',
+  devtool: 'inline-source-map',
+  // mode: 'production',
+  // devtool: 'source-map',
   entry: {
-    main: './src/index.js',
+    main: './src/front/index.js',
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -41,7 +41,7 @@ module.exports = {
                 '@babel/preset-react',
                 {
                   'useBuiltIns': true,
-                  'development': false,
+                  'development': true,
                 },
               ],
             ],
@@ -94,8 +94,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HTMLWebpackPlugin({
-      template: './src/index.html',
-      title: 'Time Zones',
+      template: './src/front/index.html',
+      title: 'Blank Slate',
     }),
     new ScriptExtHTMLWebpackPlugin({
       defaultAttribute: 'async',
@@ -103,8 +103,8 @@ module.exports = {
     new webpack.HashedModuleIdsPlugin(),
   ],
   devServer: {
-    port: 3100,
-    contentBase: path.join(__dirname, 'docs'),
+    port: 4200,
+    contentBase: path.join(__dirname, 'dist'),
     index: 'index.html',
   },
 };
