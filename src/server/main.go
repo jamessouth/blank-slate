@@ -11,6 +11,8 @@ import (
 var clients = make(map[*websocket.Conn]bool)
 var broadcast = make(chan Message)
 
+var users = make([]string, 0, 8)
+
 var upgrader = websocket.Upgrader{}
 
 // Message object with username and message properties
@@ -46,6 +48,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			delete(clients, ws)
 			break
 		}
+		if msg.Message == "connect" {
+			users = append(users, msg.Username)
+		}
 		broadcast <- msg
 
 	}
@@ -54,7 +59,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 func handleMessages() {
 	for {
 		msg := <-broadcast
-		log.Println(msg)
+		log.Println("2", msg)
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {

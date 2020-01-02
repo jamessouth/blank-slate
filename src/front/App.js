@@ -11,6 +11,7 @@ export default function App() {
   const [hasJoined, setHasJoined] = useState(false);
   const [answer, setAnswer] = useState('');
   const [username, setUsername] = useState('');
+  const [connected, setConnected] = useState(false);
   
 
   
@@ -18,7 +19,10 @@ export default function App() {
     console.log('connect to server...', Date.now());
 
 
-    
+    ws.addEventListener('open', function (e) {
+      setConnected(true);
+      console.log(e, Date.now());
+    }, false);
 
     ws.addEventListener('message', function (e) {
       console.log(e, Date.now());
@@ -46,7 +50,10 @@ export default function App() {
     if (!hasJoined) {
       setUsername(text);
       setHasJoined(true);
-      ws.send(JSON.stringify({username: text, message:"connect"}));
+      ws.send(JSON.stringify({
+        username: text,
+        message:"connect"
+      }));
       setAnswer('');
     } else {
 
@@ -69,12 +76,20 @@ export default function App() {
 
       <input value={ answer } onChange={ e => setAnswer(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
 
-      <button
-        type="button"
-        onClick={() => send(answer)}
-        >
-        submit
-      </button>
+      {
+        connected &&
+          <button
+            type="button"
+            onClick={() => send(answer)}
+            >
+            submit
+          </button>
+      }
+
+
+
+
+
 
 
     </main>
