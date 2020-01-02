@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -43,7 +42,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		var msg Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			log.Println("error: ", err, time.Now())
+			log.Println("error: ", err)
 			delete(clients, ws)
 			break
 		}
@@ -55,6 +54,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 func handleMessages() {
 	for {
 		msg := <-broadcast
+		log.Println(msg)
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
