@@ -9,16 +9,20 @@ import (
 )
 
 var clients = make(map[*websocket.Conn]bool)
-var broadcast = make(chan Message)
-
-var users = make([]string, 0, 8)
+var userMessageChannel = make(chan UserMessage)
+var serverMessageChannel = make(chan ServerMessage)
 
 var upgrader = websocket.Upgrader{}
 
-// Message object with username and message properties
-type Message struct {
+// UserMessage object with username and message properties
+type UserMessage struct {
 	Username string `json:"username"`
 	Message  string `json:"message"`
+}
+
+// ServerMessage object with message properties
+type ServerMessage struct {
+	Message string `json:"message"`
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +45,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	log.Println(clients)
 
 	for {
-		var msg Message
+		var msg UserMessage
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Println("error: ", err)
@@ -49,21 +53,28 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		if msg.Message == "connect" {
-			users = append(users, msg.Username)
+			log.Println("56", msg)
+			sm := ServerMessage{msg.Username}
+			log.Println(sm)
+			serverMessageChannel <- sm
+
 		}
-		broadcast <- msg
+		// userMessageChannel <- msg
 
 	}
 }
 
 func handleMessages() {
 	for {
-		msg := <-broadcast
-		log.Println("2", msg)
+		smsg := <-serverMessageChannel
+		// umsg := <-userMessageChannel
+		log.Println("2", smsg)
 		for client := range clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
+			// err := client.WriteJSON(umsg)
+			serr := client.WriteJSON(smsg)
+			if serr != nil {
+				// log.Printf("error: %v", err)
+				log.Printf("error: %v", serr)
 				client.Close()
 				delete(clients, client)
 			}

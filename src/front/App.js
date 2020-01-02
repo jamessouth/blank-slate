@@ -12,6 +12,7 @@ export default function App() {
   const [answer, setAnswer] = useState('');
   const [username, setUsername] = useState('');
   const [connected, setConnected] = useState(false);
+  const [users, setUsers] = useState([]);
   
 
   
@@ -61,7 +62,9 @@ export default function App() {
   }
 
 
-  
+  const players = users.map((plr, ind) => {
+    <li key={ ind }>{ plr }</li>
+  });
 
 
 
@@ -85,7 +88,10 @@ export default function App() {
             submit
           </button>
       }
-
+      {
+        users &&
+          <ul>{ players }</ul>
+      }
 
 
 
