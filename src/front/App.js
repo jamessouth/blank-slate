@@ -26,6 +26,7 @@ export default function App() {
 
 
     return function cleanup() {
+      console.log(Date.now())
       ws.close();
     };
 
