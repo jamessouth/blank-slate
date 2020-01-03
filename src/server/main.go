@@ -8,7 +8,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var clients = make(map[*websocket.Conn]bool)
+// Client object with name and connection status
+type Client struct {
+	Name      string
+	Connected bool
+}
+
+var clients = make(map[*websocket.Conn]*Client)
 var userMessageChannel = make(chan UserMessage)
 var serverMessageChannel = make(chan ServerMessage)
 
@@ -40,20 +46,33 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	clients[ws] = true
+	clients[ws] = &Client{"", true}
 
-	log.Println(clients)
+	for c := range clients {
+
+		log.Println(clients[c])
+	}
 
 	for {
 		var msg UserMessage
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Println("error: ", err)
+			if err.Error() == "websocket: close 1001 (going away)" {
+				// sm := ServerMessage{msg.Username}
+				// log.Println(sm)
+				// serverMessageChannel <- sm
+			}
 			delete(clients, ws)
+			for c := range clients {
+
+				log.Println(clients[c])
+			}
 			break
 		}
 		if msg.Message == "connect" {
-			sm := ServerMessage{msg.Username}
+			clients[ws].Name = msg.Username
+			sm := ServerMessage{clients[ws].Name}
 			log.Println(sm)
 			serverMessageChannel <- sm
 

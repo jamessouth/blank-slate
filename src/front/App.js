@@ -30,9 +30,9 @@ export default function App() {
     }, false);
 
     ws.addEventListener('message', function (e) {
-      const data = { user: JSON.parse(e.data).message };
-      dispatch({ type: 'updateUsers', payload: data });
-      console.log(users, data, e, Date.now());
+      console.log(e);
+      // const data = { user: JSON.parse(e.data).message };
+      // dispatch({ type: 'updateUsers', payload: data });
     }, false);
 
     ws.addEventListener('error', function (e) {
