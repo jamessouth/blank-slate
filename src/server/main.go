@@ -20,7 +20,7 @@ type UserMessage struct {
 	Message  string `json:"message"`
 }
 
-// ServerMessage object with message properties
+// ServerMessage object with message property
 type ServerMessage struct {
 	Message string `json:"message"`
 }
@@ -53,33 +53,46 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		if msg.Message == "connect" {
-			log.Println("56", msg)
 			sm := ServerMessage{msg.Username}
 			log.Println(sm)
 			serverMessageChannel <- sm
 
+		} else {
+			log.Println(msg)
+
+			userMessageChannel <- msg
 		}
-		// userMessageChannel <- msg
 
 	}
 }
 
-func handleMessages() {
+func handleUserMessages() {
 	for {
-		smsg := <-serverMessageChannel
-		// umsg := <-userMessageChannel
-		log.Println("2", smsg)
+		msg := <-userMessageChannel
+		log.Println("21", msg)
 		for client := range clients {
-			// err := client.WriteJSON(umsg)
-			serr := client.WriteJSON(smsg)
-			if serr != nil {
-				// log.Printf("error: %v", err)
-				log.Printf("error: %v", serr)
+			err := client.WriteJSON(msg)
+			if err != nil {
+				log.Printf("error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
 		}
+	}
+}
 
+func handleServerMessages() {
+	for {
+		msg := <-serverMessageChannel
+		log.Println("24", msg)
+		for client := range clients {
+			err := client.WriteJSON(msg)
+			if err != nil {
+				log.Printf("error: %v", err)
+				client.Close()
+				delete(clients, client)
+			}
+		}
 	}
 }
 
@@ -90,7 +103,8 @@ func main() {
 
 	http.HandleFunc("/ws", handleConnections)
 
-	go handleMessages()
+	go handleUserMessages()
+	go handleServerMessages()
 
 	log.Println("server running on port 8000")
 	err := http.ListenAndServe(":8000", nil)

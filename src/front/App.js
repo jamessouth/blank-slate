@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
-
-
+import { initialState, reducer } from './reducers/appState';
+import PlayerList from './components/PlayerList';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -12,8 +12,12 @@ export default function App() {
   const [answer, setAnswer] = useState('');
   const [username, setUsername] = useState('');
   const [connected, setConnected] = useState(false);
-  const [users, setUsers] = useState([]);
-  
+  const [
+    {
+      users,
+    },
+    dispatch
+  ] = useReducer(reducer, initialState);
 
   
   useEffect(() => {
@@ -26,7 +30,9 @@ export default function App() {
     }, false);
 
     ws.addEventListener('message', function (e) {
-      console.log(e, Date.now());
+      const data = { user: JSON.parse(e.data).message };
+      dispatch({ type: 'updateUsers', payload: data });
+      console.log(users, data, e, Date.now());
     }, false);
 
     ws.addEventListener('error', function (e) {
@@ -62,13 +68,6 @@ export default function App() {
   }
 
 
-  const players = users.map((plr, ind) => {
-    <li key={ ind }>{ plr }</li>
-  });
-
-
-
-  
 
   return (
     <main>
@@ -89,8 +88,8 @@ export default function App() {
           </button>
       }
       {
-        users &&
-          <ul>{ players }</ul>
+        users.length > 0 &&
+          <PlayerList users={ users } />
       }
 
 
