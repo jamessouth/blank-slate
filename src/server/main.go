@@ -1,24 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/jamessouth/blank-slate/src/server/structs"
+	"github.com/jamessouth/blank-slate/src/server/utils"
 )
-
-// Client object with name and connection status
-type Client struct {
-	Name      string
-	Connected bool
-}
-
-var clients = make(map[*websocket.Conn]*Client)
-var userMessageChannel = make(chan UserMessage)
-var serverMessageChannel = make(chan ServerMessage)
-
-var upgrader = websocket.Upgrader{}
 
 // UserMessage object with username and message properties
 type UserMessage struct {
@@ -28,8 +19,14 @@ type UserMessage struct {
 
 // ServerMessage object with message property
 type ServerMessage struct {
-	Message string `json:"message"`
+	Message []byte `json:"message"`
 }
+
+var clients = make(map[*websocket.Conn]*structs.Client)
+var userMessageChannel = make(chan UserMessage)
+var serverMessageChannel = make(chan ServerMessage)
+
+var upgrader = websocket.Upgrader{}
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 
@@ -46,7 +43,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	clients[ws] = &Client{"", true}
+	clients[ws] = &structs.Client{Name: "", Connected: true}
 
 	for c := range clients {
 
@@ -59,6 +56,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
+				clients[ws].Connected = false
+
 				// sm := ServerMessage{msg.Username}
 				// log.Println(sm)
 				// serverMessageChannel <- sm
@@ -72,7 +71,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		if msg.Message == "connect" {
 			clients[ws].Name = msg.Username
-			sm := ServerMessage{clients[ws].Name}
+			playerList, err := json.Marshal(utils.GetSliceOfMapValues(clients))
+			if err != nil {
+				log.Fatal("cannot JSON encode", err)
+			}
+			sm := ServerMessage{playerList}
 			log.Println(sm)
 			serverMessageChannel <- sm
 

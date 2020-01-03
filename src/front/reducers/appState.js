@@ -2,14 +2,14 @@ const initialState = {
     users: [],
 };
   
-function reducer(state, { type, payload: { user } }) {
+function reducer(state, { type, payload: { users } }) {
 
     switch (type) {
 
         case 'updateUsers':
             return {
                 ...state,
-                users: [...state.users, user]
+                users
             };
 
         default:
