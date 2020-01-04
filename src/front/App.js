@@ -66,6 +66,11 @@ export default function App() {
     }
   }
 
+  function startGame() {
+    console.log('start');
+    
+  }
+
 
 
   return (
@@ -82,7 +87,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => send(answer)}
-            >
+          >
             submit
           </button>
       }
@@ -90,7 +95,15 @@ export default function App() {
         users.length > 0 &&
           <PlayerList users={ users } />
       }
-
+      {
+        users.length > 2 &&
+          <button
+            type="button"
+            onClick={ startGame }
+          >
+            submit
+          </button>
+      }
 
 
 

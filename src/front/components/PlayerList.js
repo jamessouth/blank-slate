@@ -13,7 +13,7 @@ export default function PlayerList({ users }) {
 
     return (
         <>
-            <h2>Players</h2>
+            <h2>Players: { players.length }</h2>
 
             <ul>{ players }</ul>
         

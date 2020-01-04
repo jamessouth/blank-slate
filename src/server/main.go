@@ -11,8 +11,8 @@ import (
 )
 
 var clients = make(map[*websocket.Conn]string)
-var userMessageChannel = make(chan structs.UserMessage)
-var userListMessageChannel = make(chan structs.UserListMessage)
+var messageChannel = make(chan structs.Message)
+var usersListChannel = make(chan structs.UsersList)
 
 var upgrader = websocket.Upgrader{}
 
@@ -39,15 +39,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for {
-		var msg structs.UserMessage
+		var msg structs.Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Println("error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
 				delete(clients, ws)
-				playerList := structs.UserListMessage{Users: utils.GetSliceOfMapValues(clients)}
+				playerList := structs.UsersList{Users: utils.GetSliceOfMapValues(clients)}
 				log.Println(playerList)
-				userListMessageChannel <- playerList
+				usersListChannel <- playerList
 
 			}
 			delete(clients, ws)
@@ -59,14 +59,14 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		if msg.Message == "connect" {
 			clients[ws] = msg.Username
-			playerList := structs.UserListMessage{Users: utils.GetSliceOfMapValues(clients)}
+			playerList := structs.UsersList{Users: utils.GetSliceOfMapValues(clients)}
 			log.Println(playerList)
-			userListMessageChannel <- playerList
+			usersListChannel <- playerList
 
 		} else {
 			log.Println(msg)
 
-			userMessageChannel <- msg
+			messageChannel <- msg
 		}
 
 	}
@@ -74,7 +74,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 func handleUserMessages() {
 	for {
-		msg := <-userMessageChannel
+		msg := <-messageChannel
 		log.Println("21", msg)
 		for client := range clients {
 			err := client.WriteJSON(msg)
@@ -89,7 +89,7 @@ func handleUserMessages() {
 
 func handleServerMessages() {
 	for {
-		msg := <-userListMessageChannel
+		msg := <-usersListChannel
 		log.Println("no of clients: ", len(clients))
 		for client := range clients {
 			err := client.WriteJSON(msg)

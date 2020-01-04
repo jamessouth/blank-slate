@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// GetSliceOfMapValues loops through the map and extracts names from the struct values
+// GetSliceOfMapValues loops through the clients map and extracts the names
 func GetSliceOfMapValues(m map[*websocket.Conn]string) []string {
 	var list []string
 	for _, v := range m {
