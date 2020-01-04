@@ -12,6 +12,7 @@ export default function App() {
   const [answer, setAnswer] = useState('');
   const [username, setUsername] = useState('');
   const [connected, setConnected] = useState(false);
+  const [closed, setClosed] = useState(false);
   const [
     {
       users,
@@ -39,6 +40,7 @@ export default function App() {
     }, false);
 
     ws.addEventListener('close', function (e) {
+      setClosed(true);
       console.log(e, Date.now());
     }, false);
 
@@ -80,7 +82,18 @@ export default function App() {
         username.length > 0 && <p>Hello, { username }</p>
       }
 
-      <input value={ answer } onChange={ e => setAnswer(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
+      {
+        !closed &&
+            <input value={ answer } onChange={ e => setAnswer(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
+      }
+      {
+        closed &&
+          <p>Sorry, server not available. Please try again.</p>
+      }
+
+
+
+
 
       {
         connected &&
