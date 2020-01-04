@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,14 +16,14 @@ type UserMessage struct {
 	Message  string `json:"message"`
 }
 
-// ServerMessage object with message property
-type ServerMessage struct {
-	Message []byte `json:"message"`
+// UserListMessage object with message property
+type UserListMessage struct {
+	User []string `json:"users"`
 }
 
 var clients = make(map[*websocket.Conn]*structs.Client)
 var userMessageChannel = make(chan UserMessage)
-var serverMessageChannel = make(chan ServerMessage)
+var userListMessageChannel = make(chan UserListMessage)
 
 var upgrader = websocket.Upgrader{}
 
@@ -58,26 +57,22 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			if err.Error() == "websocket: close 1001 (going away)" {
 				clients[ws].Connected = false
 
-				// sm := ServerMessage{msg.Username}
+				// sm := UserListMessage{msg.Username}
 				// log.Println(sm)
-				// serverMessageChannel <- sm
+				// userListMessageChannel <- sm
 			}
 			delete(clients, ws)
 			for c := range clients {
 
-				log.Println(clients[c])
+				log.Println("99", clients[c])
 			}
 			break
 		}
 		if msg.Message == "connect" {
 			clients[ws].Name = msg.Username
-			playerList, err := json.Marshal(utils.GetSliceOfMapValues(clients))
-			if err != nil {
-				log.Fatal("cannot JSON encode", err)
-			}
-			sm := ServerMessage{playerList}
+			sm := UserListMessage{utils.GetSliceOfMapValues(clients)}
 			log.Println(sm)
-			serverMessageChannel <- sm
+			userListMessageChannel <- sm
 
 		} else {
 			log.Println(msg)
@@ -105,7 +100,7 @@ func handleUserMessages() {
 
 func handleServerMessages() {
 	for {
-		msg := <-serverMessageChannel
+		msg := <-userListMessageChannel
 		log.Println("24", msg)
 		for client := range clients {
 			err := client.WriteJSON(msg)

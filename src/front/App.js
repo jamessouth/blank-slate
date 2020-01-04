@@ -30,10 +30,9 @@ export default function App() {
     }, false);
 
     ws.addEventListener('message', function (e) {
-      console.log(e);
-      const data = { users: JSON.parse(atob(JSON.parse(e.data).message)) };
-      console.log(data);
-      dispatch({ type: 'updateUsers', payload: data });
+
+      
+      dispatch({ type: 'updateUsers', payload: JSON.parse(e.data) });
     }, false);
 
     ws.addEventListener('error', function (e) {
