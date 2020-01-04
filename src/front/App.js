@@ -9,10 +9,11 @@ export default function App() {
   console.log('app');
 
   const [hasJoined, setHasJoined] = useState(false);
-  const [answer, setAnswer] = useState('');
+  const [inputText, setInputText] = useState('');
   const [username, setUsername] = useState('');
   const [connected, setConnected] = useState(false);
   const [closed, setClosed] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const [
     {
       users,
@@ -25,14 +26,21 @@ export default function App() {
     console.log('connect to server...', Date.now());
 
 
+
     ws.addEventListener('open', function (e) {
       setConnected(true);
       console.log(e, Date.now());
     }, false);
 
     ws.addEventListener('message', function (e) {
-
-      dispatch({ type: 'updateUsers', payload: JSON.parse(e.data) });
+      const data = JSON.parse(e.data);
+      console.log('msg: ', e, data);
+      if (data.users) {
+        dispatch({ type: 'updateUsers', payload: data });
+      
+      } else {
+        setGameStarted(true);
+      }
     }, false);
 
     ws.addEventListener('error', function (e) {
@@ -62,16 +70,21 @@ export default function App() {
         username: text,
         message:"connect"
       }));
-      setAnswer('');
+      setInputText('');
     } else {
 
     }
   }
 
+
+
   function startGame() {
     console.log('start');
-    
+    ws.send(JSON.stringify({
+      message: "start"
+    }));
   }
+
 
 
 
@@ -84,11 +97,11 @@ export default function App() {
 
       {
         !closed &&
-            <input value={ answer } onChange={ e => setAnswer(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
+            <input value={ inputText } onChange={ e => setInputText(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
       }
       {
         closed &&
-          <p>Sorry, server not available. Please try again.</p>
+            <p>Server not available. Please try again.</p>
       }
 
 
@@ -99,24 +112,34 @@ export default function App() {
         connected &&
           <button
             type="button"
-            onClick={() => send(answer)}
+            onClick={() => send(inputText)}
           >
             submit
           </button>
       }
+
+      {
+        !connected &&
+            <p>connecting...</p>
+      }
+
+
+
+
       {
         users.length > 0 &&
           <PlayerList users={ users } />
       }
       {
-        users.length > 2 &&
+        users.length > 2 && !gameStarted &&
           <button
             type="button"
             onClick={ startGame }
           >
-            submit
+            Start Game
           </button>
       }
+
 
 
 

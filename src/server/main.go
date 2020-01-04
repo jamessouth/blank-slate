@@ -10,11 +10,14 @@ import (
 	"github.com/jamessouth/blank-slate/src/server/utils"
 )
 
-var clients = make(map[*websocket.Conn]string)
-var messageChannel = make(chan structs.Message)
-var usersListChannel = make(chan structs.UsersList)
+var (
+	clients = make(map[*websocket.Conn]string)
 
-var upgrader = websocket.Upgrader{}
+	messageChannel   = make(chan structs.Message)
+	usersListChannel = make(chan structs.UsersList)
+
+	upgrader = websocket.Upgrader{}
+)
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 
@@ -31,7 +34,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	clients[ws] = ""
+	// clients[ws] = ""
 
 	for c := range clients {
 
@@ -42,11 +45,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		var msg structs.Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			log.Println("error: ", err)
+			log.Println("45error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
 				delete(clients, ws)
 				playerList := structs.UsersList{Users: utils.GetSliceOfMapValues(clients)}
-				log.Println(playerList)
+				log.Println("playerList: ", playerList)
 				usersListChannel <- playerList
 
 			}
@@ -63,7 +66,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			log.Println(playerList)
 			usersListChannel <- playerList
 
+		} else if msg.Message == "start" {
+
+			messageChannel <- structs.Message{Username: "", Message: "remove start button"}
 		} else {
+
 			log.Println(msg)
 
 			messageChannel <- msg
@@ -75,11 +82,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 func handleUserMessages() {
 	for {
 		msg := <-messageChannel
-		log.Println("21", msg)
+		log.Println("21", msg, len(messageChannel))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("error: %v", err)
+				log.Printf("82error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
@@ -90,7 +97,7 @@ func handleUserMessages() {
 func handleServerMessages() {
 	for {
 		msg := <-usersListChannel
-		log.Println("no of clients: ", len(clients))
+		log.Println("no of clients: ", len(clients), len(usersListChannel))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
