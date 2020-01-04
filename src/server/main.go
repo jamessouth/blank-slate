@@ -11,7 +11,7 @@ import (
 )
 
 
-var clients = make(map[*websocket.Conn]*structs.Client)
+var clients = make(map[*websocket.Conn]string)
 var userMessageChannel = make(chan structs.UserMessage)
 var userListMessageChannel = make(chan structs.UserListMessage)
 
@@ -32,7 +32,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	clients[ws] = &structs.Client{Name: ""}
+	clients[ws] = ""
 
 	for c := range clients {
 
@@ -58,7 +58,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		if msg.Message == "connect" {
-			clients[ws].Name = msg.Username
+			clients[ws] = msg.Username
 			playerList := structs.UserListMessage{Users: utils.GetSliceOfMapValues(clients)}
 			log.Println(playerList)
 			userListMessageChannel <- playerList

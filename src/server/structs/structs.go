@@ -1,10 +1,5 @@
 package structs
 
-// Client object with name and connection status
-type Client struct {
-	Name      string
-}
-
 // UserMessage object with username and message properties
 type UserMessage struct {
 	Username string `json:"username"`
