@@ -10,7 +10,6 @@ import (
 	"github.com/jamessouth/blank-slate/src/server/utils"
 )
 
-
 var clients = make(map[*websocket.Conn]string)
 var userMessageChannel = make(chan structs.UserMessage)
 var userListMessageChannel = make(chan structs.UserListMessage)
@@ -36,7 +35,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 	for c := range clients {
 
-		log.Println(clients[c])
+		log.Println("ws conn: ", clients[c])
 	}
 
 	for {
@@ -51,6 +50,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				userListMessageChannel <- playerList
 
 			}
+			delete(clients, ws)
 			for c := range clients {
 
 				log.Println("99", clients[c])
@@ -90,7 +90,7 @@ func handleUserMessages() {
 func handleServerMessages() {
 	for {
 		msg := <-userListMessageChannel
-		log.Println("24", msg)
+		log.Println("no of clients: ", len(clients))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
