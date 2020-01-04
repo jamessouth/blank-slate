@@ -10,20 +10,10 @@ import (
 	"github.com/jamessouth/blank-slate/src/server/utils"
 )
 
-// UserMessage object with username and message properties
-type UserMessage struct {
-	Username string `json:"username"`
-	Message  string `json:"message"`
-}
-
-// UserListMessage object with message property
-type UserListMessage struct {
-	User []string `json:"users"`
-}
 
 var clients = make(map[*websocket.Conn]*structs.Client)
-var userMessageChannel = make(chan UserMessage)
-var userListMessageChannel = make(chan UserListMessage)
+var userMessageChannel = make(chan structs.UserMessage)
+var userListMessageChannel = make(chan structs.UserListMessage)
 
 var upgrader = websocket.Upgrader{}
 
@@ -42,7 +32,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	clients[ws] = &structs.Client{Name: "", Connected: true}
+	clients[ws] = &structs.Client{Name: ""}
 
 	for c := range clients {
 
@@ -50,18 +40,17 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for {
-		var msg UserMessage
+		var msg structs.UserMessage
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Println("error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
-				clients[ws].Connected = false
+				delete(clients, ws)
+				playerList := structs.UserListMessage{Users: utils.GetSliceOfMapValues(clients)}
+				log.Println(playerList)
+				userListMessageChannel <- playerList
 
-				// sm := UserListMessage{msg.Username}
-				// log.Println(sm)
-				// userListMessageChannel <- sm
 			}
-			delete(clients, ws)
 			for c := range clients {
 
 				log.Println("99", clients[c])
@@ -70,9 +59,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		if msg.Message == "connect" {
 			clients[ws].Name = msg.Username
-			sm := UserListMessage{utils.GetSliceOfMapValues(clients)}
-			log.Println(sm)
-			userListMessageChannel <- sm
+			playerList := structs.UserListMessage{Users: utils.GetSliceOfMapValues(clients)}
+			log.Println(playerList)
+			userListMessageChannel <- playerList
 
 		} else {
 			log.Println(msg)

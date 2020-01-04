@@ -31,7 +31,6 @@ export default function App() {
 
     ws.addEventListener('message', function (e) {
 
-      
       dispatch({ type: 'updateUsers', payload: JSON.parse(e.data) });
     }, false);
 
