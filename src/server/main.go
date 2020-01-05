@@ -15,6 +15,7 @@ var (
 
 	messageChannel     = make(chan structs.Message)
 	playersListChannel = make(chan structs.PlayersList)
+	// timerChannel       = make(chan time.Timer)
 
 	upgrader = websocket.Upgrader{}
 
@@ -119,6 +120,21 @@ func handleServerMessages() {
 		}
 	}
 }
+
+// func handleTimerMessages( {
+// 	fo {
+// 		msg := <-timerChanel
+// 		log.Println("127timer: ", msg, len(timerChanne))
+// 		for client := range client {
+// 			err := client.WriteJSON(mg)
+// 			if err != ni {
+// 				log.Printf("131error: %v", er)
+// 				client.Clos()
+// 				delete(clients, cliet)
+// 		}
+// 	}
+//	}
+/ }
 
 func main() {
 	fmt.Println("working...")

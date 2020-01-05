@@ -13,6 +13,7 @@ export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [timer, setTimer] = useState(null);
   const [
     {
       players,
@@ -143,7 +144,10 @@ export default function App() {
             Start Game
           </button>
       }
-
+      {
+        gameStarted &&
+          <p>{ timer }</p>
+      }
 
 
 

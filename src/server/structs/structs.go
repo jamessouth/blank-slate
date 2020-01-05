@@ -16,3 +16,8 @@ type Game struct {
 	Players    PlayersList `json:"players"`
 	InProgress bool        `json:"inProgress"`
 }
+
+// Timer keeps track of time
+// type Timer struct {
+// 	Time int `json:"time"`
+// }
