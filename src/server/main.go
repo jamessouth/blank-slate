@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/jamessouth/blank-slate/src/server/structs"
@@ -15,11 +16,12 @@ var (
 
 	messageChannel     = make(chan structs.Message)
 	playersListChannel = make(chan structs.PlayersList)
-	// timerChannel       = make(chan time.Timer)
+	timerDone          = make(chan bool)
 
 	upgrader = websocket.Upgrader{}
 
-	game = structs.Game{InProgress: false}
+	game                = structs.Game{InProgress: false}
+	ticker *time.Ticker = new(time.Ticker)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -79,8 +81,26 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				game.InProgress = true
 
 			}
-
 			messageChannel <- structs.Message{PlayerName: "", Message: "remove start button"}
+
+			ticker = time.NewTicker(time.Second)
+
+			go func() {
+				for {
+					select {
+					case <-timerDone:
+						log.Println("done")
+						return
+					case t := <-ticker.C:
+						messageChannel <- structs.Message{PlayerName: "", Message: t.Format("5")}
+					}
+				}
+			}()
+
+			time.Sleep(20 * time.Second)
+			ticker.Stop()
+			timerDone <- true
+
 		} else {
 
 			log.Println("84msg", msg)
@@ -121,21 +141,6 @@ func handleServerMessages() {
 	}
 }
 
-// func handleTimerMessages( {
-// 	fo {
-// 		msg := <-timerChanel
-// 		log.Println("127timer: ", msg, len(timerChanne))
-// 		for client := range client {
-// 			err := client.WriteJSON(mg)
-// 			if err != ni {
-// 				log.Printf("131error: %v", er)
-// 				client.Clos()
-// 				delete(clients, cliet)
-// 		}
-// 	}
-//	}
-/ }
-
 func main() {
 	fmt.Println("working...")
 	fs := http.FileServer(http.Dir("../dist"))
@@ -151,4 +156,5 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+
 }
