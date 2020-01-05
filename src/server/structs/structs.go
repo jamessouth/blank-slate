@@ -1,17 +1,18 @@
 package structs
 
-// Message object with username and message properties
+// Message object with PlayerName and Message properties
 type Message struct {
-	Username string `json:"username"`
-	Message  string `json:"message"`
+	PlayerName string `json:"playerName"`
+	Message    string `json:"message"`
 }
 
-// UsersList object with message property
-type UsersList struct {
-	Users []string `json:"users"`
+// PlayersList object with Players property
+type PlayersList struct {
+	Players []string `json:"players"`
 }
 
 // Game object holds game data
 type Game struct {
-	Players []string `json:"players"`
+	Players    PlayersList `json:"players"`
+	InProgress bool        `json:"inProgress"`
 }

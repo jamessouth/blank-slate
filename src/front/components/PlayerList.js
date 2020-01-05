@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function PlayerList({ users }) {
-    const players = users
+export default function PlayerList({ players }) {
+    const playerList = players
         .sort((a, b) => a > b ? 1 : -1)
         .map((user, ind) =>
             <li key={ ind }>
@@ -13,9 +13,9 @@ export default function PlayerList({ users }) {
 
     return (
         <>
-            <h2>Players: { players.length }</h2>
+            <h2>Players: { playerList.length }</h2>
 
-            <ul>{ players }</ul>
+            <ul>{ playerList }</ul>
         
         </>
     );

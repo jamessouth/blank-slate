@@ -1,15 +1,15 @@
 const initialState = {
-    users: [],
+    players: [],
 };
   
-function reducer(state, { type, payload: { users } }) {
+function reducer(state, { type, payload: { players } }) {
 
     switch (type) {
 
         case 'updateUsers':
             return {
                 ...state,
-                users
+                players
             };
 
         default:

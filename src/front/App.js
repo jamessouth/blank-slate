@@ -10,13 +10,12 @@ export default function App() {
 
   const [hasJoined, setHasJoined] = useState(false);
   const [inputText, setInputText] = useState('');
-  const [username, setUsername] = useState('');
+  const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
-  const [closed, setClosed] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [
     {
-      users,
+      players,
     },
     dispatch
   ] = useReducer(reducer, initialState);
@@ -32,23 +31,31 @@ export default function App() {
       console.log(e, Date.now());
     }, false);
 
+
+
     ws.addEventListener('message', function (e) {
       const data = JSON.parse(e.data);
       console.log('msg: ', e, data);
-      if (data.users) {
+
+      if (data.players) {
         dispatch({ type: 'updateUsers', payload: data });
       
+      } else if (data.message.startsWith('remove')) {
+        setGameStarted(true);
       } else {
         setGameStarted(true);
       }
+
     }, false);
+
+
 
     ws.addEventListener('error', function (e) {
       console.log(e, Date.now());
     }, false);
 
     ws.addEventListener('close', function (e) {
-      setClosed(true);
+      setConnected(false);
       console.log(e, Date.now());
     }, false);
 
@@ -64,10 +71,10 @@ export default function App() {
 
   function send(text) {
     if (!hasJoined) {
-      setUsername(text);
+      setPlayerName(text);
       setHasJoined(true);
       ws.send(JSON.stringify({
-        username: text,
+        playerName: text,
         message:"connect"
       }));
       setInputText('');
@@ -92,49 +99,46 @@ export default function App() {
     <main>
       <h1>Blank Slate</h1>
       {
-        username.length > 0 && <p>Hello, { username }</p>
+        playerName.length > 0 && connected && <p>Hello, { playerName }</p>
       }
-
-      {
-        !closed &&
-            <input value={ inputText } onChange={ e => setInputText(e.target.value) } type="text" placeholder={ hasJoined ? "Answer" : "Name" }/>
-      }
-      {
-        closed &&
-            <p>Server not available. Please try again.</p>
-      }
-
-
-
 
 
       {
         connected &&
-          <button
-            type="button"
-            onClick={() => send(inputText)}
-          >
-            submit
-          </button>
+          <>
+            <input
+              value={ inputText }
+              onChange={ e => setInputText(e.target.value) }
+              type="text"
+              placeholder={ hasJoined ? "Answer" : "Name" }
+            />
+            <button
+              type="button"
+              onClick={() => send(inputText)}
+            >
+              submit
+            </button>
+          </>
       }
 
       {
         !connected &&
-            <p>connecting...</p>
+          <p>Server not available. Please try again.</p>
       }
 
 
 
 
       {
-        users.length > 0 &&
-          <PlayerList users={ users } />
+        players.length > 0 && connected &&
+          <PlayerList players={ players } />
       }
       {
-        users.length > 2 && !gameStarted &&
+        !gameStarted && connected &&
           <button
             type="button"
             onClick={ startGame }
+            { ...(players.length < 3 ? { 'disabled': true } : {}) }
           >
             Start Game
           </button>

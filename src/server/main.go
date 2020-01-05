@@ -13,10 +13,12 @@ import (
 var (
 	clients = make(map[*websocket.Conn]string)
 
-	messageChannel   = make(chan structs.Message)
-	usersListChannel = make(chan structs.UsersList)
+	messageChannel     = make(chan structs.Message)
+	playersListChannel = make(chan structs.PlayersList)
 
 	upgrader = websocket.Upgrader{}
+
+	game = structs.Game{InProgress: false}
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -35,43 +37,52 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 	// clients[ws] = ""
-
+	log.Println("game", game.Players)
 	for c := range clients {
 
-		log.Println("ws conn: ", clients[c])
+		log.Println("43ws conn: ", clients[c])
 	}
 
 	for {
 		var msg structs.Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			log.Println("45error: ", err)
+			log.Println("50error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
 				delete(clients, ws)
-				playerList := structs.UsersList{Users: utils.GetSliceOfMapValues(clients)}
-				log.Println("playerList: ", playerList)
-				usersListChannel <- playerList
+				game.Players = structs.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+				log.Println("playerList: ", game.Players)
+				playersListChannel <- game.Players
 
 			}
 			delete(clients, ws)
 			for c := range clients {
 
-				log.Println("99", clients[c])
+				log.Println("61", clients[c])
 			}
 			break
 		}
 		if msg.Message == "connect" {
-			clients[ws] = msg.Username
-			playerList := structs.UsersList{Users: utils.GetSliceOfMapValues(clients)}
-			log.Println(playerList)
-			usersListChannel <- playerList
+			clients[ws] = msg.PlayerName
+			log.Println("67", clients)
+			game.Players = structs.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+			log.Println("68", game.Players)
+			playersListChannel <- game.Players
+			if game.InProgress {
+				messageChannel <- structs.Message{PlayerName: "", Message: "game in progress"}
+			}
 
 		} else if msg.Message == "start" {
 
-			messageChannel <- structs.Message{Username: "", Message: "remove start button"}
+			if !game.InProgress {
+				game.InProgress = true
+
+			}
+
+			messageChannel <- structs.Message{PlayerName: "", Message: "remove start button"}
 		} else {
 
-			log.Println(msg)
+			log.Println("84msg", msg)
 
 			messageChannel <- msg
 		}
@@ -79,14 +90,14 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleUserMessages() {
+func handlePlayerMessages() {
 	for {
 		msg := <-messageChannel
-		log.Println("21", msg, len(messageChannel))
+		log.Println("95", msg, len(messageChannel))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("82error: %v", err)
+				log.Printf("99error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
@@ -96,12 +107,12 @@ func handleUserMessages() {
 
 func handleServerMessages() {
 	for {
-		msg := <-usersListChannel
-		log.Println("no of clients: ", len(clients), len(usersListChannel))
+		msg := <-playersListChannel
+		log.Println("110no of clients: ", len(clients), len(playersListChannel))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("error: %v", err)
+				log.Printf("114error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
@@ -116,7 +127,7 @@ func main() {
 
 	http.HandleFunc("/ws", handleConnections)
 
-	go handleUserMessages()
+	go handlePlayerMessages()
 	go handleServerMessages()
 
 	log.Println("server running on port 8000")
