@@ -25,12 +25,14 @@ export default function App() {
   useEffect(() => {
     console.log('connect to server...', Date.now());
 
+    
 
 
     ws.addEventListener('open', function (e) {
       setConnected(true);
       console.log(e, Date.now());
     }, false);
+
 
 
 
@@ -41,8 +43,10 @@ export default function App() {
       if (data.players) {
         dispatch({ type: 'updateUsers', payload: data });
       
-      } else if (data.message.startsWith('remove')) {
+      } else if (data.message && data.message.startsWith('remove')) {
         setGameStarted(true);
+      } else if (data.time) {
+        setTimer(data.time);
       } else {
         setGameStarted(true);
       }

@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/jamessouth/blank-slate/src/server/structs"
+	st "github.com/jamessouth/blank-slate/src/server/structs"
 	"github.com/jamessouth/blank-slate/src/server/utils"
 )
 
 var (
 	clients = make(map[*websocket.Conn]string)
 
-	messageChannel     = make(chan structs.Message)
-	playersListChannel = make(chan structs.PlayersList)
+	messageChannel     = make(chan st.Message)
+	playersListChannel = make(chan st.PlayersList)
 
 	upgrader = websocket.Upgrader{}
 
-	game = structs.Game{InProgress: false}
+	game = st.Game{InProgress: false}
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -46,18 +45,22 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for {
-		var msg structs.Message
+		var msg st.Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Println("50error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
 				delete(clients, ws)
-				game.Players = structs.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+				game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
 				log.Println("playerList: ", game.Players)
 				playersListChannel <- game.Players
 
 			}
 			delete(clients, ws)
+			if len(clients) == 0 {
+				game.InProgress = false
+
+			}
 			for c := range clients {
 
 				log.Println("61", clients[c])
@@ -67,11 +70,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		if msg.Message == "connect" {
 			clients[ws] = msg.PlayerName
 			log.Println("67", clients)
-			game.Players = structs.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+			game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
 			log.Println("68", game.Players)
 			playersListChannel <- game.Players
 			if game.InProgress {
-				messageChannel <- structs.Message{PlayerName: "", Message: "game in progress"}
+				messageChannel <- st.Message{Message: "game in progress"}
 			}
 
 		} else if msg.Message == "start" {
@@ -80,7 +83,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				game.InProgress = true
 
 			}
-			messageChannel <- structs.Message{PlayerName: "", Message: "remove start button"}
+			messageChannel <- st.Message{Message: "remove start button"}
 
 			timerDone := make(chan bool)
 			ticker := time.NewTicker(time.Second)
@@ -110,9 +113,9 @@ func handleTimers(done chan bool, tick *time.Ticker) {
 		case <-done:
 			log.Println("done")
 			return
-		case t := <-tick.C:
-			log.Println(time.Now(), countdown, t)
-			messageChannel <- structs.Message{PlayerName: "", Message: strconv.Itoa(countdown)}
+		case <-tick.C:
+			log.Println(time.Now(), countdown)
+			messageChannel <- st.Message{Time: countdown}
 			countdown--
 		}
 	}
