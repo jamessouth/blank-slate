@@ -13,7 +13,7 @@ export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [timer, setTimer] = useState(null);
+  const [startTimer, setStartTimer] = useState(null);
   const [
     {
       players,
@@ -47,7 +47,7 @@ export default function App() {
       } else if (data.message && data.message.startsWith('remove')) {
         setGameStarted(true);
       } else if (data.time) {
-        setTimer(data.time - 1);
+        setStartTimer(data.time - 1);
       } else {
         setGameStarted(true);
       }
@@ -151,9 +151,10 @@ export default function App() {
           </button>
       }
       {
-        gameStarted && connected &&
-          <p>{ timer }</p>
+        gameStarted && connected && startTimer > 0 &&
+          <p>Game starts in: { startTimer } seconds</p>
       }
+
 
 
 
