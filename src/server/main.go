@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -16,12 +17,10 @@ var (
 
 	messageChannel     = make(chan structs.Message)
 	playersListChannel = make(chan structs.PlayersList)
-	timerDone          = make(chan bool)
 
 	upgrader = websocket.Upgrader{}
 
-	game                = structs.Game{InProgress: false}
-	ticker *time.Ticker = new(time.Ticker)
+	game = structs.Game{InProgress: false}
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -83,23 +82,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 			messageChannel <- structs.Message{PlayerName: "", Message: "remove start button"}
 
-			ticker = time.NewTicker(time.Second)
+			timerDone := make(chan bool)
+			ticker := time.NewTicker(time.Second)
 
-			go func() {
-				for {
-					select {
-					case <-timerDone:
-						log.Println("done")
-						return
-					case t := <-ticker.C:
-						messageChannel <- structs.Message{PlayerName: "", Message: t.Format("5")}
-					}
-				}
-			}()
+			go handleTimers(timerDone, ticker)
 
-			time.Sleep(20 * time.Second)
+			time.Sleep(5 * time.Second)
 			ticker.Stop()
 			timerDone <- true
+			close(timerDone)
 
 		} else {
 
@@ -108,6 +99,22 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			messageChannel <- msg
 		}
 
+	}
+}
+
+func handleTimers(done chan bool, tick *time.Ticker) {
+	countdown := 5
+	log.Println(time.Now(), countdown)
+	for {
+		select {
+		case <-done:
+			log.Println("done")
+			return
+		case t := <-tick.C:
+			log.Println(time.Now(), countdown, t)
+			messageChannel <- structs.Message{PlayerName: "", Message: strconv.Itoa(countdown)}
+			countdown--
+		}
 	}
 }
 
