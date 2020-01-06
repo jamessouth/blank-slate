@@ -90,7 +90,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 			go handleTimers(timerDone, ticker)
 
-			time.Sleep(5 * time.Second)
+			time.Sleep(6 * time.Second)
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)
@@ -106,7 +106,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleTimers(done chan bool, tick *time.Ticker) {
-	countdown := 5
+	countdown := 6
 	log.Println(time.Now(), countdown)
 	for {
 		select {
