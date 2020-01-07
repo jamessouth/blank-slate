@@ -17,3 +17,8 @@ type Game struct {
 	Players    PlayersList `json:"players"`
 	InProgress bool        `json:"inProgress"`
 }
+
+type Word struct {
+	Word     string `json:"word"`
+	Position string `json:"position"`
+}
