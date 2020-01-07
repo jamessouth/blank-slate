@@ -78,6 +78,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else if msg.Message == "start" {
+			const startDelay = 100
 
 			if !game.InProgress {
 				game.InProgress = true
@@ -88,9 +89,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			timerDone := make(chan bool)
 			ticker := time.NewTicker(time.Second)
 
-			go handleTimers(timerDone, ticker, 6)
+			go handleTimers(timerDone, ticker, startDelay)
 
-			time.Sleep(6 * time.Second)
+			time.Sleep(startDelay * time.Second)
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import PlayerList from './components/PlayerList';
+import Radio from './components/Radio';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -8,6 +9,10 @@ const ws = new WebSocket(server + '/ws');
 export default function App() {
   console.log('app');
 
+
+  
+
+  const [radioValue, setRadioValue] = useState('mixed');
   const [hasJoined, setHasJoined] = useState(false);
   const [inputText, setInputText] = useState('');
   const [playerName, setPlayerName] = useState('');
@@ -20,6 +25,11 @@ export default function App() {
     },
     dispatch
   ] = useReducer(reducer, initialState);
+
+
+  function handleRadioChange(val) {
+    setRadioValue(val);
+  }
 
   
   useEffect(() => {
@@ -152,7 +162,29 @@ export default function App() {
       }
       {
         gameStarted && connected && startTimer > 0 &&
-          <p>Game starts in: { startTimer } seconds</p>
+          <>
+            <p>Game starts in: { startTimer } seconds</p>
+            <Radio
+              text="Word, Blank"
+              onChange={ handleRadioChange }
+              value="word_first"
+              check={ radioValue == "word_first" }
+            />
+
+            <Radio
+              text="Blank, Word"
+              onChange={ handleRadioChange }
+              value="blank_first"
+              check={ radioValue == "blank_first" }
+            />
+
+            <Radio
+              text="Mixed"
+              onChange={ handleRadioChange }
+              value="mixed"
+              check={ radioValue == "mixed" }
+            />
+          </>
       }
 
 
