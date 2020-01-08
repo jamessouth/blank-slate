@@ -42,10 +42,13 @@ useEffect(() => {
   if (gameType) {
     setTimeout(() => {
       setGameTypeSignal(false);
-    }, 2000);
+    }, 3000);
 
     setTimeout(() => {
-      setGameType(null)
+      setGameType(null);
+      ws.send(JSON.stringify({
+        message: 'serve'
+      }));
     }, 4000);
 
   }
@@ -244,7 +247,7 @@ useEffect(() => {
 
 
 
-
+// Image by <a href="https://pixabay.com/users/stux-12364/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Thanks for your Like • donations welcome</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Pixabay</a>
 
 
 
