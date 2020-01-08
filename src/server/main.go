@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -20,6 +21,12 @@ var (
 	upgrader = websocket.Upgrader{}
 
 	game = st.Game{InProgress: false}
+
+	gameType = map[string]int{
+		"mixed":       0,
+		"word_first":  0,
+		"blank_first": 0,
+	}
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -38,11 +45,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 	// clients[ws] = ""
-	log.Println("game", game.Players)
-	for c := range clients {
+	// log.Println("game", game.Players)
+	// for c := range clients {
 
-		log.Println("43ws conn: ", clients[c])
-	}
+	// 	log.Println("43ws conn: ", clients[c])
+	// }
 
 	for {
 		var msg st.Message
@@ -59,6 +66,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			delete(clients, ws)
 			if len(clients) == 0 {
 				game.InProgress = false
+				for game := range gameType {
+					gameType[game] = 0
+				}
 
 			}
 			for c := range clients {
@@ -78,7 +88,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else if msg.Message == "start" {
-			const startDelay = 100
+			const startDelay = 10
 
 			if !game.InProgress {
 				game.InProgress = true
@@ -95,6 +105,25 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)
+
+		} else if strings.HasPrefix(msg.Message, "vote") {
+			vote := strings.Split(msg.Message, ": ")[1]
+			log.Println(msg, vote)
+			gameType[vote]++
+
+			if gameType["mixed"]+gameType["word_first"]+gameType["blank_first"] == len(clients) {
+				max := -1
+				var res string
+				log.Println(gameType)
+				for game := range gameType {
+					if gameType[game] > max {
+						max = gameType[game]
+						res = game
+					}
+				}
+				log.Print(res)
+
+			}
 
 		} else {
 
@@ -114,7 +143,7 @@ func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
 			log.Println("done")
 			return
 		case <-tick.C:
-			log.Println(time.Now(), countdown)
+			// log.Println(time.Now(), countdown)
 			messageChannel <- st.Message{Time: countdown}
 			countdown--
 		}

@@ -27,9 +27,25 @@ export default function App() {
   ] = useReducer(reducer, initialState);
 
 
+
+
+
+
+  
+
+  
   function handleRadioChange(val) {
     setRadioValue(val);
   }
+
+  useEffect(() => {
+    console.log('useeff: ', startTimer);
+    if (startTimer == 0) {
+      ws.send(JSON.stringify({
+        message: `vote: ${radioValue}`
+      }));
+    }
+  }, [startTimer]);
 
   
   useEffect(() => {
@@ -91,7 +107,7 @@ export default function App() {
       setHasJoined(true);
       ws.send(JSON.stringify({
         playerName: text,
-        message:"connect"
+        message: "connect"
       }));
       setInputText('');
     } else {
@@ -168,21 +184,12 @@ export default function App() {
               text="Word, Blank"
               onChange={ handleRadioChange }
               value="word_first"
-              check={ radioValue == "word_first" }
             />
 
             <Radio
               text="Blank, Word"
               onChange={ handleRadioChange }
               value="blank_first"
-              check={ radioValue == "blank_first" }
-            />
-
-            <Radio
-              text="Mixed"
-              onChange={ handleRadioChange }
-              value="mixed"
-              check={ radioValue == "mixed" }
             />
           </>
       }
