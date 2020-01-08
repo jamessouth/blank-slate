@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import PlayerList from './components/PlayerList';
 import Radio from './components/Radio';
+import { hide, show } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -19,6 +20,8 @@ export default function App() {
   const [connected, setConnected] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [startTimer, setStartTimer] = useState(null);
+  const [gameType, setGameType] = useState(null);
+  const [gameTypeSignal, setGameTypeSignal] = useState(true);
   const [
     {
       players,
@@ -31,9 +34,27 @@ export default function App() {
 
 
 
-  
+
+
+
+useEffect(() => {
+  console.log('useee: ', 'ppp');
+  if (gameType) {
+    setTimeout(() => {
+      setGameTypeSignal(false);
+    }, 2000);
+
+    setTimeout(() => {
+      setGameType(null)
+    }, 4000);
+
+  }
+}, [gameType]);
+
+
 
   
+
   function handleRadioChange(val) {
     setRadioValue(val);
   }
@@ -70,8 +91,20 @@ export default function App() {
       if (data.players) {
         dispatch({ type: 'updateUsers', payload: data });
       
-      } else if (data.message && data.message.startsWith('remove')) {
-        setGameStarted(true);
+      } else if (data.message) {
+        if (data.message.startsWith('remove')) {
+
+          setGameStarted(true);
+        } else if (data.message.startsWith('game')) {
+          const type = data.message.split(': ')[1];
+          if (type == 'mixed') {
+            setGameType('A mix of blank-first and word-first');
+          } else if (type == 'blank_first') {
+            setGameType('Blank-first cards only');
+          } else {
+            setGameType('Word-first cards only');
+          }
+        }
       } else if (data.time) {
         setStartTimer(data.time - 1);
       } else {
@@ -192,6 +225,10 @@ export default function App() {
               value="blank_first"
             />
           </>
+      }
+      {
+        gameStarted && connected && gameType &&
+          <p className={ gameTypeSignal ? show : hide }>Game type: { gameType }</p>
       }
 
 

@@ -113,15 +113,17 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 			if gameType["mixed"]+gameType["word_first"]+gameType["blank_first"] == len(clients) {
 				max := -1
-				var res string
+				var wordStyle string
 				log.Println(gameType)
 				for game := range gameType {
 					if gameType[game] > max {
 						max = gameType[game]
-						res = game
+						wordStyle = game
 					}
 				}
-				log.Print(res)
+				log.Print(wordStyle)
+
+				messageChannel <- st.Message{Message: "game: " + wordStyle}
 
 			}
 
