@@ -79,8 +79,21 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		if msg.Message == "connect" {
 			clients[ws] = msg.PlayerName
+			names := utils.GetSliceOfMapValues(clients)
+// error
+			if len(clients) > 1 {
+
+				dupe := utils.NameCheck(msg.PlayerName, names)
+
+				if dupe {
+					messageChannel <- st.Message{Message: "duplicate name"}
+					delete(clients, ws)
+					break
+				}
+			}
 			log.Println("67", clients)
-			game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+
+			game.Players = st.PlayersList{Players: names}
 			log.Println("68", game.Players)
 			playersListChannel <- game.Players
 			if game.InProgress {

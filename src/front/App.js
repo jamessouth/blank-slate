@@ -22,6 +22,7 @@ export default function App() {
   const [startTimer, setStartTimer] = useState(null);
   const [gameType, setGameType] = useState(null);
   const [gameTypeSignal, setGameTypeSignal] = useState(true);
+  const [dupeName, setDupeName] = useState(false);
   const [
     {
       players,
@@ -93,7 +94,7 @@ useEffect(() => {
 
       if (data.players) {
         dispatch({ type: 'updateUsers', payload: data });
-      
+        setDupeName(false);
       } else if (data.message) {
         if (data.message.startsWith('remove')) {
 
@@ -107,6 +108,8 @@ useEffect(() => {
           } else {
             setGameType('Word-first cards only');
           }
+        } else if (data.message.startsWith('dup')) {
+          setDupeName(true);
         }
       } else if (data.time) {
         setStartTimer(data.time - 1);
@@ -153,12 +156,15 @@ useEffect(() => {
 
 
 
+  
+
   function startGame() {
     console.log('start');
     ws.send(JSON.stringify({
       message: "start"
     }));
   }
+
 
 
 
@@ -175,9 +181,10 @@ useEffect(() => {
       {
         connected &&
           <section className={ signin }>
-            <label>Please sign in:</label>
+            <label>{ dupeName ? 'That name is taken!' : 'Please sign in:'}</label>
             <input
               value={ inputText }
+              spellCheck="false"
               onChange={ e => setInputText(e.target.value) }
               type="text"
               placeholder={ hasJoined ? "Answer" : "Name" }
@@ -185,6 +192,7 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => send(inputText)}
+              { ...(inputText.length < 1 || inputText.length > 10 ? { 'disabled': true } : {}) }
             >
               Submit
             </button>
@@ -193,7 +201,7 @@ useEffect(() => {
 
       {
         !connected &&
-          <p>Server not available. Please try again.</p>
+          <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
 
 
