@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import PlayerList from './components/PlayerList';
 import Radio from './components/Radio';
-import { hide, show } from './styles/index.css';
+import { h1, hide, show } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -165,7 +165,7 @@ useEffect(() => {
 
   return (
     <main>
-      <h1>Blank Slate</h1>
+      <h1 className={ h1 }>BLANK SLATE</h1>
       {
         playerName.length > 0 && connected && <p>Hello, { playerName }</p>
       }
