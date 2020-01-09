@@ -43,10 +43,6 @@ body{
   border: none;
   /* outline: none; */
 }
-.signin button:disabled{
-  cursor: not-allowed;
-  filter: contrast(0.25);
-}
 
 
 .show{
