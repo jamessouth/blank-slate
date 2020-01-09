@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import PlayerList from './components/PlayerList';
 import Radio from './components/Radio';
-import { h1, hide, show } from './styles/index.css';
+import { h1, hide, show, signin } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -174,7 +174,8 @@ useEffect(() => {
 
       {
         connected &&
-          <>
+          <section className={ signin }>
+            <label>Please sign in:</label>
             <input
               value={ inputText }
               onChange={ e => setInputText(e.target.value) }
@@ -185,9 +186,9 @@ useEffect(() => {
               type="button"
               onClick={() => send(inputText)}
             >
-              submit
+              Submit
             </button>
-          </>
+          </section>
       }
 
       {
