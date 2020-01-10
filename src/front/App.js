@@ -38,6 +38,8 @@ export default function App() {
 
 
 
+
+
 useEffect(() => {
   console.log('useee: ', 'ppp');
   if (gameType) {
@@ -94,7 +96,7 @@ useEffect(() => {
 
       if (data.players) {
         dispatch({ type: 'updateUsers', payload: data });
-      
+        setDupeName(false);
       } else if (data.message) {
         if (data.message.startsWith('remove')) {
 
@@ -108,6 +110,10 @@ useEffect(() => {
           } else {
             setGameType('Word-first cards only');
           }
+        } else if (data.message.startsWith('dup')) {
+          setDupeName(true);
+          setHasJoined(false);
+          setPlayerName('');
         }
       } else if (data.time) {
         setStartTimer(data.time - 1);
@@ -116,6 +122,7 @@ useEffect(() => {
       }
 
     }, false);
+
 
 
 
@@ -139,30 +146,17 @@ useEffect(() => {
 
 
   function send(text) {
-    console.log('name: ', text);
-
-    if (players.includes(text)) {
-      setDupeName(true);
+    if (!hasJoined) {
+      setPlayerName(text);
+      setHasJoined(true);
+      ws.send(JSON.stringify({
+        playerName: text,
+        message: "connect"
+      }));
+      setInputText('');
     } else {
-      
-      setDupeName(false);
-  
-      if (!hasJoined) {
-        setPlayerName(text);
-        setHasJoined(true);
-        ws.send(JSON.stringify({
-          playerName: text,
-          message: "connect"
-        }));
-        setInputText('');
-      } else {
-  
-      }
+
     }
-
-
-
-
   }
 
 
@@ -181,7 +175,8 @@ useEffect(() => {
     <main>
       <h1 className={ h1 }>BLANK SLATE</h1>
       {
-        playerName.length > 0 && connected && <p>Hello, { playerName }</p>
+        !dupeName && connected && playerName.length > 0 &&
+        <p>Hello, { playerName }</p>
       }
 
 
@@ -195,7 +190,7 @@ useEffect(() => {
               spellCheck="false"
               onChange={ e => setInputText(e.target.value) }
               type="text"
-              placeholder={ hasJoined ? "Answer" : "Name" }
+              placeholder={ !dupeName && hasJoined ? "Answer" : "Name" }
             />
             <button
               type="button"

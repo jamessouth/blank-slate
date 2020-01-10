@@ -27,6 +27,8 @@ var (
 		"word_first":  0,
 		"blank_first": 0,
 	}
+
+	nameList []string
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -69,6 +71,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				for game := range gameType {
 					gameType[game] = 0
 				}
+				nameList = []string{}
 
 			}
 			for c := range clients {
@@ -79,12 +82,28 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		if msg.Message == "connect" {
 			clients[ws] = msg.PlayerName
-			log.Println("67", clients)
-			game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
-			log.Println("68", game.Players)
-			playersListChannel <- game.Players
-			if game.InProgress {
-				messageChannel <- st.Message{Message: "game in progress"}
+			dupe := utils.NameCheck(msg.PlayerName, nameList)
+
+			if dupe {
+				err := ws.WriteJSON(st.Message{Message: "duplicate name"})
+				if err != nil {
+					log.Printf("99error: %v", err)
+					// delete(clients, client)
+				}
+				// ws.Close()
+				delete(clients, ws)
+				// break
+			} else {
+
+				nameList = append(nameList, msg.PlayerName)
+
+				log.Println("67", clients)
+				game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+				log.Println("68", game.Players)
+				playersListChannel <- game.Players
+				if game.InProgress {
+					messageChannel <- st.Message{Message: "game in progress"}
+				}
 			}
 
 		} else if msg.Message == "start" {

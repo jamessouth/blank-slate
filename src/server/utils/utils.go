@@ -12,3 +12,13 @@ func GetSliceOfMapValues(m map[*websocket.Conn]string) []string {
 	}
 	return list
 }
+
+// NameCheck checks for duplicate names entered by users
+func NameCheck(s string, names []string) bool {
+	for _, n := range names {
+		if n == s {
+			return true
+		}
+	}
+	return false
+}
