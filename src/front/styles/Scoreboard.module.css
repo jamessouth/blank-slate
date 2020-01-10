@@ -1,0 +1,19 @@
+.h2{
+    margin-bottom: 1em;
+
+}
+.li{
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    margin: 0 auto .5em;
+    justify-content: space-between;
+    align-items: center;
+}
+.ul{
+    /* margin-bottom: 2em; */
+    border: 2px solid yellow;
+    padding: 1em;
+    width: 50%;
+    margin: 0 auto 2em;
+}

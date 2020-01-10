@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
-import PlayerList from './components/PlayerList';
+import Scoreboard from './components/Scoreboard';
 import Radio from './components/Radio';
-import { h1, hide, show, signin } from './styles/index.css';
+import { h1, hide, name, show, signin } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -173,18 +173,22 @@ useEffect(() => {
 
   return (
     <main>
-      <h1 className={ h1 }>BLANK SLATE</h1>
       {
         !dupeName && connected && playerName.length > 0 &&
-        <p>Hello, { playerName }</p>
+        <p className={ name }>Hello, { playerName }</p>
       }
+      <h1 className={ h1 }>BLANK SLATE</h1>
 
 
 
+      {
+        players.length > 0 && connected &&
+          <Scoreboard players={ players } />
+      }
       {
         connected &&
           <section className={ signin }>
-            <label>{ dupeName ? 'That name is taken!' : 'Please sign in:'}</label>
+            <label>{ dupeName ? 'That name is taken!' : gameStarted ? 'Enter your answer:' : 'Please sign in:'}</label>
             <input
               value={ inputText }
               spellCheck="false"
@@ -210,10 +214,6 @@ useEffect(() => {
 
 
 
-      {
-        players.length > 0 && connected &&
-          <PlayerList players={ players } />
-      }
       {
         !gameStarted && connected &&
           <button
