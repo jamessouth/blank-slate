@@ -20,34 +20,7 @@ body{
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
 }
-.signin{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 160px;
-  font-size: 1.25rem;
-}
-.signin input{
-  height: 26px;
-  width: 60%;
-  font-size: 1.25rem;
-  border: none;
-  color: #4c4952;
-}
-.signin button{
-  font-size: 1.25rem;
-  color: #4c4952;
-  height: 28px;
-  width: 26%;
-  cursor: pointer;
-  border: none;
-  /* outline: none; */
-}
-.signin button:disabled{
-  cursor: not-allowed;
-  filter: contrast(0.25);
-}
+
 .name{
   position: absolute;
   top: 36px;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
-import Scoreboard from './components/Scoreboard';
+import Form from './components/Form';
 import Radio from './components/Radio';
+import Scoreboard from './components/Scoreboard';
 import { h1, hide, name, show, signin } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
@@ -15,7 +16,7 @@ export default function App() {
 
   const [radioValue, setRadioValue] = useState('mixed');
   const [hasJoined, setHasJoined] = useState(false);
-  const [inputText, setInputText] = useState('');
+  
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -153,7 +154,7 @@ useEffect(() => {
         playerName: text,
         message: "connect"
       }));
-      setInputText('');
+      // setInputText('');
     } else {
 
     }
@@ -187,23 +188,13 @@ useEffect(() => {
       }
       {
         connected &&
-          <section className={ signin }>
-            <label>{ dupeName ? 'That name is taken!' : gameStarted ? 'Enter your answer:' : 'Please sign in:'}</label>
-            <input
-              value={ inputText }
-              spellCheck="false"
-              onChange={ e => setInputText(e.target.value) }
-              type="text"
-              placeholder={ !dupeName && hasJoined ? "Answer" : "Name" }
-            />
-            <button
-              type="button"
-              onClick={() => send(inputText)}
-              { ...(inputText.length < 1 || inputText.length > 10 ? { 'disabled': true } : {}) }
-            >
-              Submit
-            </button>
-          </section>
+          <Form
+            dupeName={ dupeName }
+            gameStarted={ gameStarted }
+            hasJoined={ hasJoined }
+            onClick={ val => send(val) }
+            send={ send }
+          />
       }
 
       {
@@ -215,7 +206,7 @@ useEffect(() => {
 
 
       {
-        !gameStarted && connected &&
+        !gameStarted && connected && hasJoined &&
           <button
             type="button"
             onClick={ startGame }
