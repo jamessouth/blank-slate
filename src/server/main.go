@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 	st "github.com/jamessouth/blank-slate/src/server/structs"
 	"github.com/jamessouth/blank-slate/src/server/utils"
+	"github.com/jamessouth/blank-slate/src/server/data"
 )
 
 var (
@@ -29,6 +30,8 @@ var (
 	}
 
 	nameList []string
+
+	colorList = utils.CreateColorList(data.colors)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +84,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		if msg.Message == "connect" {
-			clients[ws] = msg.PlayerName
+			clients[ws] = st.Player{Name: msg.PlayerName, Color: , Score: 0}
 			dupe := utils.NameCheck(msg.PlayerName, nameList)
 
 			if dupe {

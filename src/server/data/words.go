@@ -1,4 +1,4 @@
-package words
+package data
 
 import "github.com/jamessouth/blank-slate/src/server/structs"
 
