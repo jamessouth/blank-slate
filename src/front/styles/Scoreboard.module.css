@@ -6,11 +6,25 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    /* margin: 0 auto .5em; */
-    justify-content: space-around;
+    height: 28px;
+    padding: 0 16px;
+    justify-content: space-between;
     align-items: center;
     font-size: 18px;
-    background-color: #260b0b;
+    background-color: #58355e;
+}
+/* .li p{
+    color: #000;
+
+} */
+.li:nth-of-type(4n+2){
+    background-color: #e03616;
+}
+.li:nth-of-type(4n+3){
+    background-color: #cfffb0;
+}
+.li:nth-of-type(4n+4){
+    background-color: #5998c5;
 }
 .ul{
     /* margin-bottom: 2em; */
