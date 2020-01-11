@@ -5,10 +5,12 @@
 .li{
     display: flex;
     flex-direction: row;
-    width: 70%;
-    margin: 0 auto .5em;
-    justify-content: space-between;
+    width: 100%;
+    /* margin: 0 auto .5em; */
+    justify-content: space-around;
     align-items: center;
+    font-size: 18px;
+    background-color: #260b0b;
 }
 .ul{
     /* margin-bottom: 2em; */
@@ -16,4 +18,8 @@
     padding: 1em;
     width: 50%;
     margin: 0 auto 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }

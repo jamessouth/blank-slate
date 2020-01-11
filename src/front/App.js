@@ -192,7 +192,7 @@ useEffect(() => {
             dupeName={ dupeName }
             gameStarted={ gameStarted }
             hasJoined={ hasJoined }
-            onClick={ val => send(val) }
+            onEnter={ val => send(val) }
             send={ send }
           />
       }
