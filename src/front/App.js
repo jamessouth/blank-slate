@@ -24,6 +24,7 @@ export default function App() {
   const [gameType, setGameType] = useState(null);
   const [gameTypeSignal, setGameTypeSignal] = useState(true);
   const [dupeName, setDupeName] = useState(false);
+  const [playerColor, setPlayerColor] = useState(null);
   const [
     {
       players,
@@ -102,6 +103,10 @@ useEffect(() => {
         if (data.message.startsWith('remove')) {
 
           setGameStarted(true);
+        } else if (data.message.startsWith('color')) {
+          const color = data.message.split(': ')[1];
+          setPlayerColor(color);
+
         } else if (data.message.startsWith('game')) {
           const type = data.message.split(': ')[1];
           if (type == 'mixed') {
@@ -171,14 +176,16 @@ useEffect(() => {
 
 
 
+  
 
   return (
     <main>
       {
         !dupeName && connected && playerName.length > 0 &&
-        <p className={ name }>Hello, { playerName }</p>
+        <p style={{color: playerColor}} className={ name }>Hello, { playerName }</p>
       }
       <h1 className={ h1 }>BLANK SLATE</h1>
+
 
 
 

@@ -64,6 +64,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("50error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
+				colorList = append(colorList, clients[ws].Color)
 				delete(clients, ws)
 				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
 				log.Println("playerList: ", game.Players)
@@ -90,7 +91,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			var color string
 			color, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
 
-
 			clients[ws] = st.Player{Name: msg.PlayerName, Color: color, Score: 0}
 			dupe := utils.NameCheck(msg.PlayerName, nameList)
 
@@ -105,6 +105,12 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				colorList = append(colorList, color)
 				// break
 			} else {
+
+				err := ws.WriteJSON(st.Message{Message: "color: " + color})
+				if err != nil {
+					log.Printf("111error: %v", err)
+					// delete(clients, client)
+				}
 
 				nameList = append(nameList, msg.PlayerName)
 
