@@ -1,6 +1,6 @@
 package data
 
-var colors = []string{
+var Colors = []string{
 	"#102a49",
 	"#3e7a1c",
 	"#235301",

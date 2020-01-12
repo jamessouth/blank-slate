@@ -1,13 +1,14 @@
 import React from 'react';
 import { h2, li, ul } from '../styles/Scoreboard.module.css';
+import playerSort from '../utils/playerSort';
 
 export default function Scoreboard({ players }) {
     const playerList = players
-        .sort((a, b) => a > b ? 1 : -1)
-        .map((user, ind) =>
-            <li className={ li } key={ ind }>
-                <p>{ user }</p>
-                <p>58</p>
+        .sort(playerSort)
+        .map((pl, ind) =>
+            <li style={{backgroundColor: pl.color}} className={ li } key={ ind + pl.name }>
+                <p>{ pl.name }</p>
+                <p>{ pl.score}</p>
             </li>);
   
 

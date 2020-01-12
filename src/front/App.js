@@ -182,6 +182,13 @@ useEffect(() => {
 
 
 
+
+
+
+
+
+
+
       {
         players.length > 0 && connected &&
           <Scoreboard players={ players } />

@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/jamessouth/blank-slate/src/server/data"
 	st "github.com/jamessouth/blank-slate/src/server/structs"
 	"github.com/jamessouth/blank-slate/src/server/utils"
-	"github.com/jamessouth/blank-slate/src/server/data"
 )
 
 var (
-	clients = make(map[*websocket.Conn]string)
+	clients = make(map[*websocket.Conn]st.Player)
 
 	messageChannel     = make(chan st.Message)
 	playersListChannel = make(chan st.PlayersList)
@@ -31,7 +31,7 @@ var (
 
 	nameList []string
 
-	colorList = utils.CreateColorList(data.colors)
+	colorList = utils.PlayerColors(data.Colors).ShuffleColors()
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +56,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// 	log.Println("43ws conn: ", clients[c])
 	// }
 
+	log.Println(colorList)
+
 	for {
 		var msg st.Message
 		err := ws.ReadJSON(&msg)
@@ -63,7 +65,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			log.Println("50error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
 				delete(clients, ws)
-				game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
 				log.Println("playerList: ", game.Players)
 				playersListChannel <- game.Players
 
@@ -75,6 +77,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					gameType[game] = 0
 				}
 				nameList = []string{}
+				colorList = utils.PlayerColors(data.Colors).ShuffleColors()
 
 			}
 			for c := range clients {
@@ -84,7 +87,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		if msg.Message == "connect" {
-			clients[ws] = st.Player{Name: msg.PlayerName, Color: , Score: 0}
+			var color string
+			color, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
+
+
+			clients[ws] = st.Player{Name: msg.PlayerName, Color: color, Score: 0}
 			dupe := utils.NameCheck(msg.PlayerName, nameList)
 
 			if dupe {
@@ -95,13 +102,14 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				}
 				// ws.Close()
 				delete(clients, ws)
+				colorList = append(colorList, color)
 				// break
 			} else {
 
 				nameList = append(nameList, msg.PlayerName)
 
 				log.Println("67", clients)
-				game.Players = st.PlayersList{Players: utils.GetSliceOfMapValues(clients)}
+				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
 				log.Println("68", game.Players)
 				playersListChannel <- game.Players
 				if game.InProgress {

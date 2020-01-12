@@ -11,7 +11,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 18px;
-    background-color: #58355e;
+    /* background-color: #58355e; */
 }
 /* .li p{
     color: #000;
@@ -26,22 +26,24 @@
     4c3f54
     d13525
 
+    darkslateblue
+    darkblue
+    darkmagenta
+    darkslategrey
+    darkred
+    darkolivegreen
+    darkgreen
+    brown
+
+
 
 
 
 } */
-.li:nth-of-type(4n+2){
-    background-color: #e03616;
-}
-.li:nth-of-type(4n+3){
-    background-color: #cfffb0;
-}
-.li:nth-of-type(4n+4){
-    background-color: #5998c5;
-}
+
 .ul{
     /* margin-bottom: 2em; */
-    border: 2px solid yellow;
+    border: 2px solid #f9ba32;
     padding: 1em;
     width: 50%;
     margin: 0 auto 2em;

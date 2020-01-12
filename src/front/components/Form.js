@@ -26,7 +26,10 @@ export default function Form({ dupeName, gameStarted, hasJoined, onEnter }) {
           />
           <button
             type="button"
-            onClick={() => onEnter(inputText)}
+            onClick={() => {
+              onEnter(inputText);
+              setInputText('');
+            }}
             { ...(inputText.length < 1 || inputText.length > 10 ? { 'disabled': true } : {}) }
           >
             Submit
