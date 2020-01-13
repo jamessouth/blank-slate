@@ -225,6 +225,12 @@ useEffect(() => {
 
 
 
+
+
+
+
+
+
       {
         !gameStarted && connected && hasJoined &&
           <button

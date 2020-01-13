@@ -79,7 +79,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				}
 				nameList = []string{}
 				colorList = utils.PlayerColors(data.Colors).ShuffleColors()
-
+// err
 			}
 			for c := range clients {
 
