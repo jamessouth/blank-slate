@@ -170,6 +170,7 @@ useEffect(() => {
   }
 
 
+  
 
   function startGame() {
     console.log('start');
@@ -177,6 +178,13 @@ useEffect(() => {
       message: "start"
     }));
   }
+
+
+
+
+
+
+
 
 
 
@@ -191,6 +199,11 @@ useEffect(() => {
           playerName={ playerName }
         />
       }
+
+
+
+
+
 
 
 
@@ -220,6 +233,7 @@ useEffect(() => {
         !connected &&
         <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
+
 
 
 

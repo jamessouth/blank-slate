@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -14,7 +15,8 @@ import (
 )
 
 var (
-	clients = make(map[*websocket.Conn]st.Player)
+	clients   = make(map[*websocket.Conn]st.Player)
+	clientsMu sync.Mutex
 
 	messageChannel     = make(chan st.Message)
 	playersListChannel = make(chan st.PlayersList)
@@ -56,7 +58,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// 	log.Println("43ws conn: ", clients[c])
 	// }
 
-	log.Println(colorList)
+	log.Println("colors", colorList, len(colorList))
 
 	for {
 		var msg st.Message
@@ -64,7 +66,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("50error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
-				colorList = append(colorList, clients[ws].Color)
+
+				sock, ok := clients[ws]
+				if ok {
+					log.Println("ccccc in clients map")
+					colorList = append(colorList, sock.Color)
+				} else {
+					log.Println("ggggggg not in map")
+				}
+
 				delete(clients, ws)
 				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
 				log.Println("playerList: ", game.Players)
@@ -79,7 +89,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				}
 				nameList = []string{}
 				colorList = utils.PlayerColors(data.Colors).ShuffleColors()
-// err
+				// err
 			}
 			for c := range clients {
 
