@@ -108,7 +108,13 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 				err := ws.WriteJSON(st.Message{Message: "color: " + color})
 				if err != nil {
-					log.Printf("111error: %v", err)
+					log.Printf("c111error: %v", err)
+					// delete(clients, client)
+				}
+
+				err = ws.WriteJSON(st.Message{Message: "name: " + msg.PlayerName})
+				if err != nil {
+					log.Printf("n111error: %v", err)
 					// delete(clients, client)
 				}
 

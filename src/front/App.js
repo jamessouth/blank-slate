@@ -108,6 +108,11 @@ useEffect(() => {
           const color = data.message.split(': ')[1];
           setPlayerColor(color);
 
+        } else if(data.message.startsWith('name')) {
+          const name = data.message.split(': ')[1];
+          setPlayerName(name);
+          setHasJoined(true);
+
         } else if (data.message.startsWith('game')) {
           const type = data.message.split(': ')[1];
           if (type == 'mixed') {
@@ -119,8 +124,6 @@ useEffect(() => {
           }
         } else if (data.message.startsWith('dup')) {
           setDupeName(true);
-          setHasJoined(false);
-          setPlayerName('');
         }
       } else if (data.time) {
         setStartTimer(data.time - 1);
@@ -154,15 +157,15 @@ useEffect(() => {
 
   function send(text) {
     if (!hasJoined) {
-      setPlayerName(text);
-      setHasJoined(true);
+
+      
       ws.send(JSON.stringify({
         playerName: text,
         message: "connect"
       }));
       // setInputText('');
     } else {
-
+      // answers
     }
   }
 
