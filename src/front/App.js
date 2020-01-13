@@ -185,19 +185,17 @@ useEffect(() => {
   return (
     <main>
       {
-        !dupeName && connected && playerName.length > 0 &&
+        connected && playerName.length > 0 &&
         <Name
           playerColor={ playerColor }
           playerName={ playerName }
         />
       }
+
+
+
+
       <h1 className={ h1 }>BLANK SLATE</h1>
-
-
-
-
-
-
 
 
 
@@ -222,6 +220,7 @@ useEffect(() => {
         !connected &&
         <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
+
 
 
 
