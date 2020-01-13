@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import Form from './components/Form';
+import Name from './components/Name';
 import Radio from './components/Radio';
 import Scoreboard from './components/Scoreboard';
-import { h1, hide, name, show, signin } from './styles/index.css';
+import { h1, hide, show } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -182,7 +183,10 @@ useEffect(() => {
     <main>
       {
         !dupeName && connected && playerName.length > 0 &&
-        <p style={{color: playerColor}} className={ name }>Hello, { playerName }</p>
+        <Name
+          playerColor={ playerColor }
+          playerName={ playerName }
+        />
       }
       <h1 className={ h1 }>BLANK SLATE</h1>
 
