@@ -26,9 +26,9 @@ var (
 	game = st.Game{InProgress: false}
 
 	gameType = map[string]int{
-		"mixed":       0,
-		"word_first":  0,
-		"blank_first": 0,
+		"mixed": 0,
+		"word":  0,
+		"blank": 0,
 	}
 
 	nameList []string
@@ -163,21 +163,21 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			log.Println(msg, vote)
 			gameType[vote]++
 
-			if gameType["mixed"]+gameType["word_first"]+gameType["blank_first"] == len(clients) {
-				max := -1
-				var wordStyle string
-				log.Println(gameType)
-				for game := range gameType {
-					if gameType[game] > max {
-						max = gameType[game]
-						wordStyle = game
-					}
-				}
-				log.Print(wordStyle)
+			// if gameType["mixed"]+gameType["word"]+gameType["blank"] == len(clients) {
+			// 	max := -1
+			// 	var wordStyle string
+			// 	log.Println(gameType)
+			// 	for game := range gameType {
+			// 		if gameType[game] > max {
+			// 			max = gameType[game]
+			// 			wordStyle = game
+			// 		}
+			// 	}
+			// 	log.Print(wordStyle)
 
-				messageChannel <- st.Message{Message: "game: " + wordStyle}
+			// 	messageChannel <- st.Message{Message: "game: " + wordStyle}
 
-			}
+			// }
 
 		} else {
 

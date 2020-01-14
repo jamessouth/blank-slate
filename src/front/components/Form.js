@@ -41,13 +41,13 @@ export default function Form({ dupeName, playerName, hasJoined, onEnter }) {
             <Radio
               text="Word ____"
               onChange={ handleRadioChange }
-              value="word_first"
+              value="word"
             />
 
             <Radio
               text="____ Word"
               onChange={ handleRadioChange }
-              value="blank_first"
+              value="blank"
             />
           </div>
 
