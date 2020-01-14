@@ -2,9 +2,8 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import Form from './components/Form';
 import Name from './components/Name';
-import Radio from './components/Radio';
 import Scoreboard from './components/Scoreboard';
-import { h1, hide, show } from './styles/index.css';
+import { btn, h1, hide, p, show } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -15,7 +14,7 @@ export default function App() {
 
   
 
-  const [radioValue, setRadioValue] = useState('mixed');
+  
   const [hasJoined, setHasJoined] = useState(false);
   
   const [playerName, setPlayerName] = useState('');
@@ -32,14 +31,6 @@ export default function App() {
     },
     dispatch
   ] = useReducer(reducer, initialState);
-
-
-
-
-
-
-
-
 
 
 
@@ -61,21 +52,12 @@ useEffect(() => {
 }, [gameType]);
 
 
+  // useEffect(() => {
+  //   console.log('useeff: ', startTimer);
+  //   if (startTimer == 0) {
 
-  
-
-  function handleRadioChange(val) {
-    setRadioValue(val);
-  }
-
-  useEffect(() => {
-    console.log('useeff: ', startTimer);
-    if (startTimer == 0) {
-      ws.send(JSON.stringify({
-        message: `vote: ${radioValue}`
-      }));
-    }
-  }, [startTimer]);
+  //   }
+  // }, [startTimer]);
 
   
   useEffect(() => {
@@ -88,8 +70,6 @@ useEffect(() => {
       setConnected(true);
       console.log(e, Date.now());
     }, false);
-
-
 
 
 
@@ -155,31 +135,23 @@ useEffect(() => {
 
 
 
-  function send(text) {
+  function send(name, vote) {
     if (!hasJoined) {
 
       
       ws.send(JSON.stringify({
-        playerName: text,
+        playerName: name,
         message: "connect"
+      }));
+
+      ws.send(JSON.stringify({
+        message: `vote: ${vote}`
       }));
       // setInputText('');
     } else {
       // answers
     }
   }
-
-
-
-
-  
-
-
-
-
-
-
-
 
 
 
@@ -192,15 +164,6 @@ useEffect(() => {
 
 
 
-
-
-
-
-
-
-
-  
-
   return (
     <main>
       {
@@ -211,30 +174,39 @@ useEffect(() => {
       }
 
 
-
-
-
-
-
-
-
       <h1 style={{backgroundColor: playerColor}} className={ h1 }>BLANK SLATE</h1>
-
-
-
 
 
       {
         players.length > 0 && connected &&
           <Scoreboard players={ players } />
       }
+        
+      {
+        !gameStarted && connected && hasJoined &&
+          <>
+            {
+              players.length < 3 &&
+                  <p className={ p }>Waiting for at least { 3 - players.length } more { 3 - players.length == 1 ? 'player' : 'players' }...</p>
+            }
+            <button
+              className={ btn }
+              type="button"
+              onClick={ startGame }
+              { ...(players.length < 3 ? { 'disabled': true } : {}) }
+            >
+              Start Game
+            </button>
+          </>
+      }
+
       {
         connected &&
           <Form
             dupeName={ dupeName }
             playerName={ playerName }
             hasJoined={ hasJoined }
-            onEnter={ val => send(val) }
+            onEnter={ (name, vote) => send(name, vote) }
             send={ send }
           />
       }
@@ -244,53 +216,17 @@ useEffect(() => {
         <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
 
-
-
-
-
-
-
-
-
-
-
-
-      {
-        !gameStarted && connected && hasJoined &&
-          <button
-            type="button"
-            onClick={ startGame }
-            { ...(players.length < 3 ? { 'disabled': true } : {}) }
-          >
-            Start Game
-          </button>
-      }
       {
         gameStarted && connected && startTimer > 0 &&
           <>
             <p>Game starts in: { startTimer } seconds</p>
-            <Radio
-              text="Word, Blank"
-              onChange={ handleRadioChange }
-              value="word_first"
-            />
 
-            <Radio
-              text="Blank, Word"
-              onChange={ handleRadioChange }
-              value="blank_first"
-            />
           </>
       }
       {
         gameStarted && connected && gameType &&
           <p className={ gameTypeSignal ? show : hide }>Game type: { gameType }</p>
       }
-
-
-
-
-
 
     </main>
   );
@@ -301,25 +237,6 @@ useEffect(() => {
 
 
 // Image by <a href="https://pixabay.com/users/stux-12364/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Thanks for your Like • donations welcome</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Pixabay</a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

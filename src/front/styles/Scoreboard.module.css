@@ -13,40 +13,12 @@
     font-size: 18px;
     /* background-color: #58355e; */
 }
-/* .li p{
-    color: #000;
-
-    ul border f9ba32
-    102a49
-    3e7a1c
-    235301
-    301b28
-    861a06
-    9b4f0f
-    4c3f54
-    d13525
-
-    darkslateblue
-    darkblue
-    darkmagenta
-    darkslategrey
-    darkred
-    darkolivegreen
-    darkgreen
-    brown
-
-
-
-
-
-} */
-
 .ul{
     background-color: rgba(255, 238, 88, .8);
     border: 2px solid #ffee58;
     padding: 1em;
     width: 50%;
-    margin: 0 auto 3em;
+    margin: 0 auto 5em;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

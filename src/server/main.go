@@ -140,7 +140,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else if msg.Message == "start" {
-			const startDelay = 10
+			const startDelay = 1000
 
 			if !game.InProgress {
 				game.InProgress = true

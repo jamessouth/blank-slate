@@ -1,29 +1,37 @@
+.inputdiv{
+    display: flex;
+    flex-direction: column;
+    height: 90px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.radiodiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 140px;
+    width: 100%;
+}
+.p{
+  font-size: 12px;
+}
+
+
 .signin{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 160px;
+    height: 340px;
     font-size: 1.25rem;
   }
-  .signin input{
+  .signin input[type="text"]{
     height: 26px;
-    width: 60%;
+    width: 54%;
     font-size: 1.25rem;
     text-align: initial;
     border: none;
     color: #4c4952;
-  }
-  .signin button{
-    font-size: 1.25rem;
-    color: #4c4952;
-    height: 28px;
-    width: 26%;
-    cursor: pointer;
-    border: none;
-    /* outline: none; */
-  }
-  .signin button:disabled{
-    cursor: not-allowed;
-    filter: contrast(0.25);
   }
