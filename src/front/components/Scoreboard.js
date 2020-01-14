@@ -16,7 +16,7 @@ export default function Scoreboard({ players }) {
 
     return (
         <>
-            <h2 className={ h2 }>Players: { playerList.length }</h2>
+            <h2 className={ h2 }>Players:&nbsp;&nbsp;{ playerList.length }</h2>
 
             <ul className={ ul }>{ playerList }</ul>
         

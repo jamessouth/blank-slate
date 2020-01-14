@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { signin } from '../styles/Form.module.css';
 
 
-export default function Form({ dupeName, gameStarted, hasJoined, onEnter }) {
+export default function Form({ dupeName, playerName, hasJoined, onEnter }) {
 
     const [inputText, setInputText] = useState('');
 
     return (
 
         <section className={ signin }>
-          <label>{ dupeName ? 'That name is taken!' : gameStarted ? 'Enter your answer:' : 'Please sign in:'}</label>
+          <label>{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
           <input
             autoFocus
             value={ inputText }

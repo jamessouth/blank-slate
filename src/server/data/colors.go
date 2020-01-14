@@ -1,12 +1,13 @@
 package data
 
+// Colors slice of player colors
 var Colors = []string{
-	"darkslateblue",
-	"darkblue",
-	"darkmagenta",
+	"#397f3c",
+	"#cb3434",
+	"#5b4eb1",
 	"#490049",
-	"darkred",
-	"darkolivegreen",
-	"darkgreen",
-	"brown",
+	"#800000",
+	"#a300a3",
+	"#000080",
+	"#004d00",
 }

@@ -170,7 +170,18 @@ useEffect(() => {
   }
 
 
+
+
   
+
+
+
+
+
+
+
+
+
 
   function startGame() {
     console.log('start');
@@ -195,7 +206,6 @@ useEffect(() => {
       {
         connected && playerName.length > 0 &&
         <Name
-          playerColor={ playerColor }
           playerName={ playerName }
         />
       }
@@ -208,7 +218,7 @@ useEffect(() => {
 
 
 
-      <h1 className={ h1 }>BLANK SLATE</h1>
+      <h1 style={{backgroundColor: playerColor}} className={ h1 }>BLANK SLATE</h1>
 
 
 
@@ -222,7 +232,7 @@ useEffect(() => {
         connected &&
           <Form
             dupeName={ dupeName }
-            gameStarted={ gameStarted }
+            playerName={ playerName }
             hasJoined={ hasJoined }
             onEnter={ val => send(val) }
             send={ send }

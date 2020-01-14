@@ -14,7 +14,7 @@ body{
 .h1{
   font-size: 3.5rem;
   font-family: 'Architects Daughter', cursive;
-  text-align: center;
+  /* text-align: center; */
   margin: 1.75em 0 .75em;
   -webkit-mask-image: url('../../assets/decaying.png');
   mask-image: url('../../assets/decaying.png');
