@@ -15,7 +15,7 @@
     width: 100%;
 }
 .p{
-  font-size: 12px;
+    font-size: 12px;
 }
 
 
@@ -26,12 +26,16 @@
     align-items: center;
     height: 340px;
     font-size: 1.25rem;
-  }
-  .signin input[type="text"]{
+    margin-bottom: 3em;
+}
+.signin input[type="text"]{
     height: 26px;
     width: 54%;
     font-size: 1.25rem;
     text-align: initial;
     border: none;
     color: #4c4952;
-  }
+}
+.signedin{
+    height: 150px;
+}

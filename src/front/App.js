@@ -134,6 +134,7 @@ useEffect(() => {
   }, []);
 
 
+  
 
   function send(name, vote) {
     if (!hasJoined) {
