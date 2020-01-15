@@ -38,7 +38,12 @@ button:disabled{
 .p{
   margin-bottom: 1em;
 }
-
+.span{
+  color: #dacc55;
+  font-size: 5em;
+  vertical-align: middle;
+  font-family: 'Over the Rainbow', cursive;
+}
 
 
 

@@ -3,7 +3,7 @@ import { initialState, reducer } from './reducers/appState';
 import Form from './components/Form';
 import Name from './components/Name';
 import Scoreboard from './components/Scoreboard';
-import { btn, h1, hide, p, show } from './styles/index.css';
+import { btn, h1, hide, p, show, span } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -134,7 +134,7 @@ useEffect(() => {
   }, []);
 
 
-  
+
 
   function send(name, vote) {
     if (!hasJoined) {
@@ -153,6 +153,8 @@ useEffect(() => {
       // answers
     }
   }
+
+
 
 
 
@@ -202,6 +204,11 @@ useEffect(() => {
       }
 
       {
+        gameStarted && connected && startTimer > 0 &&
+            <p>The game will start in&nbsp;&nbsp;<span className={ span }>{ startTimer }</span>&nbsp;&nbsp;seconds</p>
+
+      }
+      {
         connected &&
           <Form
             dupeName={ dupeName }
@@ -217,13 +224,6 @@ useEffect(() => {
         <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
 
-      {
-        gameStarted && connected && startTimer > 0 &&
-          <>
-            <p>Game starts in: { startTimer } seconds</p>
-
-          </>
-      }
       {
         gameStarted && connected && gameType &&
           <p className={ gameTypeSignal ? show : hide }>Game type: { gameType }</p>
