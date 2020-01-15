@@ -2,8 +2,10 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import Form from './components/Form';
 import Name from './components/Name';
+import Start from './components/Start';
+import Timer from './components/Timer';
 import Scoreboard from './components/Scoreboard';
-import { btn, h1, hide, p, show, span } from './styles/index.css';
+import { div, h1, hide, show, span } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -11,18 +13,11 @@ const ws = new WebSocket(server + '/ws');
 export default function App() {
   console.log('app');
 
-
-  
-
-  
   const [hasJoined, setHasJoined] = useState(false);
-  
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [startTimer, setStartTimer] = useState(null);
-  const [gameType, setGameType] = useState(null);
-  const [gameTypeSignal, setGameTypeSignal] = useState(true);
+  const [timer, setTimer] = useState(null);
   const [dupeName, setDupeName] = useState(false);
   const [playerColor, setPlayerColor] = useState(null);
   const [
@@ -34,34 +29,37 @@ export default function App() {
 
 
 
-useEffect(() => {
-  console.log('useee: ', 'ppp');
-  if (gameType) {
-    setTimeout(() => {
-      setGameTypeSignal(false);
-    }, 3000);
+// useEffect(() => {
+//   console.log('useee: ', 'ppp');
+//   if () {
+//     setTimeout(() => {
+      
+      
+//     }, 3000);
 
-    setTimeout(() => {
-      setGameType(null);
-      ws.send(JSON.stringify({
-        message: 'serve'
-      }));
-    }, 4000);
+//     setTimeout(() => {
+      
+      
+//       ws.send(JSON.stringify({
+//         message: 'serve'
+//       }));
+//     }, 4000);
 
-  }
-}, [gameType]);
+//   }
+// }, []);
 
 
   // useEffect(() => {
-  //   console.log('useeff: ', startTimer);
-  //   if (startTimer == 0) {
+  //   console.log('useeff: ', timer);
+  //   if (timer == 0) {
 
   //   }
-  // }, [startTimer]);
+  // }, [timer]);
 
   
   useEffect(() => {
     console.log('connect to server...', Date.now());
+
 
 
 
@@ -93,20 +91,11 @@ useEffect(() => {
           setPlayerName(name);
           setHasJoined(true);
 
-        } else if (data.message.startsWith('game')) {
-          const type = data.message.split(': ')[1];
-          if (type == 'mixed') {
-            setGameType('A mix of blank-first and word-first');
-          } else if (type == 'blank_first') {
-            setGameType('Blank-first cards only');
-          } else {
-            setGameType('Word-first cards only');
-          }
         } else if (data.message.startsWith('dup')) {
           setDupeName(true);
         }
       } else if (data.time) {
-        setStartTimer(data.time - 1);
+        setTimer(data.time - 1);
       } else {
         setGameStarted(true);
       }
@@ -136,7 +125,7 @@ useEffect(() => {
 
 
 
-  function send(name, vote) {
+  function send(name) {
     if (!hasJoined) {
 
       
@@ -145,10 +134,7 @@ useEffect(() => {
         message: "connect"
       }));
 
-      ws.send(JSON.stringify({
-        message: `vote: ${vote}`
-      }));
-      // setInputText('');
+
     } else {
       // answers
     }
@@ -169,12 +155,10 @@ useEffect(() => {
 
   return (
     <main>
-      {
-        connected && playerName.length > 0 &&
-        <Name
-          playerName={ playerName }
-        />
-      }
+      <Name
+        playerName={ playerName }
+      />
+
 
 
       <h1 style={{backgroundColor: playerColor}} className={ h1 }>BLANK SLATE</h1>
@@ -182,31 +166,28 @@ useEffect(() => {
 
       {
         players.length > 0 && connected &&
-          <Scoreboard players={ players } />
+          <Scoreboard
+            players={ players }
+          />
       }
-        
       {
-        !gameStarted && connected && hasJoined &&
-          <>
+        hasJoined &&
+          <div className={ div }>
             {
-              players.length < 3 &&
-                  <p className={ p }>Waiting for at least { 3 - players.length } more { 3 - players.length == 1 ? 'player' : 'players' }...</p>
+              !gameStarted && connected && hasJoined &&
+                <Start
+                  onClick={ () => startGame }
+                  players={ players }
+                />
             }
-            <button
-              className={ btn }
-              type="button"
-              onClick={ startGame }
-              { ...(players.length < 3 ? { 'disabled': true } : {}) }
-            >
-              Start Game
-            </button>
-          </>
-      }
+            {
+              gameStarted && connected && timer > 0 &&
+                  <Timer
+                  timer={ timer }
+                  />
 
-      {
-        gameStarted && connected && startTimer > 0 &&
-            <p>The game will start in&nbsp;&nbsp;<span className={ span }>{ startTimer }</span>&nbsp;&nbsp;seconds</p>
-
+            }
+          </div>
       }
       {
         connected &&
@@ -214,7 +195,7 @@ useEffect(() => {
             dupeName={ dupeName }
             playerName={ playerName }
             hasJoined={ hasJoined }
-            onEnter={ (name, vote) => send(name, vote) }
+            onEnter={ name => send(name) }
             send={ send }
           />
       }
@@ -224,10 +205,7 @@ useEffect(() => {
         <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
       }
 
-      {
-        gameStarted && connected && gameType &&
-          <p className={ gameTypeSignal ? show : hide }>Game type: { gameType }</p>
-      }
+
 
     </main>
   );

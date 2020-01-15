@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 	"sync"
 	"time"
 
@@ -24,12 +23,6 @@ var (
 	upgrader = websocket.Upgrader{}
 
 	game = st.Game{InProgress: false}
-
-	gameType = map[string]int{
-		"mixed": 0,
-		"word":  0,
-		"blank": 0,
-	}
 
 	nameList []string
 
@@ -84,9 +77,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			delete(clients, ws)
 			if len(clients) == 0 {
 				game.InProgress = false
-				for game := range gameType {
-					gameType[game] = 0
-				}
 				nameList = []string{}
 				colorList = utils.PlayerColors(data.Colors).ShuffleColors()
 				// err
@@ -157,27 +147,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)
-
-		} else if strings.HasPrefix(msg.Message, "vote") {
-			vote := strings.Split(msg.Message, ": ")[1]
-			log.Println(msg, vote)
-			gameType[vote]++
-
-			// if gameType["mixed"]+gameType["word"]+gameType["blank"] == len(clients) {
-			// 	max := -1
-			// 	var wordStyle string
-			// 	log.Println(gameType)
-			// 	for game := range gameType {
-			// 		if gameType[game] > max {
-			// 			max = gameType[game]
-			// 			wordStyle = game
-			// 		}
-			// 	}
-			// 	log.Print(wordStyle)
-
-			// 	messageChannel <- st.Message{Message: "game: " + wordStyle}
-
-			// }
 
 		} else {
 

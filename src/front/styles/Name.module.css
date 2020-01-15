@@ -1,12 +1,6 @@
 .name{
     font-family: 'Indie Flower', cursive;
-    position: absolute;
-    top: -5px;
-    /* line-height: 2; */
     color: #ffffff;
-    /* padding: 0px 15px; */
     font-size: 2.5em;
     font-weight: bold;
-    transform: translateX(-50%);
-    left: 50%;
   }

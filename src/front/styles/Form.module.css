@@ -6,14 +6,8 @@
     justify-content: space-between;
     align-items: center;
 }
-.radiodiv{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 140px;
-    width: 100%;
-}
+
+
 .p{
     font-size: 12px;
 }
@@ -24,7 +18,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 340px;
+    height: 160px;
     font-size: 1.25rem;
     margin-bottom: 3em;
 }

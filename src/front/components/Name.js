@@ -4,10 +4,14 @@ import { name } from '../styles/Name.module.css';
 export default function Name({ playerName }) {
 
     return (
-        <p
-            className={ name }>
-                { playerName }
-        </p>
+        <>
+            {
+                playerName &&
+                    <p className={ name }>
+                        { playerName }
+                    </p>
+            }
+        </>
     );
 
 }
