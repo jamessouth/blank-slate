@@ -37,7 +37,7 @@ button:disabled{
   font-size: 3.5rem;
   font-family: 'Architects Daughter', cursive;
   /* text-align: center; */
-  margin: 1em 0;
+  margin: 40px 0 1em;
   -webkit-mask-image: url('../../assets/decaying.png');
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */

@@ -130,13 +130,12 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else if msg.Message == "start" {
-			const startDelay = 10
+			const startDelay = 300
 
 			if !game.InProgress {
 				game.InProgress = true
 
 			}
-			messageChannel <- st.Message{Message: "remove start button"}
 
 			timerDone := make(chan bool)
 			ticker := time.NewTicker(time.Second)

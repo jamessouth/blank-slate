@@ -16,8 +16,10 @@ export default function App() {
   const [hasJoined, setHasJoined] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
+  const [showStartTimer, setShowStartTimer] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [showStartButton, setShowStartButton] = useState(true);
+  const [gameHasBegun, setGameHasBegun] = useState(false);
   const [dupeName, setDupeName] = useState(false);
   const [playerColor, setPlayerColor] = useState(null);
   const [
@@ -79,10 +81,7 @@ export default function App() {
         dispatch({ type: 'updateUsers', payload: data });
         setDupeName(false);
       } else if (data.message) {
-        if (data.message.startsWith('remove')) {
-
-          setGameStarted(true);
-        } else if (data.message.startsWith('color')) {
+        if (data.message.startsWith('color')) {
           const color = data.message.split(': ')[1];
           setPlayerColor(color);
 
@@ -93,11 +92,15 @@ export default function App() {
 
         } else if (data.message.startsWith('dup')) {
           setDupeName(true);
+        } else if (data.message.startsWith('game')) {
+          setGameHasBegun(true);
+          setShowStartTimer(true);
         }
       } else if (data.time) {
+        if (data.time == 300) setShowStartTimer(true);
         setTimer(data.time - 1);
       } else {
-        setGameStarted(true);
+        
       }
 
     }, false);
@@ -114,7 +117,7 @@ export default function App() {
       console.log(e, Date.now());
     }, false);
 
-    
+
 
     return function cleanup() {
       ws.close(1000);
@@ -144,8 +147,13 @@ export default function App() {
 
 
 
+
+  
+
+
   function startGame() {
     console.log('start');
+    setShowStartButton(false);
     ws.send(JSON.stringify({
       message: "start"
     }));
@@ -174,18 +182,18 @@ export default function App() {
         hasJoined &&
           <div className={ div }>
             {
-              !gameStarted && connected && hasJoined &&
+              showStartButton && connected && hasJoined &&
                 <Start
-                  onClick={ () => startGame }
+                  onClick={ startGame }
                   players={ players }
+                  gameHasBegun={ gameHasBegun }
                 />
             }
             {
-              gameStarted && connected && timer > 0 &&
-                  <Timer
+              showStartTimer && connected && timer > 0 &&
+                <Timer
                   timer={ timer }
-                  />
-
+                />
             }
           </div>
       }
