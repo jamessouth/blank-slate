@@ -17,8 +17,8 @@ var (
 	clients   = make(map[*websocket.Conn]st.Player)
 	clientsMu sync.Mutex
 
-	messageChannel     = make(chan st.Message)
-	playersListChannel = make(chan st.PlayersList)
+	messageChannel = make(chan st.Message)
+	// playersListChannel = make(chan st.PlayersList)
 
 	upgrader = websocket.Upgrader{}
 
@@ -26,7 +26,9 @@ var (
 
 	nameList []string
 
-	colorList = utils.PlayerColors(data.Colors).ShuffleColors()
+	colorList = utils.StringList(data.Colors).ShuffleList()
+
+	wordList = utils.StringList(data.Words).ShuffleList()
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +54,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	log.Println("colors", colorList, len(colorList))
+	log.Println("words", wordList, len(wordList))
 
 	for {
 		var msg st.Message
@@ -69,16 +72,16 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				}
 
 				delete(clients, ws)
-				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
-				log.Println("playerList: ", game.Players)
-				playersListChannel <- game.Players
+				// game.Players = st.Message{Players: utils.GetPlayers(clients)}
+				// log.Println("playerList: ", game.Players)
+				messageChannel <- st.Message{Players: utils.GetPlayers(clients)}
 
 			}
 			delete(clients, ws)
 			if len(clients) == 0 {
 				game.InProgress = false
 				nameList = []string{}
-				colorList = utils.PlayerColors(data.Colors).ShuffleColors()
+				colorList = utils.StringList(data.Colors).ShuffleList()
 				// err
 			}
 			for c := range clients {
@@ -87,15 +90,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
-		if msg.Message == "connect" {
+		if msg.Name != "" {
 			var color string
 			color, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
 
-			clients[ws] = st.Player{Name: msg.PlayerName, Color: color, Score: 0}
-			dupe := utils.NameCheck(msg.PlayerName, nameList)
+			clients[ws] = st.Player{Name: msg.Name, Color: color, Score: 0}
+			dupe := utils.NameCheck(msg.Name, nameList)
 
 			if dupe {
-				err := ws.WriteJSON(st.Message{Message: "duplicate name"})
+				err := ws.WriteJSON(st.Message{Message: "duplicate"})
 				if err != nil {
 					log.Printf("99error: %v", err)
 					// delete(clients, client)
@@ -106,26 +109,36 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				// break
 			} else {
 
-				err := ws.WriteJSON(st.Message{Message: "color: " + color})
+				err := ws.WriteJSON(st.Message{Color: color})
 				if err != nil {
 					log.Printf("c111error: %v", err)
 					// delete(clients, client)
 				}
 
-				err = ws.WriteJSON(st.Message{Message: "name: " + msg.PlayerName})
+				err = ws.WriteJSON(st.Message{Name: msg.Name})
 				if err != nil {
 					log.Printf("n111error: %v", err)
 					// delete(clients, client)
 				}
 
-				nameList = append(nameList, msg.PlayerName)
+				nameList = append(nameList, msg.Name)
 
 				log.Println("67", clients)
-				game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
-				log.Println("68", game.Players)
-				playersListChannel <- game.Players
+				// game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
+				// log.Println("68", game.Players)
+
+				// playersListChannel <- game.Players
+
+				// pList, err := json.Marshal(game.Players)
+				// if err != nil {
+				// 	log.Printf("n111error: %v", err)
+				// 	// delete(clients, client)
+				// }
+
+				messageChannel <- st.Message{Players: utils.GetPlayers(clients)}
+
 				if game.InProgress {
-					messageChannel <- st.Message{Message: "game in progress"}
+					messageChannel <- st.Message{Message: "in progress"}
 				}
 			}
 
@@ -146,8 +159,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)
-			
+
 			log.Println("ready")
+			serveGame(wordList)
 
 		} else {
 
@@ -157,6 +171,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+}
+
+func serveGame(wl []string) {
+
+	for _, w := range wl {
+		messageChannel <- st.Message{Message: w}
+		time.Sleep(3 * time.Second)
+	}
+
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
@@ -189,20 +212,20 @@ func handlePlayerMessages() {
 	}
 }
 
-func handleServerMessages() {
-	for {
-		msg := <-playersListChannel
-		log.Println("110no of clients: ", len(clients), len(playersListChannel))
-		for client := range clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("114error: %v", err)
-				client.Close()
-				delete(clients, client)
-			}
-		}
-	}
-}
+// func handleServerMessages() {
+// 	for {
+// 		msg := <-playersListChannel
+// 		log.Println("110no of clients: ", len(clients), len(playersListChannel))
+// 		for client := range clients {
+// 			err := client.WriteJSON(msg)
+// 			if err != nil {
+// 				log.Printf("114error: %v", err)
+// 				client.Close()
+// 				delete(clients, client)
+// 			}
+// 		}
+// 	}
+// }
 
 func main() {
 	fmt.Println("working...")
@@ -212,7 +235,7 @@ func main() {
 	http.HandleFunc("/ws", handleConnections)
 
 	go handlePlayerMessages()
-	go handleServerMessages()
+	// go handleServerMessages()
 
 	log.Println("server running on port 8000")
 	err := http.ListenAndServe(":8000", nil)

@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log"
 	"math/rand"
 	"time"
 
@@ -28,17 +27,16 @@ func NameCheck(s string, names []string) bool {
 	return false
 }
 
-// PlayerColors type to hold shuffle method
-type PlayerColors []string
+// StringList type to hold shuffle method
+type StringList []string
 
-// ShuffleColors method to provide a random mix of colors each game
-func (c PlayerColors) ShuffleColors() []string {
+// ShuffleList method shuffles a list of strings
+func (l StringList) ShuffleList() []string {
 	t := time.Now().UnixNano()
 	rand.Seed(t)
-	log.Println(t)
 
-	rand.Shuffle(len(c), func(i, j int) {
-		c[i], c[j] = c[j], c[i]
+	rand.Shuffle(len(l), func(i, j int) {
+		l[i], l[j] = l[j], l[i]
 	})
-	return c
+	return l
 }

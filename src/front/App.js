@@ -30,7 +30,9 @@ export default function App() {
   ] = useReducer(reducer, initialState);
 
 
-  
+
+
+
 
 
 // useEffect(() => {
@@ -68,6 +70,7 @@ export default function App() {
 
 
 
+
     ws.addEventListener('open', function (e) {
       setConnected(true);
       console.log(e, Date.now());
@@ -79,32 +82,38 @@ export default function App() {
       const data = JSON.parse(e.data);
       console.log('msg: ', e, data);
 
-      if (data.players) {
-        dispatch({ type: 'updateUsers', payload: data });
-        setDupeName(false);
-      } else if (data.message) {
-        if (data.message.startsWith('color')) {
-          const color = data.message.split(': ')[1];
-          setPlayerColor(color);
-
-        } else if(data.message.startsWith('name')) {
-          const name = data.message.split(': ')[1];
-          setPlayerName(name);
+      switch (true) {
+        case !!data.players:
+          dispatch({ type: 'players', payload: data });
+          setDupeName(false);
+          break;
+        case !!data.name:
+          // const name = data.message.split(': ')[1];
+          setPlayerName(data.name);
           setHasJoined(true);
-
-        } else if (data.message.startsWith('dup')) {
-          setDupeName(true);
-        } else if (data.message.startsWith('game')) {
-          setGameHasBegun(true);
+          break;
+        case !!data.color:
+          // const color = data.message.split(': ')[1];
+          setPlayerColor(data.color);
+          break;
+        case !!data.time:
           setShowStartTimer(true);
-        }
-      } else if (data.time) {
-        setShowStartTimer(true);
-        setShowStartButton(false);
-        setTimer(data.time - 1);
-      } else {
-        
+          setShowStartButton(false);
+          setTimer(data.time - 1);
+          break;
+        case !!data.message:
+          if (data.message == 'duplicate') {
+
+            setDupeName(true);
+  
+          } else if (data.message == 'in progress') {
+            setGameHasBegun(true);
+            setShowStartTimer(true);
+          }
+
+          break;
       }
+
 
     }, false);
 
@@ -141,8 +150,8 @@ export default function App() {
 
       
       ws.send(JSON.stringify({
-        playerName: name,
-        message: "connect"
+        name: name,
+        // message: "connect"
       }));
 
 
@@ -218,7 +227,7 @@ export default function App() {
 
       {
         !connected &&
-        <p style={{'textAlign': 'center'}}>Server not available. Please try again.</p>
+        <p>Server not available. Please try again.</p>
       }
 
 

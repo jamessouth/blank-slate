@@ -6,7 +6,7 @@ function reducer(state, { type, payload: { players } }) {
 
     switch (type) {
 
-        case 'updateUsers':
+        case 'players':
             return {
                 ...state,
                 players
