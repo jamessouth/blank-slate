@@ -30,6 +30,8 @@ export default function App() {
   ] = useReducer(reducer, initialState);
 
 
+  
+
 
 // useEffect(() => {
 //   console.log('useee: ', 'ppp');
@@ -97,13 +99,18 @@ export default function App() {
           setShowStartTimer(true);
         }
       } else if (data.time) {
-        if (data.time == 300) setShowStartTimer(true);
+        setShowStartTimer(true);
+        setShowStartButton(false);
         setTimer(data.time - 1);
       } else {
         
       }
 
     }, false);
+
+    
+
+
 
 
 
@@ -148,7 +155,7 @@ export default function App() {
 
 
 
-  
+
 
 
   function startGame() {
