@@ -146,6 +146,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			ticker.Stop()
 			timerDone <- true
 			close(timerDone)
+			
+			log.Println("ready")
 
 		} else {
 

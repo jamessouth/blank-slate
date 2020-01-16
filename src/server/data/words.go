@@ -1,8 +1,6 @@
 package data
 
-import "github.com/jamessouth/blank-slate/src/server/structs"
-
-var words = []structs.Word{
+var words = []string{
 	{Word: "half", Position: "first"},
 	{Word: "child", Position: "last"},
 	{Word: "middle", Position: "first"},

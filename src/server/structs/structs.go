@@ -24,9 +24,3 @@ type Game struct {
 	Players    PlayersList `json:"players"`
 	InProgress bool        `json:"inProgress"`
 }
-
-// Word object for game play. Describes a word and whether it comes before or after the blank.
-type Word struct {
-	Word     string `json:"word"`
-	Position string `json:"position"`
-}
