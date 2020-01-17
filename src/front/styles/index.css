@@ -27,7 +27,7 @@ button:disabled{
   filter: contrast(0.25);
 }
 .div{
-  height: 200px;
+  height: 220px;
   display: flex;
   align-items: center;
   flex-direction: column;

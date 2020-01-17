@@ -2,14 +2,14 @@ package data
 
 // Words for the game
 var Words = []string{
-	"half _____",
-	"_____ child",
-	"middle _____",
-	"_____ wash",
-	"car _____",
-	"tooth _____",
-	"time _____",
-	"running _____",
-	"party _____",
-	"social _____",
+	"half ____",
+	"____ child",
+	"middle ____",
+	"____ wash",
+	"car ____",
+	"tooth ____",
+	"time ____",
+	"running ____",
+	"party ____",
+	"social ____",
 }

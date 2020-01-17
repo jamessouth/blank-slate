@@ -1,10 +1,17 @@
 .div{
-    width: 200px;
-    height: 150px;
+    background-color: whitesmoke;
+    border-width: 10px;
+    border-style: solid;
+    border-radius: 10px;
+    /* width: 238px; */
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .p{
-    color: burlywood;
+    font-family: 'Permanent Marker', cursive;
+    color: #3b383f;
+    font-size: 2.5em;
+    padding: 0 24px;
 }

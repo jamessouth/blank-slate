@@ -182,6 +182,8 @@ export default function App() {
 
 
 
+
+
   function startGame() {
     console.log('start');
     setShowStartButton(false);
@@ -230,6 +232,7 @@ export default function App() {
               showWords && connected && hasJoined &&
                 <Word
                   word={ word }
+                  playerColor={ playerColor }
                 />
             }
           </div>
