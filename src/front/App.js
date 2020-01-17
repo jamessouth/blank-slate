@@ -4,6 +4,7 @@ import Form from './components/Form';
 import Name from './components/Name';
 import Start from './components/Start';
 import Timer from './components/Timer';
+import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
 import { div, h1, hide, show, span } from './styles/index.css';
 
@@ -18,6 +19,8 @@ export default function App() {
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [word, setWord] = useState('');
+  const [showWords, setShowWords] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
   const [gameHasBegun, setGameHasBegun] = useState(false);
   const [dupeName, setDupeName] = useState(false);
@@ -28,6 +31,9 @@ export default function App() {
     },
     dispatch
   ] = useReducer(reducer, initialState);
+
+
+
 
 
 
@@ -92,6 +98,10 @@ export default function App() {
           setPlayerName(data.name);
           setHasJoined(true);
           break;
+        case !!data.word:
+          setWord(data.word);
+          setShowWords(true);
+          break;
         case !!data.color:
           // const color = data.message.split(': ')[1];
           setPlayerColor(data.color);
@@ -112,6 +122,8 @@ export default function App() {
           }
 
           break;
+        default:
+          console.log('no case found: ', data);
       }
 
 
@@ -165,6 +177,8 @@ export default function App() {
 
 
 
+  
+
 
 
 
@@ -210,6 +224,12 @@ export default function App() {
               showStartTimer && connected && timer > 0 &&
                 <Timer
                   timer={ timer }
+                />
+            }
+            {
+              showWords && connected && hasJoined &&
+                <Word
+                  word={ word }
                 />
             }
           </div>

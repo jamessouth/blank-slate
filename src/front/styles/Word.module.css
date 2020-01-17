@@ -1,0 +1,10 @@
+.div{
+    width: 200px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.p{
+    color: burlywood;
+}

@@ -7,6 +7,7 @@ type Message struct {
 	Message string   `json:"message,omitempty"`
 	Players []Player `json:"players,omitempty"`
 	Time    int      `json:"time,omitempty"`
+	Word    string   `json:"word,omitempty"`
 }
 
 // Code int `json:"code"`

@@ -29,6 +29,7 @@ button:disabled{
 .div{
   height: 200px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   justify-content: center;
 }

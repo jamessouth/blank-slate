@@ -82,6 +82,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				game.InProgress = false
 				nameList = []string{}
 				colorList = utils.StringList(data.Colors).ShuffleList()
+				wordList = utils.StringList(data.Words).ShuffleList()
 				// err
 			}
 			for c := range clients {
@@ -176,8 +177,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 func serveGame(wl []string) {
 
 	for _, w := range wl {
-		messageChannel <- st.Message{Message: w}
-		time.Sleep(3 * time.Second)
+		messageChannel <- st.Message{Word: w}
+		time.Sleep(50 * time.Second)
 	}
 
 }
