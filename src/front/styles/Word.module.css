@@ -1,9 +1,6 @@
 .div{
     background-color: whitesmoke;
     position: relative;
-    /* border-width: 10px;
-    border-style: solid;
-    border-radius: 10px; */
     width: 330px;
     height: 140px;
     display: flex;
@@ -24,16 +21,13 @@ svg{
     width: 100%;
     height: 100%;
 }
-
 rect{
     fill: transparent;
-    /* stroke:#FB0; */
     stroke-width: 10;
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
-    animation: change 50s linear forwards infinite;
+    /* animation: change 30s linear forwards infinite; */
 }
-
 @keyframes change {
     to {
         stroke-dashoffset: 1000;

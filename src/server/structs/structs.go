@@ -2,6 +2,7 @@ package structs
 
 // Message object with PlayerName and Message properties
 type Message struct {
+	Answer  string   `json:"answer,omitempty"`
 	Color   string   `json:"color,omitempty"`
 	Name    string   `json:"name,omitempty"`
 	Message string   `json:"message,omitempty"`

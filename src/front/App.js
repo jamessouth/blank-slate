@@ -137,6 +137,11 @@ export default function App() {
 
 
 
+    
+
+
+
+
     ws.addEventListener('error', function (e) {
       console.log(e, Date.now());
     }, false);
@@ -157,30 +162,20 @@ export default function App() {
 
 
 
-  function send(name) {
+
+
+
+  function send(text) {
     if (!hasJoined) {
-
-      
       ws.send(JSON.stringify({
-        name: name,
-        // message: "connect"
+        name: text,
       }));
-
-
     } else {
-      // answers
+      ws.send(JSON.stringify({
+        answer: text,
+      }));
     }
   }
-
-
-
-
-
-
-  
-
-  
-
 
 
 
@@ -245,7 +240,7 @@ export default function App() {
             dupeName={ dupeName }
             playerName={ playerName }
             hasJoined={ hasJoined }
-            onEnter={ name => send(name) }
+            onEnter={ val => send(val) }
             send={ send }
           />
       }

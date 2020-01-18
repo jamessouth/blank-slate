@@ -29,6 +29,10 @@ var (
 	colorList = utils.StringList(data.Colors).ShuffleList()
 
 	wordList = utils.StringList(data.Words).ShuffleList()
+
+	answers = make(map[string][]*websocket.Conn)
+
+	numAns = 0
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -164,6 +168,16 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			log.Println("ready")
 			serveGame(wordList)
 
+		} else if msg.Answer != "" {
+			numAns++
+			log.Println("num", numAns)
+			answers[msg.Answer] = append(answers[msg.Answer], ws)
+			log.Println("anssss", answers)
+
+			if numAns == len(clients) {
+				scoreRound(answers)
+			}
+
 		} else {
 
 			log.Println("84msg", msg)
@@ -174,11 +188,17 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func scoreRound(m map[string][]*websocket.Conn) {
+	for _, ans := range m {
+		log.Println("logggg", ans)
+	}
+}
+
 func serveGame(wl []string) {
 
 	for _, w := range wl {
 		messageChannel <- st.Message{Word: w}
-		time.Sleep(50 * time.Second)
+		time.Sleep(30 * time.Second)
 	}
 
 }
