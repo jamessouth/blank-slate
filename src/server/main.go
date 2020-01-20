@@ -33,6 +33,8 @@ var (
 	answers = make(map[string][]*websocket.Conn)
 
 	numAns = 0
+
+	done = make(chan bool, 1)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -166,7 +168,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			close(timerDone)
 
 			log.Println("ready")
-			serveGame(wordList)
+			go sendWords(done)
 
 		} else if msg.Answer != "" {
 			numAns++
@@ -188,19 +190,90 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+
+
+// var (
+// 	cnt = 128
+// 	c   = 0
+
+// 	words = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"}
+// 	nums  = []int{12, 6, 19, 14, 13, 12, 7, 6, 16, 25, 8, 9, 4, 7, 6, 7, 6, 5, 4, 5, 4, 3, 4, 5, 23, 26, 31, 33, 66}
+// )
+
+// func ans(d2 chan bool) {
+// 	fmt.Print("ans...")
+// 	time.Sleep(2 * time.Second)
+// 	fmt.Println("done")
+// 	d2 <- true
+// }
+
+// func sendWord(d, d2 chan bool) {
+// 	for _, w := range words {
+// 		fmt.Print(w+" ", c, cnt)
+// 		c++
+// 		cnt -= nums[c]
+// 		go ans(d2)
+
+// 		if cnt < 0 {
+// 			d <- true
+// 		}
+// 		<-d2
+
+// 	}
+
+// }
+
+// func main() {
+// 	var done = make(chan bool, 1)
+// 	var done2 = make(chan bool, 1)
+
+// 	for cnt > 0 {
+
+// 		go sendWord(done, done2)
+// 		<-done
+// 	}
+
+// }
+
+
+
+
+
+func sendWords(c chan bool) {
+	// for {
+	// 	select {
+	// 	case msg := <-serveGame(wordList):
+	// 		messageChannel <- st.Message{Word: msg}
+	// 	default:
+	// 		fmt.Println("no message received")
+	// 	}
+	// }
+	for msg := range serveGame(wordList) {
+		messageChannel <- st.Message{Word: msg}
+		// time.Sleep(30 * time.Second)
+		c <- true
+	}
+
+}
+
+func serveGame(wl []string) <-chan string {
+	ch := make(chan string)
+	go func() {
+
+		for _, w := range wl {
+			ch <- w
+			
+		}
+		close(ch)
+	}()
+	return ch
+}
+
 func scoreRound(m map[string][]*websocket.Conn) {
 	for _, ans := range m {
 		log.Println("logggg", ans)
 	}
-}
-
-func serveGame(wl []string) {
-
-	for _, w := range wl {
-		messageChannel <- st.Message{Word: w}
-		time.Sleep(30 * time.Second)
-	}
-
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
