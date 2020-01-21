@@ -3,7 +3,7 @@ import Radio from './Radio';
 import { inputdiv, p, radiodiv, signin, signedin } from '../styles/Form.module.css';
 
 
-export default function Form({ dupeName, playerName, hasJoined, onEnter }) {
+export default function Form({ answered, dupeName, playerName, hasJoined, onEnter }) {
 
     const [inputText, setInputText] = useState('');
     const [maxLength, setMaxLength] = useState(10);
@@ -44,7 +44,7 @@ export default function Form({ dupeName, playerName, hasJoined, onEnter }) {
               onEnter(inputText);
               setInputText('');
             }}
-            { ...(inputText.length < 1 || inputText.length > maxLength ? { 'disabled': true } : {}) }
+            { ...((inputText.length < 2 || inputText.length > maxLength) || answered ? { 'disabled': true } : {}) }
           >
             Submit
           </button>

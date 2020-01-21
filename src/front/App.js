@@ -18,6 +18,7 @@ export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
+  const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
   const [word, setWord] = useState('');
   const [showWords, setShowWords] = useState(false);
@@ -38,6 +39,7 @@ export default function App() {
 
 
 
+  
 
 
 
@@ -99,6 +101,7 @@ export default function App() {
           setHasJoined(true);
           break;
         case !!data.word:
+          setAnswered(false);
           setWord(data.word);
           setShowWords(true);
           break;
@@ -128,6 +131,7 @@ export default function App() {
 
 
     }, false);
+
 
 
 
@@ -169,6 +173,7 @@ export default function App() {
         name: text,
       }));
     } else {
+      setAnswered(true);
       ws.send(JSON.stringify({
         answer: text,
       }));
@@ -178,12 +183,6 @@ export default function App() {
 
 
   
-
-
-
-
-
-
 
 
   function startGame() {
@@ -244,6 +243,7 @@ export default function App() {
           <Form
             dupeName={ dupeName }
             playerName={ playerName }
+            answered={ answered }
             hasJoined={ hasJoined }
             onEnter={ val => send(val) }
             send={ send }

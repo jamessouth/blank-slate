@@ -157,28 +157,27 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else if msg.Message == "start" {
-			const startDelay = 6
 
 			if !game.InProgress {
 				game.InProgress = true
 
+				const startDelay = 6
+
+				timerDone := make(chan bool)
+				ticker := time.NewTicker(time.Second)
+
+				go handleTimers(timerDone, ticker, startDelay)
+
+				time.Sleep(startDelay * time.Second)
+				ticker.Stop()
+				timerDone <- true
+				close(timerDone)
+
+				log.Println("ready")
+				var sig = make(chan bool, 1)
+				var sig2 = make(chan bool, 1)
+				go sendWords(sig, sig2)
 			}
-
-			timerDone := make(chan bool)
-			ticker := time.NewTicker(time.Second)
-
-			go handleTimers(timerDone, ticker, startDelay)
-
-			time.Sleep(startDelay * time.Second)
-			ticker.Stop()
-			timerDone <- true
-			close(timerDone)
-
-			log.Println("ready")
-			var sig = make(chan bool, 1)
-			var sig2 = make(chan bool, 1)
-			go sendWords(sig, sig2)
-
 			// for cnt > 0 {
 
 			// 	go sendWord(sig, sig2)
@@ -209,7 +208,6 @@ func anss(s2 chan bool) {
 	// 	ans := <-answerChannel
 	// 	sock := <-websocketChannel
 	// 	log.Println("sockans", ans, sock)
-	// 	answers[ans] = append(answers[ans], sock)
 	// 	log.Println("anssss", answers)
 
 	// 		scoreRound(answers)
@@ -217,15 +215,18 @@ func anss(s2 chan bool) {
 	// 	}
 	// }
 	// ticker := time.NewTicker(14 * time.Second)
+
 	for {
 		select {
 		case <-done:
 			return
 		case ans := <-answerChannel:
 			numAns++
-			log.Println("num", numAns, ans, len(answerChannel))
+			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
+			log.Println("num", numAns, ans, answers)
 			if numAns == len(clients) {
-
+				answers = make(map[string][]*websocket.Conn)
+				numAns = 0
 				s2 <- true
 			}
 
