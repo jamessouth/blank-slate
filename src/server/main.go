@@ -32,9 +32,13 @@ var (
 
 	answers = make(map[string][]*websocket.Conn)
 
+	answerChannel = make(chan st.Answer, 1)
+
 	numAns = 0
 
-	done = make(chan bool, 1)
+	cnt = 55
+
+	// done = make(chan bool, 1)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -59,8 +63,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// 	log.Println("43ws conn: ", clients[c])
 	// }
 
-	log.Println("colors", colorList, len(colorList))
-	log.Println("words", wordList, len(wordList))
+	// log.Println("colors", colorList, len(colorList))
+	// log.Println("words", wordList, len(wordList))
 
 	for {
 		var msg st.Message
@@ -97,6 +101,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
+
+		log.Println("MSG  ", msg)
+
 		if msg.Name != "" {
 			var color string
 			color, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
@@ -168,17 +175,22 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			close(timerDone)
 
 			log.Println("ready")
-			go sendWords(done)
+			var sig = make(chan bool, 1)
+			var sig2 = make(chan bool, 1)
+			go sendWords(sig, sig2)
+
+			// for cnt > 0 {
+
+			// 	go sendWord(sig, sig2)
+			// 	<-sig
+			// }
+			// close(sig)
+			// close(sig2)
 
 		} else if msg.Answer != "" {
-			numAns++
-			log.Println("num", numAns)
-			answers[msg.Answer] = append(answers[msg.Answer], ws)
-			log.Println("anssss", answers)
 
-			if numAns == len(clients) {
-				scoreRound(answers)
-			}
+			log.Println("ANSmsg", msg)
+			answerChannel <- st.Answer{Answer: msg.Answer, Conn: ws}
 
 		} else {
 
@@ -190,69 +202,51 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-
-
-// var (
-// 	cnt = 128
-// 	c   = 0
-
-// 	words = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"}
-// 	nums  = []int{12, 6, 19, 14, 13, 12, 7, 6, 16, 25, 8, 9, 4, 7, 6, 7, 6, 5, 4, 5, 4, 3, 4, 5, 23, 26, 31, 33, 66}
-// )
-
-// func ans(d2 chan bool) {
-// 	fmt.Print("ans...")
-// 	time.Sleep(2 * time.Second)
-// 	fmt.Println("done")
-// 	d2 <- true
-// }
-
-// func sendWord(d, d2 chan bool) {
-// 	for _, w := range words {
-// 		fmt.Print(w+" ", c, cnt)
-// 		c++
-// 		cnt -= nums[c]
-// 		go ans(d2)
-
-// 		if cnt < 0 {
-// 			d <- true
-// 		}
-// 		<-d2
-
-// 	}
-
-// }
-
-// func main() {
-// 	var done = make(chan bool, 1)
-// 	var done2 = make(chan bool, 1)
-
-// 	for cnt > 0 {
-
-// 		go sendWord(done, done2)
-// 		<-done
-// 	}
-
-// }
-
-
-
-
-
-func sendWords(c chan bool) {
+func anss(s2 chan bool) {
+	log.Println("anss running")
+	done := make(chan bool)
 	// for {
-	// 	select {
-	// 	case msg := <-serveGame(wordList):
-	// 		messageChannel <- st.Message{Word: msg}
-	// 	default:
-	// 		fmt.Println("no message received")
+	// 	ans := <-answerChannel
+	// 	sock := <-websocketChannel
+	// 	log.Println("sockans", ans, sock)
+	// 	answers[ans] = append(answers[ans], sock)
+	// 	log.Println("anssss", answers)
+
+	// 		scoreRound(answers)
+	// 		s2 <- true
 	// 	}
 	// }
+	// ticker := time.NewTicker(14 * time.Second)
+	for {
+		select {
+		case <-done:
+			return
+		case ans := <-answerChannel:
+			numAns++
+			log.Println("num", numAns, ans, len(answerChannel))
+			if numAns == len(clients) {
+
+				s2 <- true
+			}
+
+			// case <-ticker.C:
+		}
+	}
+	// time.Sleep(140 * time.Second)
+	// done <- true
+	// ticker.Stop()
+}
+
+func sendWords(s chan<- bool, s2 chan bool) {
 	for msg := range serveGame(wordList) {
 		messageChannel <- st.Message{Word: msg}
-		// time.Sleep(30 * time.Second)
-		c <- true
+		// cnt--
+		go anss(s2)
+		// if cnt < 0 {
+		// 	s <- true
+
+		// }
+		<-s2
 	}
 
 }
@@ -263,7 +257,7 @@ func serveGame(wl []string) <-chan string {
 
 		for _, w := range wl {
 			ch <- w
-			
+			// time.Sleep(10 * time.Second)
 		}
 		close(ch)
 	}()
@@ -277,8 +271,8 @@ func scoreRound(m map[string][]*websocket.Conn) {
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
-	log.Println(time.Now(), countdown)
 	for {
+		log.Println(time.Now(), countdown)
 		select {
 		case <-done:
 			log.Println("done")

@@ -1,5 +1,7 @@
 package structs
 
+import "github.com/gorilla/websocket"
+
 // Message object with PlayerName and Message properties
 type Message struct {
 	Answer  string   `json:"answer,omitempty"`
@@ -30,4 +32,8 @@ type Game struct {
 	InProgress bool `json:"inProgress"`
 }
 
-// Players    PlayersList `json:"players"`
+// Answer to hold player and their answer for each round
+type Answer struct {
+	Answer string          `json:"answer"`
+	Conn   *websocket.Conn `json:"conn"`
+}

@@ -131,7 +131,13 @@ export default function App() {
 
 
 
+
+
+
+
+
     
+
 
     ws.addEventListener('error', function (e) {
       console.log(e, Date.now());
@@ -156,6 +162,7 @@ export default function App() {
 
 
 
+
   function send(text) {
     if (!hasJoined) {
       ws.send(JSON.stringify({
@@ -167,6 +174,13 @@ export default function App() {
       }));
     }
   }
+
+
+
+  
+
+
+
 
 
 
