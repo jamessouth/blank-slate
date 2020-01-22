@@ -22,6 +22,12 @@ type Player struct {
 	Score int    `json:"score"`
 }
 
+// UpdateScore method on Player struct to increment player scores
+func (p Player) UpdateScore(n int) Player {
+	p.Score += n
+	return p
+}
+
 // PlayersList object with Players property
 // type PlayersList struct {
 // 	Players []Player `json:"players"`

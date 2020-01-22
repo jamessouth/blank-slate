@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"math/rand"
 	"time"
 
@@ -39,4 +40,22 @@ func (l StringList) ShuffleList() []string {
 		l[i], l[j] = l[j], l[i]
 	})
 	return l
+}
+
+func forEach(s []*websocket.Conn, clients map[*websocket.Conn]structs.Player, n int) {
+	for _, v := range s {
+		clients[v].UpdateScore(n)
+	}
+}
+
+// ScoreAnswers updates every player's score each round
+func ScoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]structs.Player) {
+	for _, v := range answers {
+		log.Println(v)
+		if len(v) > 2 {
+			forEach(v, clients, 1)
+		} else if len(v) == 2 {
+			forEach(v, clients, 3)
+		}
+	}
 }

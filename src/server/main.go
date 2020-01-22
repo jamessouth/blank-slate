@@ -225,6 +225,8 @@ func anss(s2 chan bool) {
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			log.Println("num", numAns, ans, answers)
 			if numAns == len(clients) {
+				utils.ScoreAnswers(answers, clients)
+				messageChannel <- st.Message{Players: utils.GetPlayers(clients)}
 				answers = make(map[string][]*websocket.Conn)
 				numAns = 0
 				s2 <- true
