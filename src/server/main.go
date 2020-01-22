@@ -227,10 +227,18 @@ func anss(s2 chan bool) {
 			if numAns == len(clients) {
 				utils.ScoreAnswers(answers, clients)
 				messageChannel <- st.Message{Players: utils.GetPlayers(clients)}
-				answers = make(map[string][]*websocket.Conn)
-				numAns = 0
-				utils.CheckForWin(clients)
-				s2 <- true
+
+				if winners := utils.CheckForWin(clients); len(winners) > 1 {
+					messageChannel <- st.Message{Winners: utils.FormatTiedWinners(winners)}
+
+				} else if len(winners) == 1 {
+					messageChannel <- st.Message{Winners: winners[0].Name}
+				} else {
+					answers = make(map[string][]*websocket.Conn)
+					numAns = 0
+
+					s2 <- true
+				}
 			}
 
 			// case <-ticker.C:

@@ -60,9 +60,26 @@ func ScoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.C
 	}
 }
 
-func CheckForWin(clients map[*websocket.Conn]structs.Player) {
-	for _, v := range clients {
-		log.Println(v)
+// CheckForWin checks for a winner
+func CheckForWin(clients map[*websocket.Conn]structs.Player) []structs.Player {
+	var res []structs.Player
+	for _, p := range clients {
+		log.Println(p)
+		if p.Score >= 25 {
+			res = append(res, p)
+		}
 	}
-	// return
+	return res
+}
+
+func FormatTiedWinners(s []structs.Player) string {
+	if len(s) == 2 {
+		return s[0].Name + " and " + s[1].Name + "!"
+	} else {
+		res := ""
+		for _, p := range s[:len(s)-1] {
+			res += p.Name + ", "
+		}
+		return res + "and " + s[len(s)-1].Name + "!"
+	}
 }

@@ -10,6 +10,7 @@ type Message struct {
 	Message string   `json:"message,omitempty"`
 	Players []Player `json:"players,omitempty"`
 	Time    int      `json:"time,omitempty"`
+	Winners string   `json:"winners,omitempty"`
 	Word    string   `json:"word,omitempty"`
 }
 
