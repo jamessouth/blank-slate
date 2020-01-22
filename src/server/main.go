@@ -229,6 +229,7 @@ func anss(s2 chan bool) {
 				messageChannel <- st.Message{Players: utils.GetPlayers(clients)}
 				answers = make(map[string][]*websocket.Conn)
 				numAns = 0
+				utils.CheckForWin(clients)
 				s2 <- true
 			}
 

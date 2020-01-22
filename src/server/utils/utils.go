@@ -59,3 +59,10 @@ func ScoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.C
 		}
 	}
 }
+
+func CheckForWin(clients map[*websocket.Conn]structs.Player) {
+	for _, v := range clients {
+		log.Println(v)
+	}
+	// return
+}
