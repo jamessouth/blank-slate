@@ -44,7 +44,7 @@ func (l StringList) ShuffleList() []string {
 
 func forEach(s []*websocket.Conn, clients map[*websocket.Conn]structs.Player, n int) {
 	for _, v := range s {
-		clients[v].UpdateScore(n)
+		clients[v] = clients[v].UpdateScore(n)
 	}
 }
 
