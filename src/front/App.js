@@ -21,6 +21,7 @@ export default function App() {
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
   const [word, setWord] = useState('');
+  const [winners, setWinners] = useState('');
   const [showWords, setShowWords] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
   const [gameHasBegun, setGameHasBegun] = useState(false);
@@ -234,11 +235,14 @@ export default function App() {
                 />
             }
             {
-              showWords && connected && hasJoined &&
+              showWords && connected && hasJoined && !winners &&
                 <Word
                   word={ word }
                   playerColor={ playerColor }
                 />
+            }
+            {
+              winners && <p>{ winners.includes(' and ') ? 'Winners: ' : 'Winner: '}{ winners }</p>
             }
           </div>
       }
