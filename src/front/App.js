@@ -20,6 +20,7 @@ export default function App() {
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [showSVGTimer, setShowSVGTimer] = useState(true);
   const [word, setWord] = useState('');
   const [winners, setWinners] = useState('');
   const [showWords, setShowWords] = useState(false);
@@ -38,51 +39,10 @@ export default function App() {
 
 
 
-  
-
-
-
-
-
-
-
-
-
-// useEffect(() => {
-//   console.log('useee: ', 'ppp');
-//   if () {
-//     setTimeout(() => {
-      
-      
-//     }, 3000);
-
-//     setTimeout(() => {
-      
-      
-//       ws.send(JSON.stringify({
-//         message: 'serve'
-//       }));
-//     }, 4000);
-
-//   }
-// }, []);
-
-
-  // useEffect(() => {
-  //   console.log('useeff: ', timer);
-  //   if (timer == 0) {
-
-  //   }
-  // }, [timer]);
 
   
   useEffect(() => {
     console.log('connect to server...', Date.now());
-
-
-
-
-
 
     ws.addEventListener('open', function (e) {
       setConnected(true);
@@ -107,6 +67,7 @@ export default function App() {
           break;
         case !!data.word:
           setAnswered(false);
+          setShowSVGTimer(true);
           setWord(data.word);
           setShowWords(true);
           break;
@@ -179,11 +140,13 @@ export default function App() {
       }));
     } else {
       setAnswered(true);
+      setShowSVGTimer(false);
       ws.send(JSON.stringify({
         answer: text,
       }));
     }
   }
+
 
 
 
@@ -237,8 +200,10 @@ export default function App() {
             {
               showWords && connected && hasJoined && !winners &&
                 <Word
-                  word={ word }
+                  onAnimationEnd={ () => send('butt') }
                   playerColor={ playerColor }
+                  showSVGTimer={ showSVGTimer }
+                  word={ word }
                 />
             }
             {

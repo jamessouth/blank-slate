@@ -64,7 +64,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// log.Println("colors", colorList, len(colorList))
-	// log.Println("words", wordList, len(wordList))
+	log.Println("words", wordList, len(wordList))
 
 	for {
 		var msg st.Message
@@ -274,12 +274,6 @@ func serveGame(wl []string) <-chan string {
 		close(ch)
 	}()
 	return ch
-}
-
-func scoreRound(m map[string][]*websocket.Conn) {
-	for _, ans := range m {
-		log.Println("logggg", ans)
-	}
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {

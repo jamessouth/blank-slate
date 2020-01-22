@@ -26,7 +26,7 @@ rect{
     stroke-width: 10;
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
-    /* animation: change 30s linear forwards infinite; */
+    animation: change 20s linear forwards 1;
 }
 @keyframes change {
     to {
