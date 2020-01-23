@@ -28,7 +28,7 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
             value={ inputText }
             spellCheck="false"
             onKeyPress={ ({ key }) => {
-                if (key == "Enter") {
+                if (key == "Enter" && !answered) {
                     onEnter(inputText);
                     setInputText('');
                 }

@@ -237,6 +237,7 @@ func anss(s2 chan bool) {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
 
+					time.Sleep(2 * time.Second)
 					s2 <- true
 				}
 			}
@@ -244,7 +245,6 @@ func anss(s2 chan bool) {
 			// case <-ticker.C:
 		}
 	}
-	// time.Sleep(140 * time.Second)
 	// done <- true
 	// ticker.Stop()
 }
