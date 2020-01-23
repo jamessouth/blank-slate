@@ -128,6 +128,7 @@ export default function App() {
 
 
 
+  
 
 
 
@@ -146,6 +147,7 @@ export default function App() {
       }));
     }
   }
+
 
 
 
@@ -200,7 +202,7 @@ export default function App() {
             {
               showWords && connected && hasJoined && !winners &&
                 <Word
-                  onAnimationEnd={ () => send('butt') }
+                  onAnimationEnd={ () => send('xJ4wzIq') }
                   playerColor={ playerColor }
                   showSVGTimer={ showSVGTimer }
                   word={ word }

@@ -50,9 +50,11 @@ func forEach(s []*websocket.Conn, clients map[*websocket.Conn]structs.Player, n 
 
 // ScoreAnswers updates every player's score each round
 func ScoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]structs.Player) {
-	for _, v := range answers {
-		log.Println(v)
-		if len(v) > 2 {
+	for s, v := range answers {
+		log.Println("ans    ", v)
+		if s == "xJ4wzIq" {
+			// forEach(v, clients, 0)
+		} else if len(v) > 2 {
 			forEach(v, clients, 1)
 		} else if len(v) == 2 {
 			forEach(v, clients, 3)
@@ -72,14 +74,14 @@ func CheckForWin(clients map[*websocket.Conn]structs.Player) []structs.Player {
 	return res
 }
 
+// FormatTiedWinners returns a string of winners' names if there is a tie
 func FormatTiedWinners(s []structs.Player) string {
 	if len(s) == 2 {
 		return s[0].Name + " and " + s[1].Name + "!"
-	} else {
-		res := ""
-		for _, p := range s[:len(s)-1] {
-			res += p.Name + ", "
-		}
-		return res + "and " + s[len(s)-1].Name + "!"
 	}
+	res := ""
+	for _, p := range s[:len(s)-1] {
+		res += p.Name + ", "
+	}
+	return res + "and " + s[len(s)-1].Name + "!"
 }
