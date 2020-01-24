@@ -22,9 +22,9 @@ type answer struct {
 }
 
 type message struct {
-	Answer  string `json:"answer,omitempty"`
-	Name    string `json:"name,omitempty"`
-	Message string `json:"message,omitempty"`
+	Answer  *string `json:"answer,omitempty"`
+	Name    string  `json:"name,omitempty"`
+	Message string  `json:"message,omitempty"`
 }
 
 type player struct {
@@ -142,7 +142,7 @@ func forEach(s []*websocket.Conn, clients map[*websocket.Conn]player, n int) {
 func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]player) {
 	for s, v := range answers {
 		log.Println("ans    ", v)
-		if s == "xJ4wzIq" {
+		if s == "" {
 			// forEach(v, clients, 0)
 		} else if len(v) > 2 {
 			forEach(v, clients, 1)
@@ -214,6 +214,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Println("MSG  ", msg)
+		log.Println("answerlength", msg.Answer)
+		fmt.Printf("%+v\n", msg)
 
 		if msg.Name != "" {
 			var playerColor string
@@ -291,10 +293,10 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			// close(sig)
 			// close(sig2)
 
-		} else if msg.Answer != "" {
+		} else if *msg.Answer != interface{}(nil) {
 
 			log.Println("ANSmsg", msg)
-			answerChannel <- answer{Answer: msg.Answer, Conn: ws}
+			answerChannel <- answer{Answer: *msg.Answer, Conn: ws}
 
 		} else {
 
