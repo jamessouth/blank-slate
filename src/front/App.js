@@ -61,9 +61,10 @@ export default function App() {
           console.log('pl: ', playerName);
           setDupeName(false);
           break;
-        case !!data.name:
+        case !!data.player:
           // const name = data.message.split(': ')[1];
-          setPlayerName(data.name);
+          setPlayerName(data.player.name);
+          setPlayerColor(data.player.color);
           setHasJoined(true);
           break;
         case !!data.word:
@@ -71,10 +72,6 @@ export default function App() {
           setShowSVGTimer(true);
           setWord(data.word);
           setShowWords(true);
-          break;
-        case !!data.color:
-          // const color = data.message.split(': ')[1];
-          setPlayerColor(data.color);
           break;
         case !!data.time:
           setShowStartTimer(true);
@@ -98,6 +95,7 @@ export default function App() {
 
 
     }, false);
+
 
 
 

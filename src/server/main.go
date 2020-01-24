@@ -33,6 +33,10 @@ type player struct {
 	Score int    `json:"score"`
 }
 
+type playerJSON struct {
+	Player player `json:"player"`
+}
+
 type players struct {
 	Players []player `json:"players"`
 }
@@ -230,7 +234,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				// break
 			} else {
 
-				err = ws.WriteJSON(player{Name: msg.Name, Color: playerColor})
+				err = ws.WriteJSON(playerJSON{player{Name: msg.Name, Color: playerColor}})
 				if err != nil {
 					log.Printf("n111error: %v", err)
 					// delete(clients, client)
