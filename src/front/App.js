@@ -58,6 +58,7 @@ export default function App() {
       switch (true) {
         case !!data.players:
           dispatch({ type: 'players', payload: data });
+          console.log('pl: ', playerName);
           setDupeName(false);
           break;
         case !!data.name:
@@ -102,6 +103,7 @@ export default function App() {
 
 
 
+    
 
 
 
@@ -187,10 +189,10 @@ export default function App() {
           />
       }
       {
-        hasJoined &&
+        hasJoined && connected &&
           <div className={ div }>
             {
-              showStartButton && connected && hasJoined &&
+              showStartButton && hasJoined &&
                 <Start
                   onClick={ startGame }
                   players={ players }
@@ -198,13 +200,13 @@ export default function App() {
                 />
             }
             {
-              showStartTimer && connected && timer > 0 &&
+              showStartTimer && timer > 0 &&
                 <Timer
                   timer={ timer }
                 />
             }
             {
-              showWords && connected && hasJoined && !winners &&
+              showWords && hasJoined && !winners &&
                 <Word
                   onAnimationEnd={ () => send('xJ4wzIq') }
                   playerColor={ playerColor }

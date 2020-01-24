@@ -71,10 +71,6 @@ var (
 	answerChannel = make(chan answer, 1)
 
 	numAns = 0
-
-	cnt = 55
-
-	// done = make(chan bool, 1)
 )
 
 func nameCheck(s string, names []string) bool {
