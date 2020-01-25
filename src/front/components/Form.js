@@ -10,7 +10,7 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
 
     useEffect(() => {
       if (hasJoined) {
-        setMaxLength(20);
+        setMaxLength(16);
       }
     }, [hasJoined]);
 

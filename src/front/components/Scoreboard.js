@@ -1,5 +1,5 @@
 import React from 'react';
-import { h2, li, ul } from '../styles/Scoreboard.module.css';
+import { h2, li, p, ul } from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 
 export default function Scoreboard({ players }) {
@@ -8,12 +8,9 @@ export default function Scoreboard({ players }) {
         .map((pl, ind) =>
             <li style={{backgroundColor: pl.color}} className={ li } key={ ind + pl.name }>
                 <p>{ pl.name }</p>
-                <p>{ pl.answer }</p>
-                <p>{ pl.score}</p>
+                <p className={ p }>{ pl.answer }</p>
+                <p>{ pl.score }</p>
             </li>);
-  
-
-  
 
     return (
         <>
