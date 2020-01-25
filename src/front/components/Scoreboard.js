@@ -8,6 +8,7 @@ export default function Scoreboard({ players }) {
         .map((pl, ind) =>
             <li style={{backgroundColor: pl.color}} className={ li } key={ ind + pl.name }>
                 <p>{ pl.name }</p>
+                <p>{ pl.answer }</p>
                 <p>{ pl.score}</p>
             </li>);
   

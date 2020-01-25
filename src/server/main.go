@@ -28,9 +28,10 @@ type message struct {
 }
 
 type player struct {
-	Name  string `json:"name"`
-	Color string `json:"color"`
-	Score int    `json:"score"`
+	Answer string `json:"answer"`
+	Name   string `json:"name"`
+	Color  string `json:"color"`
+	Score  int    `json:"score"`
 }
 
 type playerJSON struct {
@@ -128,14 +129,16 @@ func getPlayers(m map[*websocket.Conn]player) []player {
 	return list
 }
 
-func (p player) updateScore(n int) player {
+func (p player) updatePlayer(n int, s string) player {
+	log.Println("s         ", s)
 	p.Score += n
+	p.Answer = s
 	return p
 }
 
-func forEach(s []*websocket.Conn, clients map[*websocket.Conn]player, n int) {
+func forEach(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st string) {
 	for _, v := range s {
-		clients[v] = clients[v].updateScore(n)
+		clients[v] = clients[v].updatePlayer(n, st)
 	}
 }
 
@@ -143,11 +146,13 @@ func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.C
 	for s, v := range answers {
 		log.Println("ans    ", v)
 		if s == "" {
-			// forEach(v, clients, 0)
+			forEach(v, clients, 0, s)
 		} else if len(v) > 2 {
-			forEach(v, clients, 1)
+			forEach(v, clients, 1, s)
 		} else if len(v) == 2 {
-			forEach(v, clients, 3)
+			forEach(v, clients, 3, s)
+		} else {
+			forEach(v, clients, 0, s)
 		}
 	}
 }
