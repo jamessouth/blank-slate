@@ -6,7 +6,7 @@ import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
-import { div, h1, hide, show, span } from './styles/index.css';
+import { div, h1, score } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -15,6 +15,7 @@ export default function App() {
   console.log('app');
 
   const [hasJoined, setHasJoined] = useState(false);
+  const [showScores, setShowScores] = useState(true);
   const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
@@ -170,7 +171,10 @@ export default function App() {
 
 
   
-
+function swipe() {
+  console.log('hello: ', 'ghghgh');
+  setShowScores(!showScores)
+}
 
   
 
@@ -198,9 +202,21 @@ export default function App() {
 
       {
         players.length > 0 && connected &&
-          <Scoreboard
-            players={ players }
-          />
+          <div className={ score }>
+            <button
+              type="button"
+              onClick={ swipe }
+            >
+            </button>
+            <Scoreboard
+              players={ players }
+              showScores={ showScores }
+            />
+            <Scoreboard
+              players={ players }
+              showScores={ showScores }
+            />
+          </div>
       }
       {
         hasJoined && connected &&
@@ -261,6 +277,10 @@ export default function App() {
 
 
 // Image by <a href="https://pixabay.com/users/stux-12364/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Thanks for your Like • donations welcome</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Pixabay</a>
+
+
+
+// Image by <a href="https://pixabay.com/users/b0red-4473488/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">b0red</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">Pixabay</a>
 
 
 

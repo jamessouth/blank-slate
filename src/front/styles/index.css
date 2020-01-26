@@ -11,9 +11,9 @@
 body{
   background: url('../../assets/mob.jpg') no-repeat top/cover;
 }
-main{
-  position: relative;
-}
+/* main{
+  
+} */
 button{
   font-size: 1.25rem;
   color: #4c4952;
@@ -35,7 +35,7 @@ button:disabled{
 }
 
 .h1{
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-family: 'Architects Daughter', cursive;
   /* text-align: center; */
   margin: 40px 0 1em;
@@ -43,8 +43,21 @@ button:disabled{
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
 }
+.score{
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 200%;
+}
+.score button{
+position: absolute;
+top: -33px;
+    background: url('../../assets/finger.png') no-repeat;
+    height: 33px;
+    width: 64px;
+    
 
-
+}
 
 
 
@@ -56,6 +69,12 @@ button:disabled{
   transition: opacity 1s ease-in;
 }
 
+
+@media screen and (min-width: 414px){
+  .h1{
+    font-size: 3.5rem;
+  }
+}
 
 
 @media screen and (min-width: 768px){

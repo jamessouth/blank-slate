@@ -2,6 +2,11 @@
     margin-bottom: 1.25em;
 
 }
+.div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 .li{
     display: flex;
     flex-direction: row;

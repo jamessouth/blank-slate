@@ -1,8 +1,8 @@
 import React from 'react';
-import { h2, li, p, ul } from '../styles/Scoreboard.module.css';
+import { div, h2, li, p, ul } from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 
-export default function Scoreboard({ players }) {
+export default function Scoreboard({ players, showScores }) {
     const playerList = players
         .sort(playerSort)
         .map((pl, ind) =>
@@ -13,12 +13,12 @@ export default function Scoreboard({ players }) {
             </li>);
 
     return (
-        <>
+        <div className={ div } style={  {backgroundColor: showScores ? 'red': 'green' }}>
             <h2 className={ h2 }>Players:&nbsp;&nbsp;{ playerList.length }</h2>
 
             <ul className={ ul }>{ playerList }</ul>
         
-        </>
+        </div>
     );
   
   }
