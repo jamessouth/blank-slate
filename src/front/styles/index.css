@@ -48,7 +48,7 @@ button:disabled{
   flex-direction: row;
   position: relative;
   overflow-x: hidden;
-  height: 126px;
+  /* height: 126px; */
   /* width: 200%; */
 }
 .score button{

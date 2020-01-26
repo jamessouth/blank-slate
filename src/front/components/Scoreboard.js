@@ -8,8 +8,14 @@ export default function Scoreboard({ hidden, players, showScores, shown }) {
         .map((pl, ind) =>
             <li style={{backgroundColor: pl.color}} className={ li } key={ ind + pl.name }>
                 <p>{ pl.name }</p>
-                <p className={ p }>{ pl.answer }</p>
-                <p>{ pl.score }</p>
+                {
+                    !showScores &&
+                        <p className={ p }>{ pl.answer }</p>
+                }
+                {
+                    showScores &&
+                        <p>{ pl.score }</p>
+                }
             </li>);
 
     return (

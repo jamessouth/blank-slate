@@ -202,11 +202,11 @@ function swipe() {
 
       {
         players.length > 0 && connected &&
-          <div className={ score }>
+          <div style={{ height: `calc(95px + (28px * ${players.length}))` }} className={ score }>
             <button
               type="button"
               onClick={ swipe }
-              className={ showScores ? flipR : flipL}
+              className={ showScores ? flipR : flipL }
             >
             </button>
             <Scoreboard
@@ -214,7 +214,7 @@ function swipe() {
               showScores={ showScores }
               shown="translateX(0%)"
               hidden="translateX(-100%)"
-              />
+            />
             <Scoreboard
               players={ players }
               showScores={ !showScores }
