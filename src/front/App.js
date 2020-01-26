@@ -6,7 +6,7 @@ import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
-import { div, h1, score } from './styles/index.css';
+import { div, flipL, flipR, h1, score } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -206,15 +206,20 @@ function swipe() {
             <button
               type="button"
               onClick={ swipe }
+              className={ showScores ? flipR : flipL}
             >
             </button>
             <Scoreboard
               players={ players }
               showScores={ showScores }
-            />
+              shown="translateX(0%)"
+              hidden="translateX(-100%)"
+              />
             <Scoreboard
               players={ players }
               showScores={ !showScores }
+              shown="translateX(0%)"
+              hidden="translateX(100%)"
             />
           </div>
       }

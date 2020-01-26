@@ -38,7 +38,7 @@ button:disabled{
   font-size: 3rem;
   font-family: 'Architects Daughter', cursive;
   /* text-align: center; */
-  margin: 40px 0 1em;
+  margin: 44px 0 1.25em;
   -webkit-mask-image: url('../../assets/decaying.png');
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
@@ -60,6 +60,13 @@ button:disabled{
     width: 64px;
 
 
+}
+.flipL{
+  transform: rotateY(180deg);
+  transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
+}
+.flipR{
+  transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
 }
 
 
