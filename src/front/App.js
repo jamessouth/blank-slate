@@ -214,7 +214,7 @@ function swipe() {
             />
             <Scoreboard
               players={ players }
-              showScores={ showScores }
+              showScores={ !showScores }
             />
           </div>
       }

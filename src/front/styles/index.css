@@ -47,15 +47,18 @@ button:disabled{
   display: flex;
   flex-direction: row;
   position: relative;
-  width: 200%;
+  overflow-x: hidden;
+  height: 126px;
+  /* width: 200%; */
 }
 .score button{
-position: absolute;
-top: -33px;
-    background: url('../../assets/finger.png') no-repeat;
+    position: absolute;
+    z-index: 1;
+    right: 10%;
+    background: url('../../assets/finger.png') no-repeat center/contain;
     height: 33px;
     width: 64px;
-    
+
 
 }
 

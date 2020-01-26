@@ -13,7 +13,7 @@ export default function Scoreboard({ players, showScores }) {
             </li>);
 
     return (
-        <div className={ div } style={  {backgroundColor: showScores ? 'red': 'green' }}>
+        <div className={ div } style={  {transform: showScores ? 'translateX(0%)': 'translateX(100%)' }}>
             <h2 className={ h2 }>Players:&nbsp;&nbsp;{ playerList.length }</h2>
 
             <ul className={ ul }>{ playerList }</ul>

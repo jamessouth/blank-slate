@@ -6,6 +6,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    position: absolute;
+    transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75)
 }
 .li{
     display: flex;
