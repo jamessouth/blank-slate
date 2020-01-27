@@ -179,6 +179,7 @@ function swipe() {
   
 
 
+
   function startGame() {
     console.log('start');
     setShowStartButton(false);
@@ -186,6 +187,7 @@ function swipe() {
       message: "start"
     }));
   }
+
 
 
 
@@ -214,12 +216,14 @@ function swipe() {
               showScores={ showScores }
               shown="translateX(0%)"
               hidden="translateX(-100%)"
+              score={ true }
             />
             <Scoreboard
               players={ players }
               showScores={ !showScores }
               shown="translateX(0%)"
               hidden="translateX(100%)"
+              score={ false }
             />
           </div>
       }
