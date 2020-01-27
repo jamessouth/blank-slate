@@ -22,7 +22,7 @@ export default function App() {
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
   const [showSVGTimer, setShowSVGTimer] = useState(true);
-  const [word, setWord] = useState('');
+  // const [word, setWord] = useState('');
   const [winners, setWinners] = useState('');
   const [showWords, setShowWords] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
@@ -31,6 +31,8 @@ export default function App() {
   const [playerColor, setPlayerColor] = useState(null);
   const [
     {
+      newWord,
+      oldWord,
       players,
     },
     dispatch
@@ -63,7 +65,6 @@ export default function App() {
           setDupeName(false);
           break;
         case !!data.player:
-          // const name = data.message.split(': ')[1];
           setPlayerName(data.player.name);
           setPlayerColor(data.player.color);
           setHasJoined(true);
@@ -71,7 +72,7 @@ export default function App() {
         case !!data.word:
           setAnswered(false);
           setShowSVGTimer(true);
-          setWord(data.word);
+          dispatch({ type: 'word', payload: data });
           setShowWords(true);
           break;
         case !!data.time:
@@ -139,15 +140,8 @@ export default function App() {
 
 
 
-
-
-
-
-
-
-
-
-
+  
+  
 
 
 
@@ -224,6 +218,7 @@ function swipe() {
               shown="translateX(0%)"
               hidden="translateX(100%)"
               score={ false }
+              word={ oldWord }
             />
           </div>
       }
@@ -250,7 +245,7 @@ function swipe() {
                   onAnimationEnd={ () => send('') }
                   playerColor={ playerColor }
                   showSVGTimer={ showSVGTimer }
-                  word={ word }
+                  word={ newWord }
                 />
             }
             {

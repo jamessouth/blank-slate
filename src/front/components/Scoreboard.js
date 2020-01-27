@@ -2,9 +2,11 @@ import React from 'react';
 import { div, h2, li, p, ul } from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 
-export default function Scoreboard({ hidden, players, score, showScores, shown }) {
+export default function Scoreboard({ hidden, players, score, showScores, shown, word }) {
+    const sortFunc = score ? playerSort('score', -1) : playerSort('answer', 1);
+
     const playerList = players
-        .sort(playerSort)
+        .sort(sortFunc)
         .map((pl, ind) =>
             <li style={{backgroundColor: pl.color}} className={ li } key={ ind + pl.name }>
                 <p>{ pl.name }</p>
@@ -20,7 +22,7 @@ export default function Scoreboard({ hidden, players, score, showScores, shown }
 
     const titleStart = score ? 'Players:' : 'Last round:';
 
-    const titleEnd = score ? playerList.length : 'hub';
+    const titleEnd = score ? playerList.length : word;
 
     return (
         <div className={ div } style={  {transform: showScores ? shown: hidden }}>

@@ -1,8 +1,10 @@
 const initialState = {
+    newWord: '',
+    oldWord: '',
     players: [],
 };
   
-function reducer(state, { type, payload: { players } }) {
+function reducer(state, { type, payload: { players, word } }) {
 
     switch (type) {
 
@@ -10,6 +12,13 @@ function reducer(state, { type, payload: { players } }) {
             return {
                 ...state,
                 players
+            };
+
+        case 'word':
+            return {
+                ...state,
+                oldWord: state.newWord,
+                newWord: word
             };
 
         default:
