@@ -71,10 +71,14 @@ button:disabled{
 .winner{
   font-size: 2rem;
   font-weight: bold;
-  color: #4c4952;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  padding: 1em;
+  border-radius: 4px;
   filter: hue-rotate(0deg);
-  background-color: #ffee58;
-  animation: rotate 20s linear infinite;
+  background-image: radial-gradient(#ffee58, transparent);
+  animation: rotate 5s ease-in-out infinite;
 }
 @keyframes rotate {
   to {

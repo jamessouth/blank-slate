@@ -15,12 +15,13 @@ function reducer(state, { type, payload: { players, winners, word } }) {
                 players
             };
 
-            case 'winners':
-                const win = winners.includes(state.playerName) ? 'YOU WON!!' : 'YOU LOST!!';
-                return {
-                    ...state,
-                    h1Text: win
-                };
+        case 'winners':
+            console.log('www: ', winners, state);
+            const win = winners.includes(state.playerName) ? 'YOU WON!!' : 'YOU LOST!!';
+            return {
+                ...state,
+                h1Text: win
+            };
 
         case 'word':
             return {

@@ -20,12 +20,12 @@ export default function Scoreboard({ hidden, players, score, showScores, shown, 
                 }
             </li>);
 
-    const titleStart = score ? 'Players:' : 'Last round:';
+    const titleStart = score ? 'Players:' : 'Word:';
 
     const titleEnd = score ? playerList.length : word;
 
     return (
-        <div className={ div } style={  {transform: showScores ? shown: hidden }}>
+        <div className={ div } style={{ transform: showScores ? shown: hidden }}>
             <h2 className={ h2 }>{ titleStart }&nbsp;&nbsp;{ titleEnd }</h2>
 
             <ul className={ ul }>{ playerList }</ul>

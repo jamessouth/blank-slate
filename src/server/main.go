@@ -114,7 +114,7 @@ func checkForWin(clients map[*websocket.Conn]player) []player {
 	var res []player
 	for _, p := range clients {
 		log.Println(p)
-		if p.Score >= 25 {
+		if p.Score >= 15 {
 			res = append(res, p)
 		}
 	}

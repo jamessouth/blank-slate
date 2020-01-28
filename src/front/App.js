@@ -43,6 +43,8 @@ export default function App() {
 
 
 
+  
+
 
 
   
@@ -96,6 +98,7 @@ export default function App() {
         case !! data.winners:
           dispatch({ type: 'winners', payload: data });
           setWinners(data.winners)
+          dispatch({ type: 'word', payload: { word: '' } });
           break
         default:
           console.log('no case found: ', data);
