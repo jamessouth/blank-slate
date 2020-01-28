@@ -68,8 +68,19 @@ button:disabled{
 .flipR{
   transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
 }
-
-
+.winner{
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4c4952;
+  filter: hue-rotate(0deg);
+  background-color: #ffee58;
+  animation: rotate 20s linear infinite;
+}
+@keyframes rotate {
+  to {
+      filter: hue-rotate(360deg);
+  }
+}
 
 .show{
   opacity: 1;

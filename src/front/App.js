@@ -6,7 +6,7 @@ import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
-import { div, flipL, flipR, h1, score } from './styles/index.css';
+import { div, flipL, flipR, h1, score, winner } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -22,7 +22,6 @@ export default function App() {
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
   const [showSVGTimer, setShowSVGTimer] = useState(true);
-  // const [word, setWord] = useState('');
   const [winners, setWinners] = useState('');
   const [showWords, setShowWords] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
@@ -31,12 +30,15 @@ export default function App() {
   const [playerColor, setPlayerColor] = useState(null);
   const [
     {
+      h1Text,
       newWord,
       oldWord,
       players,
     },
     dispatch
   ] = useReducer(reducer, initialState);
+
+
 
 
 
@@ -91,6 +93,10 @@ export default function App() {
           }
 
           break;
+        case !! data.winners:
+          dispatch({ type: 'winners', payload: data });
+          setWinners(data.winners)
+          break
         default:
           console.log('no case found: ', data);
       }
@@ -193,7 +199,7 @@ function swipe() {
 
 
 
-      <h1 style={{backgroundColor: playerColor}} className={ h1 }>BLANK SLATE</h1>
+      <h1 style={{backgroundColor: playerColor}} className={ h1 }>{ h1Text }</h1>
 
 
       {
@@ -249,12 +255,12 @@ function swipe() {
                 />
             }
             {
-              winners && <p>{ winners.includes(' and ') ? 'Winners: ' : 'Winner: '}{ winners }</p>
+              winners && <p className={ winner }>{ winners.includes(' and ') ? 'Winners:' : 'Winner:'}&nbsp;&nbsp;{ winners }</p>
             }
           </div>
       }
       {
-        connected &&
+        connected && !winners &&
           <Form
             dupeName={ dupeName }
             playerName={ playerName }
