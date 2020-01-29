@@ -180,6 +180,9 @@ export default function App() {
 
   
 
+
+  
+
   
 function swipe() {
   console.log('hello: ', 'ghghgh');
@@ -187,6 +190,10 @@ function swipe() {
 }
 
   
+
+
+
+
 
 
 

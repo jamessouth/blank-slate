@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"runtime"
 	"sync"
 	"time"
 
@@ -316,23 +317,13 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 }
 
 func anss(s2 chan bool) {
-	log.Println("anss running")
+	log.Println("AAAAAAAAAanss running", runtime.NumGoroutine())
 	done := make(chan bool)
-	// for {
-	// 	ans := <-answerChannel
-	// 	sock := <-websocketChannel
-	// 	log.Println("sockans", ans, sock)
-	// 	log.Println("anssss", answers)
-
-	// 		scoreRound(answers)
-	// 		s2 <- true
-	// 	}
-	// }
-	// ticker := time.NewTicker(14 * time.Second)
 
 	for {
 		select {
 		case <-done:
+			log.Println("done222222", time.Now())
 			return
 		case ans := <-answerChannel:
 			numAns++
@@ -352,10 +343,12 @@ func anss(s2 chan bool) {
 					numAns = 0
 
 					time.Sleep(2 * time.Second)
+					log.Println("sss", time.Now())
 					s2 <- true
 				}
+				log.Println("done", time.Now())
+				return
 			}
-
 			// case <-ticker.C:
 		}
 	}
