@@ -101,13 +101,13 @@ func (l stringList) ShuffleList() []string {
 
 func formatTiedWinners(s []player) string {
 	if len(s) == 2 {
-		return s[0].Name + " and " + s[1].Name + "!"
+		return s[0].Name + " and " + s[1].Name
 	}
 	res := ""
 	for _, p := range s[:len(s)-1] {
 		res += p.Name + ", "
 	}
-	return res + "and " + s[len(s)-1].Name + "!"
+	return res + "and " + s[len(s)-1].Name
 }
 
 func checkForWin(clients map[*websocket.Conn]player) []player {

@@ -259,7 +259,7 @@ function swipe() {
                 />
             }
             {
-              winners && <p className={ winner }>{ winners.includes(' and ') ? 'Winners:' : 'Winner:'}&nbsp;&nbsp;{ winners }</p>
+              winners && <p className={ winner }>{ winners }&nbsp;&nbsp;{ winners.includes(' and ') ? 'Win!!!' : 'Wins!!!'}</p>
             }
           </div>
       }
