@@ -2,12 +2,19 @@ const initialState = {
     h1Text: 'BLANK SLATE',
     newWord: '',
     oldWord: '',
+    playerName: '',
     players: [],
 };
   
-function reducer(state, { type, payload: { players, winners, word } }) {
+function reducer(state, { type, payload: { name, players, winners, word } }) {
 
     switch (type) {
+
+        case 'player':
+            return {
+                ...state,
+                playerName: name
+            };
 
         case 'players':
             return {
@@ -16,7 +23,7 @@ function reducer(state, { type, payload: { players, winners, word } }) {
             };
 
         case 'winners':
-            console.log('www: ', winners, state);
+            // console.log('www: ', winners, state);
             const win = winners.includes(state.playerName) ? 'YOU WON!!' : 'YOU LOST!!';
             return {
                 ...state,

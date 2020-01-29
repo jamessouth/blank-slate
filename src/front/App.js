@@ -16,7 +16,7 @@ export default function App() {
 
   const [hasJoined, setHasJoined] = useState(false);
   const [showScores, setShowScores] = useState(true);
-  const [playerName, setPlayerName] = useState('');
+  // const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
@@ -33,6 +33,7 @@ export default function App() {
       h1Text,
       newWord,
       oldWord,
+      playerName,
       players,
     },
     dispatch
@@ -65,11 +66,11 @@ export default function App() {
       switch (true) {
         case !!data.players:
           dispatch({ type: 'players', payload: data });
-          console.log('pl: ', playerName);
           setDupeName(false);
           break;
         case !!data.player:
-          setPlayerName(data.player.name);
+          dispatch({ type: 'player', payload: data.player });
+          // setPlayerName(data.player.name);
           setPlayerColor(data.player.color);
           setHasJoined(true);
           break;
