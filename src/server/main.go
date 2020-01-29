@@ -209,6 +209,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				nameList = []string{}
 				colorList = stringList(data.Colors).ShuffleList()
 				wordList = stringList(data.Words).ShuffleList()
+				answers = make(map[string][]*websocket.Conn)
+				numAns = 0
 				// err
 			}
 			for c := range clients {

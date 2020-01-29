@@ -32,7 +32,7 @@ button:disabled{
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .h1{
@@ -74,20 +74,14 @@ button:disabled{
   font-family: 'Luckiest Guy', cursive;
   color: transparent;
   background-clip: text;
-  letter-spacing: 0px;
   -webkit-background-clip: text;
   filter: hue-rotate(0deg);
   background-image: linear-gradient(#ffee58, #ffee58);
-  animation: rotate 5s ease-in-out infinite, space 3s ease-in-out infinite;
+  animation: rotate 5s ease-in-out infinite;
 }
 @keyframes rotate {
   to {
       filter: hue-rotate(360deg);
-  }
-}
-@keyframes space {
-  50% {
-    letter-spacing: 5px;
   }
 }
 

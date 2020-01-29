@@ -151,6 +151,9 @@ export default function App() {
 
 
 
+
+
+
   
   
 
@@ -176,12 +179,15 @@ export default function App() {
 
 
   
+
+  
 function swipe() {
   console.log('hello: ', 'ghghgh');
   setShowScores(!showScores)
 }
 
   
+
 
 
 
@@ -273,6 +279,7 @@ function swipe() {
             hasJoined={ hasJoined }
             onEnter={ val => send(val) }
             send={ send }
+            playing={ !!newWord }
           />
       }
 
