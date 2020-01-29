@@ -150,6 +150,7 @@ export default function App() {
 
 
 
+
   
   
 
@@ -259,7 +260,7 @@ function swipe() {
                 />
             }
             {
-              winners && <p className={ winner }>{ winners }&nbsp;&nbsp;{ winners.includes(' and ') ? 'Win!!!' : 'Wins!!!'}</p>
+              winners && <p className={ winner }>{ winners } { winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>
             }
           </div>
       }
