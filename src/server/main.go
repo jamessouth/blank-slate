@@ -297,8 +297,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				close(timerDone)
 
 				log.Println("ready")
-				var sig = make(chan bool, 1)
-				var sig2 = make(chan bool, 1)
+				var sig = make(chan bool)
+				var sig2 = make(chan bool)
 				go sendWords(sig, sig2)
 			}
 
@@ -339,13 +339,13 @@ func anss(s chan bool, s2 chan bool) {
 
 				if winners := checkForWin(clients); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
+					close(s2)
 					s <- true
-					// close(s2)
 
 				} else if len(winners) == 1 {
 					messageChannel <- gamewinners{Winners: winners[0].Name}
+					close(s2)
 					s <- true
-					// close(s2)
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
@@ -366,11 +366,11 @@ func anss(s chan bool, s2 chan bool) {
 
 func sendWords(s chan bool, s2 chan bool) {
 	log.Println("SSSSSENDW", runtime.NumGoroutine())
-	for msg := range serveGame(wordList, s) {
+	for msg := range serveGame(wordList, s, s2) {
 
 		messageChannel <- word{Word: msg}
 		go anss(s, s2)
-		<-s2
+
 	}
 	log.Println("REACH HERERERERERE")
 	// if <-s {
@@ -378,17 +378,24 @@ func sendWords(s chan bool, s2 chan bool) {
 	// }
 }
 
-func serveGame(wl []string, s chan bool) <-chan string {
+func serveGame(wl []string, s, s2 chan bool) <-chan string {
 	log.Println("SEEEEEEERVEG", runtime.NumGoroutine())
 	ch := make(chan string)
 	go func() {
-		if v := <-s; v == true {
-			return
-		}
 		for _, w := range wl {
-			log.Println("SSSIIIZZZEEE", w)
-			ch <- w
-			// time.Sleep(10 * time.Second)
+
+			select {
+			case <-s:
+				log.Println("SSSSSS MESSAGE", s)
+				close(ch)
+				return
+			default:
+
+				log.Println("SSSIIIZZZEEE", w)
+				ch <- w
+				<-s2
+			}
+
 		}
 		close(ch)
 	}()
