@@ -5,7 +5,9 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"runtime"
+	"runtime/pprof"
 	"sync"
 	"time"
 
@@ -115,7 +117,7 @@ func checkForWin(clients map[*websocket.Conn]player) []player {
 	var res []player
 	for _, p := range clients {
 		log.Println(p)
-		if p.Score >= 15 {
+		if p.Score >= 9 {
 			res = append(res, p)
 		}
 	}
@@ -199,6 +201,12 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				}
 
 				delete(clients, ws)
+				log.Println()
+				log.Println()
+				log.Println("GOOOOOODBYEEEE", runtime.NumGoroutine())
+				pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+				log.Println()
+				log.Println()
 				// game.Players = st.Message{Players: utils.GetPlayers(clients)}
 				// log.Println("playerList: ", game.Players)
 				messageChannel <- players{Players: getPlayers(clients)}
@@ -293,13 +301,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				var sig2 = make(chan bool, 1)
 				go sendWords(sig, sig2)
 			}
-			// for cnt > 0 {
-
-			// 	go sendWord(sig, sig2)
-			// 	<-sig
-			// }
-			// close(sig)
-			// close(sig2)
 
 		} else if *msg.Answer != interface{}(nil) {
 
@@ -316,8 +317,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func anss(s2 chan bool) {
+func anss(s chan bool, s2 chan bool) {
+
 	log.Println("AAAAAAAAAanss running", runtime.NumGoroutine())
+	// pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+
 	done := make(chan bool)
 
 	for {
@@ -335,9 +339,13 @@ func anss(s2 chan bool) {
 
 				if winners := checkForWin(clients); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
+					s <- true
+					// close(s2)
 
 				} else if len(winners) == 1 {
 					messageChannel <- gamewinners{Winners: winners[0].Name}
+					s <- true
+					// close(s2)
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
@@ -356,25 +364,29 @@ func anss(s2 chan bool) {
 	// ticker.Stop()
 }
 
-func sendWords(s chan<- bool, s2 chan bool) {
-	for msg := range serveGame(wordList) {
-		messageChannel <- word{Word: msg}
-		// cnt--
-		go anss(s2)
-		// if cnt < 0 {
-		// 	s <- true
+func sendWords(s chan bool, s2 chan bool) {
+	log.Println("SSSSSENDW", runtime.NumGoroutine())
+	for msg := range serveGame(wordList, s) {
 
-		// }
+		messageChannel <- word{Word: msg}
+		go anss(s, s2)
 		<-s2
 	}
-
+	log.Println("REACH HERERERERERE")
+	// if <-s {
+	return
+	// }
 }
 
-func serveGame(wl []string) <-chan string {
+func serveGame(wl []string, s chan bool) <-chan string {
+	log.Println("SEEEEEEERVEG", runtime.NumGoroutine())
 	ch := make(chan string)
 	go func() {
-
+		if v := <-s; v == true {
+			return
+		}
 		for _, w := range wl {
+			log.Println("SSSIIIZZZEEE", w)
 			ch <- w
 			// time.Sleep(10 * time.Second)
 		}
@@ -384,6 +396,7 @@ func serveGame(wl []string) <-chan string {
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
+
 	for {
 		log.Println(time.Now(), countdown)
 		select {
@@ -399,6 +412,7 @@ func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
 }
 
 func handlePlayerMessages() {
+
 	for {
 		msg := <-messageChannel
 		log.Println("95", msg, len(messageChannel))
@@ -436,12 +450,11 @@ func main() {
 	http.HandleFunc("/ws", handleConnections)
 
 	go handlePlayerMessages()
-	// go handleServerMessages()
 
 	log.Println("server running on port 8000")
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
-
+	log.Println("MMMMMAIN", runtime.NumGoroutine())
 }

@@ -181,7 +181,8 @@ export default function App() {
   
 
 
-  
+
+
 
   
 function swipe() {
@@ -190,6 +191,12 @@ function swipe() {
 }
 
   
+
+
+
+
+
+
 
 
 
