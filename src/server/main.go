@@ -337,11 +337,13 @@ func anss(s chan bool, s2 chan bool) {
 
 				if winners := checkForWin(clients); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
+					gameobj.InProgress = false
 					close(s2)
 					s <- true
 
 				} else if len(winners) == 1 {
 					messageChannel <- gamewinners{Winners: winners[0].Name}
+					gameobj.InProgress = false
 					close(s2)
 					s <- true
 				} else {

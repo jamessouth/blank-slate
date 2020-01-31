@@ -21,6 +21,7 @@ export default function App() {
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
   const [showSVGTimer, setShowSVGTimer] = useState(true);
+  const [showReset, setShowReset] = useState(false);
   const [winners, setWinners] = useState('');
   const [showWords, setShowWords] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
@@ -38,15 +39,6 @@ export default function App() {
     dispatch
   ] = useReducer(reducer, initialState);
 
-
-
-
-
-
-  
-
-
-
   
   useEffect(() => {
     console.log('connect to server...', Date.now());
@@ -57,6 +49,7 @@ export default function App() {
     }, false);
 
 
+    
 
     ws.addEventListener('message', function (e) {
       const data = JSON.parse(e.data);
@@ -99,6 +92,9 @@ export default function App() {
           dispatch({ type: 'winners', payload: data });
           setWinners(data.winners)
           dispatch({ type: 'word', payload: { word: '' } });
+          setTimeout(() => {
+            setShowReset(true);
+          }, 5000);
           break
         default:
           console.log('no case found: ', data);
@@ -106,26 +102,6 @@ export default function App() {
 
 
     }, false);
-
-
-
-
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
-
-    
 
 
     ws.addEventListener('error', function (e) {
@@ -147,22 +123,6 @@ export default function App() {
 
 
 
-
-
-
-
-  
-
-
-
-
-
-  
-  
-
-
-
-
   function send(text) {
     if (!hasJoined) {
       ws.send(JSON.stringify({
@@ -178,27 +138,11 @@ export default function App() {
   }
 
 
-
-
-
-  
-
-
-
-
-
   
 function swipe() {
   console.log('hello: ', 'ghghgh');
   setShowScores(!showScores)
 }
-
-  
-
-
-
-
-
 
 
   function startGame() {
@@ -208,8 +152,9 @@ function swipe() {
       message: "start"
     }));
   }
-
-
+  function resetGame() {
+    window.location.reload();
+  }
 
 
   return (
@@ -277,6 +222,15 @@ function swipe() {
             }
             {
               winners && <p className={ winner }>{ winners } { winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>
+            }
+            {
+              showReset &&
+                <button
+                  type="button"
+                  onClick={ resetGame }
+                >
+                  Play Again
+                </button>
             }
           </div>
       }
