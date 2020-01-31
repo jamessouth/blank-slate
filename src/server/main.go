@@ -5,9 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"runtime"
-	"runtime/pprof"
 	"sync"
 	"time"
 
@@ -204,7 +202,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				log.Println()
 				log.Println()
 				log.Println("GOOOOOODBYEEEE", runtime.NumGoroutine())
-				pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+				// pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
 				log.Println()
 				log.Println()
 				// game.Players = st.Message{Players: utils.GetPlayers(clients)}
@@ -463,5 +461,4 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
-	log.Println("MMMMMAIN", runtime.NumGoroutine())
 }

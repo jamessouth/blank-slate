@@ -16,7 +16,6 @@ export default function App() {
 
   const [hasJoined, setHasJoined] = useState(false);
   const [showScores, setShowScores] = useState(true);
-  // const [playerName, setPlayerName] = useState('');
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
@@ -70,7 +69,6 @@ export default function App() {
           break;
         case !!data.player:
           dispatch({ type: 'player', payload: data.player });
-          // setPlayerName(data.player.name);
           setPlayerColor(data.player.color);
           setHasJoined(true);
           break;
@@ -79,6 +77,7 @@ export default function App() {
           setShowSVGTimer(true);
           dispatch({ type: 'word', payload: data });
           setShowWords(true);
+          setShowStartTimer(false);
           break;
         case !!data.time:
           setShowStartTimer(true);
@@ -150,11 +149,9 @@ export default function App() {
 
 
 
+
+
   
-
-
-
-
 
 
 
