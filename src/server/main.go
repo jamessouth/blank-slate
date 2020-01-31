@@ -300,6 +300,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				go sendWords(sig, sig2)
 			}
 
+		} else if msg.Message == "reset" {
+			messageChannel <- message{Message: "reset"}
+
 		} else if *msg.Answer != interface{}(nil) {
 
 			log.Println("ANSmsg", msg)
@@ -307,7 +310,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 
-			log.Println("84msg", msg)
+			log.Println("other msg", msg)
 
 			messageChannel <- msg
 		}
@@ -337,13 +340,11 @@ func anss(s chan bool, s2 chan bool) {
 
 				if winners := checkForWin(clients); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
-					gameobj.InProgress = false
 					close(s2)
 					s <- true
 
 				} else if len(winners) == 1 {
 					messageChannel <- gamewinners{Winners: winners[0].Name}
-					gameobj.InProgress = false
 					close(s2)
 					s <- true
 				} else {

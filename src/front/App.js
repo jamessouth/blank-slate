@@ -85,8 +85,9 @@ export default function App() {
           } else if (data.message == 'in progress') {
             setGameHasBegun(true);
             setShowStartTimer(true);
+          } else if (data.message == 'reset') {
+            window.location.reload();
           }
-
           break;
         case !! data.winners:
           dispatch({ type: 'winners', payload: data });
@@ -153,7 +154,9 @@ function swipe() {
     }));
   }
   function resetGame() {
-    window.location.reload();
+    ws.send(JSON.stringify({
+      message: "reset"
+    }));
   }
 
 
