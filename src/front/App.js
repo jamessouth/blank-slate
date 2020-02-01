@@ -50,55 +50,68 @@ export default function App() {
 
 
     
+    
 
     ws.addEventListener('message', function (e) {
-      const data = JSON.parse(e.data);
-      console.log('msg: ', e, data);
+      const {
+        message,
+        player,
+        players,
+        time,
+        winners,
+        word
+      } = JSON.parse(e.data);
+      console.log('msg: ', e.data);
 
       switch (true) {
-        case !!data.players:
-          dispatch({ type: 'players', payload: data });
-          setDupeName(false);
-          break;
-        case !!data.player:
-          dispatch({ type: 'player', payload: data.player });
-          setPlayerColor(data.player.color);
-          setHasJoined(true);
-          break;
-        case !!data.word:
-          setAnswered(false);
-          setShowSVGTimer(true);
-          dispatch({ type: 'word', payload: data });
-          setShowWords(true);
-          setShowStartTimer(false);
-          break;
-        case !!data.time:
-          setShowStartTimer(true);
-          setShowStartButton(false);
-          setTimer(data.time - 1);
-          break;
-        case !!data.message:
-          if (data.message == 'duplicate') {
-
-            setDupeName(true);
-  
-          } else if (data.message == 'in progress') {
-            setGameHasBegun(true);
-            setShowStartTimer(true);
-          } else if (data.message == 'reset') {
-            window.location.reload();
+        case !!message:
+          switch (message) {
+            case 'duplicate':
+              setDupeName(true);
+              break;
+            case 'in progress':
+              setGameHasBegun(true);
+              setShowStartTimer(true);
+              break;
+            case 'reset':
+              window.location.reload();
+              break;
+            default:
+              console.log('no case for this message found: ', message);
           }
           break;
-        case !! data.winners:
-          dispatch({ type: 'winners', payload: data });
-          setWinners(data.winners)
-          dispatch({ type: 'word', payload: { word: '' } });
+        case !!player:
+          const { color, name } = player;
+          setPlayerColor(color);
+          dispatch({ type: 'player', name });
+          setHasJoined(true);
+          break;
+        case !!players:
+          dispatch({ type: 'players', players });
+          setDupeName(false);
+          break;
+        case !!time:
+          setShowStartTimer(true);
+          setShowStartButton(false);
+          setTimer(time - 1);
+          break;
+        case !!winners:
+          dispatch({ type: 'winners', winners });
+          setWinners(winners)
+          dispatch({ type: 'word', word: '' });
           setTimeout(() => {
             setShowReset(true);
           }, 5000);
           break
+        case !!word:
+          setAnswered(false);
+          setShowSVGTimer(true);
+          dispatch({ type: 'word', word });
+          setShowWords(true);
+          setShowStartTimer(false);
+          break;
         default:
-          console.log('no case found: ', data);
+          console.log('no case found: ', e.data);
       }
 
 

@@ -6,7 +6,7 @@ const initialState = {
     players: [],
 };
   
-function reducer(state, { type, payload: { name, players, winners, word } }) {
+function reducer(state, { type, name, players, winners, word }) {
 
     switch (type) {
 

@@ -181,7 +181,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// log.Println("colors", colorList, len(colorList))
-	log.Println("words", wordList, len(wordList))
+	log.Println("words", wordList, len(wordList), runtime.NumGoroutine())
 
 	for {
 		var msg message
