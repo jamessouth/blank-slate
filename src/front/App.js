@@ -6,7 +6,7 @@ import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
-import { div, flipL, flipR, h1, score, winner } from './styles/index.css';
+import { div, h1, winner } from './styles/index.css';
 
 const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
@@ -15,7 +15,6 @@ export default function App() {
   console.log('app');
 
   const [hasJoined, setHasJoined] = useState(false);
-  const [showScores, setShowScores] = useState(true);
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
@@ -50,7 +49,7 @@ export default function App() {
 
 
     
-    
+
 
     ws.addEventListener('message', function (e) {
       const {
@@ -153,10 +152,7 @@ export default function App() {
 
 
   
-function swipe() {
-  console.log('hello: ', 'ghghgh');
-  setShowScores(!showScores)
-}
+
 
 
   function startGame() {
@@ -186,29 +182,14 @@ function swipe() {
 
       {
         players.length > 0 && connected &&
-          <div style={{ height: `calc(95px + (28px * ${players.length}))` }} className={ score }>
-            <button
-              type="button"
-              onClick={ swipe }
-              className={ showScores ? flipR : flipL }
-            >
-            </button>
-            <Scoreboard
-              players={ players }
-              showScores={ showScores }
-              shown="translateX(0%)"
-              hidden="translateX(-100%)"
-              score={ true }
-            />
-            <Scoreboard
-              players={ players }
-              showScores={ !showScores }
-              shown="translateX(0%)"
-              hidden="translateX(100%)"
-              score={ false }
-              word={ oldWord }
-            />
-          </div>
+          
+
+
+          <Scoreboard
+            players={ players }
+            word={ oldWord }
+          />
+          
       }
       {
         hasJoined && connected &&

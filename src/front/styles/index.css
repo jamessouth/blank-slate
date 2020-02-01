@@ -44,31 +44,9 @@ button:disabled{
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
 }
-.score{
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  overflow-x: hidden;
-  /* height: 126px; */
-  /* width: 200%; */
-}
-.score button{
-    position: absolute;
-    z-index: 1;
-    right: 10%;
-    background: url('../../assets/finger.png') no-repeat center/contain;
-    height: 33px;
-    width: 64px;
 
 
-}
-.flipL{
-  transform: rotateY(180deg);
-  transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
-}
-.flipR{
-  transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
-}
+
 .winner{
   font-size: 3rem;
   font-family: 'Luckiest Guy', cursive;
@@ -106,6 +84,7 @@ button:disabled{
     background: url('../../assets/tab.jpg') no-repeat top/cover;
   }
 }
+
 
 @media screen and (min-width: 1440px){
   body{
