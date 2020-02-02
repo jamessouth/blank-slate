@@ -12,6 +12,7 @@ export default function Scoreboard({ players, word }) {
                 <p>{ pl.name }</p>
                 <p>{ pl.score }</p>
             </li>);
+            
     const answerList = players
         .sort(playerSort('answer', 1))
         .map((pl, ind) =>

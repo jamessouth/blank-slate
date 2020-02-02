@@ -2,21 +2,18 @@
     margin-bottom: 1.25em;
     text-align: initial;
     margin-left: 10%;
-
 }
 .div{
     display: flex;
     flex-direction: column;
     width: 100%;
     position: absolute;
-    transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
 }
 .flipL{
     transform: rotateY(180deg);
-    transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
   }
-.flipR{
-transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
+.div, .flipL, .flipR{
+    transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
 }
 .li{
     display: flex;
@@ -27,7 +24,6 @@ transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
     justify-content: space-between;
     align-items: center;
     font-size: 18px;
-    /* background-color: #58355e; */
 }
 .offScreenLeft{
     transform: translateX(-100%);
@@ -46,8 +42,6 @@ transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
     flex-direction: row;
     position: relative;
     overflow-x: hidden;
-    /* height: 126px; */
-    /* width: 200%; */
 }
 .score button{
     position: absolute;
@@ -68,8 +62,6 @@ transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
     justify-content: space-around;
     align-items: center;
 }
-
-
 @media screen and (min-width: 1024px){
     .div{
         width: 40%;
@@ -86,5 +78,4 @@ transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
     .score button{
       display: none;
     }
-    
 }

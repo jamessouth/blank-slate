@@ -63,15 +63,6 @@ button:disabled{
   }
 }
 
-.show{
-  opacity: 1;
-}
-.hide{
-  opacity: 0;
-  transition: opacity 1s ease-in;
-}
-
-
 @media screen and (min-width: 414px){
   .h1{
     font-size: 3.5rem;
