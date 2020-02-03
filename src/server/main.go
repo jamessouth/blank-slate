@@ -13,6 +13,7 @@ import (
 	"github.com/jamessouth/blank-slate/src/server/data"
 )
 
+// "watchFileChanges": true,
 type game struct {
 	InProgress bool `json:"inProgress"`
 }
@@ -303,7 +304,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if msg.Message == "reset" {
 			messageChannel <- message{Message: "reset"}
 
-		} else if *msg.Answer != interface{}(nil) {
+		} else if len(*msg.Answer) > -1 {
 
 			log.Println("ANSmsg", msg)
 			answerChannel <- answer{Answer: *msg.Answer, Conn: ws}
