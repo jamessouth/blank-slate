@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Radio from './Radio';
-import { inputdiv, p, radiodiv, signin, signedin } from '../styles/Form.module.css';
-
+import { signin, signedin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, playerName, hasJoined, onEnter, playing }) {
 
     const [inputText, setInputText] = useState('');
     const [maxLength, setMaxLength] = useState(10);
+    const [disableSubmit, setDisableSubmit] = useState(true);
+
 
     useEffect(() => {
       if (hasJoined) {
@@ -14,9 +14,9 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
       }
     }, [hasJoined]);
 
-    function handleRadioChange(val) {
-      setRadioValue(val);
-    }
+    useEffect(() => {
+      setDisableSubmit((inputText.length < 2 || inputText.length > maxLength) || answered || (hasJoined && !playing));
+    }, [inputText, maxLength, answered, hasJoined, playing]);
 
     return (
 
@@ -28,7 +28,7 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
             value={ inputText }
             spellCheck="false"
             onKeyPress={ ({ key }) => {
-                if (key == "Enter" && !answered) {
+                if (key == "Enter" && !disableSubmit) {
                     onEnter(inputText);
                     setInputText('');
                 }
@@ -44,7 +44,7 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
               onEnter(inputText);
               setInputText('');
             }}
-            { ...((inputText.length < 2 || inputText.length > maxLength) || answered || (hasJoined && !playing) ? { 'disabled': true } : {}) }
+            { ...(disableSubmit ? { 'disabled': true } : {}) }
           >
             Submit
           </button>
