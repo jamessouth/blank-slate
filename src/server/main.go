@@ -1,10 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
+	re "regexp"
 	"runtime"
 	"sync"
 	"time"
@@ -27,6 +29,17 @@ type message struct {
 	Answer  *string `json:"answer,omitempty"`
 	Name    string  `json:"name,omitempty"`
 	Message string  `json:"message,omitempty"`
+}
+
+func (m message) validate(r *re.Regexp) error {
+	if !r.MatchString(*m.Answer) {
+		return errors.New("Invalid Answer in message struct: " + *m.Answer)
+	} else if !r.MatchString(m.Name) {
+		return errors.New("Invalid Name in message struct: " + m.Name)
+	} else if !r.MatchString(m.Message) {
+		return errors.New("Invalid Message in message struct: " + m.Message)
+	}
+	return nil
 }
 
 type player struct {
@@ -69,9 +82,11 @@ var (
 
 	nameList []string
 
-	colorList = stringList(data.Colors).ShuffleList()
+	regex = re.MustCompile(`(?i)^[a-z0-9 -]+$`)
 
-	wordList = stringList(data.Words).ShuffleList()
+	colorList = stringList(data.Colors).shuffleList()
+
+	wordList = stringList(data.Words).shuffleList()
 
 	answers = make(map[string][]*websocket.Conn)
 
@@ -91,7 +106,7 @@ func nameCheck(s string, names []string) bool {
 
 type stringList []string
 
-func (l stringList) ShuffleList() []string {
+func (l stringList) shuffleList() []string {
 	t := time.Now().UnixNano()
 	rand.Seed(t)
 
@@ -215,8 +230,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			if len(clients) == 0 {
 				gameobj.InProgress = false
 				nameList = []string{}
-				colorList = stringList(data.Colors).ShuffleList()
-				wordList = stringList(data.Words).ShuffleList()
+				colorList = stringList(data.Colors).shuffleList()
+				wordList = stringList(data.Words).shuffleList()
 				answers = make(map[string][]*websocket.Conn)
 				numAns = 0
 				// err
@@ -232,90 +247,98 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Println("answerlength", msg.Answer)
 		fmt.Printf("%+v\n", msg)
 
-		if msg.Name != "" {
-			var playerColor string
-			playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-
-			clients[ws] = player{Name: msg.Name, Color: playerColor, Score: 0}
-			dupe := nameCheck(msg.Name, nameList)
-
-			if dupe {
-				err := ws.WriteJSON(message{Message: "duplicate"})
-				if err != nil {
-					log.Printf("99error: %v", err)
-					// delete(clients, client)
-				}
-				// ws.Close()
-				delete(clients, ws)
-				colorList = append(colorList, playerColor)
-				// break
-			} else {
-
-				err = ws.WriteJSON(playerJSON{player{Name: msg.Name, Color: playerColor}})
-				if err != nil {
-					log.Printf("n111error: %v", err)
-					// delete(clients, client)
-				}
-
-				nameList = append(nameList, msg.Name)
-
-				log.Println("67", clients)
-				// game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
-				// log.Println("68", game.Players)
-
-				// playersListChannel <- game.Players
-
-				// pList, err := json.Marshal(game.Players)
-				// if err != nil {
-				// 	log.Printf("n111error: %v", err)
-				// 	// delete(clients, client)
-				// }
-
-				messageChannel <- players{Players: getPlayers(clients)}
-
-				if gameobj.InProgress {
-					messageChannel <- message{Message: "in progress"}
-				}
+		if err = msg.validate(regex); err != nil {
+			log.Println("invalid", err)
+			err := ws.WriteJSON(message{Message: "invalid"})
+			if err != nil {
+				log.Printf("error writing to client: %v", err)
 			}
-
-		} else if msg.Message == "start" {
-
-			if !gameobj.InProgress {
-				gameobj.InProgress = true
-
-				const startDelay = 6
-
-				timerDone := make(chan bool)
-				ticker := time.NewTicker(time.Second)
-
-				go handleTimers(timerDone, ticker, startDelay)
-
-				time.Sleep(startDelay * time.Second)
-				ticker.Stop()
-				timerDone <- true
-				close(timerDone)
-
-				log.Println("ready")
-				var sig = make(chan bool)
-				var sig2 = make(chan bool)
-				go sendWords(sig, sig2)
-			}
-
-		} else if msg.Message == "reset" {
-			messageChannel <- message{Message: "reset"}
-
-		} else if len(*msg.Answer) > -1 {
-
-			log.Println("ANSmsg", msg)
-			answerChannel <- answer{Answer: *msg.Answer, Conn: ws}
-
 		} else {
 
-			log.Println("other msg", msg)
+			if msg.Name != "" {
+				var playerColor string
+				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
 
-			messageChannel <- msg
+				clients[ws] = player{Name: msg.Name, Color: playerColor, Score: 0}
+				dupe := nameCheck(msg.Name, nameList)
+
+				if dupe {
+					err := ws.WriteJSON(message{Message: "duplicate"})
+					if err != nil {
+						log.Printf("99error: %v", err)
+						// delete(clients, client)
+					}
+					// ws.Close()
+					delete(clients, ws)
+					colorList = append(colorList, playerColor)
+					// break
+				} else {
+
+					err = ws.WriteJSON(playerJSON{player{Name: msg.Name, Color: playerColor}})
+					if err != nil {
+						log.Printf("n111error: %v", err)
+						// delete(clients, client)
+					}
+
+					nameList = append(nameList, msg.Name)
+
+					log.Println("67", clients)
+					// game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
+					// log.Println("68", game.Players)
+
+					// playersListChannel <- game.Players
+
+					// pList, err := json.Marshal(game.Players)
+					// if err != nil {
+					// 	log.Printf("n111error: %v", err)
+					// 	// delete(clients, client)
+					// }
+
+					messageChannel <- players{Players: getPlayers(clients)}
+
+					if gameobj.InProgress {
+						messageChannel <- message{Message: "progress"}
+					}
+				}
+
+			} else if msg.Message == "start" {
+
+				if !gameobj.InProgress {
+					gameobj.InProgress = true
+
+					const startDelay = 6
+
+					timerDone := make(chan bool)
+					ticker := time.NewTicker(time.Second)
+
+					go handleTimers(timerDone, ticker, startDelay)
+
+					time.Sleep(startDelay * time.Second)
+					ticker.Stop()
+					timerDone <- true
+					close(timerDone)
+
+					log.Println("ready")
+					var sig = make(chan bool)
+					var sig2 = make(chan bool)
+					go sendWords(sig, sig2)
+				}
+
+			} else if msg.Message == "reset" {
+				messageChannel <- message{Message: "reset"}
+
+			} else if len(*msg.Answer) > -1 {
+
+				log.Println("ANSmsg", msg)
+				answerChannel <- answer{Answer: *msg.Answer, Conn: ws}
+
+			} else {
+
+				log.Println("other msg", msg)
+
+				messageChannel <- msg
+			}
 		}
-
 	}
 }
 

@@ -26,6 +26,7 @@ export default function App() {
   const [showStartButton, setShowStartButton] = useState(true);
   const [gameHasBegun, setGameHasBegun] = useState(false);
   const [dupeName, setDupeName] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
   const [playerColor, setPlayerColor] = useState(null);
   const [
     {
@@ -68,7 +69,10 @@ export default function App() {
             case 'duplicate':
               setDupeName(true);
               break;
-            case 'in progress':
+            case 'invalid':
+              setInvalidInput(true);
+              break;
+            case 'progress':
               setGameHasBegun(true);
               setShowStartTimer(true);
               break;
