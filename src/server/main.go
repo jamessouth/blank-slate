@@ -38,11 +38,8 @@ func validateName(s string, r *re.Regexp) error {
 	return nil
 }
 
-func validateAnswer(s string, r *re.Regexp) string {
-	// if len(s) > 0 {
+func stripAnswer(s string, r *re.Regexp) string {
 	return r.ReplaceAllLiteralString(s, "")
-	// }
-	// return s
 }
 
 type player struct {
@@ -85,7 +82,9 @@ var (
 
 	nameList []string
 
-	regex = re.MustCompile(`(?i)^[a-z0-8 -]+$`)
+	nameRegex = re.MustCompile(`(?i)^[a-z0-9 -']+$`)
+
+	answerRegex = re.MustCompile(`(?i)[^a-z0-9 -']+`)
 
 	colorList = stringList(data.Colors).shuffleList()
 
@@ -251,7 +250,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%+v\n", msg)
 
 		if msg.Name != "" {
-			if err = validateName(msg.Name, regex); err != nil {
+			if err = validateName(msg.Name, nameRegex); err != nil {
 				log.Println("invalid", err)
 				err := ws.WriteJSON(message{Message: "invalid"})
 				if err != nil {
@@ -333,7 +332,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if len(*msg.Answer) > -1 {
 
 			log.Println("ANSmsg", msg)
-			answerChannel <- answer{Answer: validateAnswer(*msg.Answer, regex), Conn: ws}
+			answerChannel <- answer{Answer: stripAnswer(*msg.Answer, answerRegex), Conn: ws}
 
 		} else {
 

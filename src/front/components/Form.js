@@ -3,7 +3,7 @@ import { inv, signin, signedin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing }) {
 
-    const regex = /^[a-z0-9 -]+$/i;
+    const regex = /^[a-z0-9 -']+$/i;
     const NAME_MAX_LENGTH = 10;
     const ANSWER_MAX_LENGTH = 16;
     const INPUT_MIN_LENGTH = 2;
@@ -23,14 +23,14 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
     }, [hasJoined]);
 
     useEffect(() => {
-      setDisableSubmit((inputText.length < INPUT_MIN_LENGTH || inputText.length > maxLength) || answered || !isValidInput || (hasJoined && !playing));
-    }, [inputText, maxLength, answered, isValidInput, hasJoined, playing]);
+      setDisableSubmit((inputText.length < INPUT_MIN_LENGTH || inputText.length > maxLength) || answered || invalidInput || !isValidInput || (hasJoined && !playing));
+    }, [inputText, maxLength, answered, invalidInput, isValidInput, hasJoined, playing]);
 
     return (
         <section className={ !hasJoined ? signin : [signin, signedin].join(' ') }>
           {
             invalidInput &&
-            <p className={ inv }>Letters, numbers, space, and dash only</p>
+            <p className={ inv }>Letters, numbers, space, ' and - only</p>
           }
           <label>{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
           <input

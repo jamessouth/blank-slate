@@ -40,9 +40,14 @@ export default function App() {
   ] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    setTimeout(() => {
-      setInvalidInput(false);
-    }, 3750);
+    console.log('useeee: ', 'timeout');
+    if (invalidInput) {
+
+      setTimeout(() => {
+        console.log('useeee: ', 'timeout5555555555555');
+        setInvalidInput(false);
+      }, 3750);
+    }
   }, [invalidInput]);
 
   
@@ -60,6 +65,7 @@ export default function App() {
 
 
 
+    
 
 
     
