@@ -31,15 +31,18 @@ type message struct {
 	Message string  `json:"message,omitempty"`
 }
 
-func (m message) validate(r *re.Regexp) error {
-	if !r.MatchString(*m.Answer) {
-		return errors.New("Invalid Answer in message struct: " + *m.Answer)
-	} else if !r.MatchString(m.Name) {
-		return errors.New("Invalid Name in message struct: " + m.Name)
-	} else if !r.MatchString(m.Message) {
-		return errors.New("Invalid Message in message struct: " + m.Message)
+func validateName(s string, r *re.Regexp) error {
+	if !r.MatchString(s) {
+		return errors.New("Invalid name: " + s)
 	}
 	return nil
+}
+
+func validateAnswer(s string, r *re.Regexp) string {
+	// if len(s) > 0 {
+	return r.ReplaceAllLiteralString(s, "")
+	// }
+	// return s
 }
 
 type player struct {
@@ -82,7 +85,7 @@ var (
 
 	nameList []string
 
-	regex = re.MustCompile(`(?i)^[a-z0-9 -]+$`)
+	regex = re.MustCompile(`(?i)^[a-z0-8 -]+$`)
 
 	colorList = stringList(data.Colors).shuffleList()
 
@@ -247,15 +250,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Println("answerlength", msg.Answer)
 		fmt.Printf("%+v\n", msg)
 
-		if err = msg.validate(regex); err != nil {
-			log.Println("invalid", err)
-			err := ws.WriteJSON(message{Message: "invalid"})
-			if err != nil {
-				log.Printf("error writing to client: %v", err)
-			}
-		} else {
+		if msg.Name != "" {
+			if err = validateName(msg.Name, regex); err != nil {
+				log.Println("invalid", err)
+				err := ws.WriteJSON(message{Message: "invalid"})
+				if err != nil {
+					log.Printf("error writing to client: %v", err)
+				}
+			} else {
 
-			if msg.Name != "" {
 				var playerColor string
 				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
 
@@ -300,45 +303,45 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						messageChannel <- message{Message: "progress"}
 					}
 				}
-
-			} else if msg.Message == "start" {
-
-				if !gameobj.InProgress {
-					gameobj.InProgress = true
-
-					const startDelay = 6
-
-					timerDone := make(chan bool)
-					ticker := time.NewTicker(time.Second)
-
-					go handleTimers(timerDone, ticker, startDelay)
-
-					time.Sleep(startDelay * time.Second)
-					ticker.Stop()
-					timerDone <- true
-					close(timerDone)
-
-					log.Println("ready")
-					var sig = make(chan bool)
-					var sig2 = make(chan bool)
-					go sendWords(sig, sig2)
-				}
-
-			} else if msg.Message == "reset" {
-				messageChannel <- message{Message: "reset"}
-
-			} else if len(*msg.Answer) > -1 {
-
-				log.Println("ANSmsg", msg)
-				answerChannel <- answer{Answer: *msg.Answer, Conn: ws}
-
-			} else {
-
-				log.Println("other msg", msg)
-
-				messageChannel <- msg
 			}
+		} else if msg.Message == "start" {
+
+			if !gameobj.InProgress {
+				gameobj.InProgress = true
+
+				const startDelay = 6
+
+				timerDone := make(chan bool)
+				ticker := time.NewTicker(time.Second)
+
+				go handleTimers(timerDone, ticker, startDelay)
+
+				time.Sleep(startDelay * time.Second)
+				ticker.Stop()
+				timerDone <- true
+				close(timerDone)
+
+				log.Println("ready")
+				var sig = make(chan bool)
+				var sig2 = make(chan bool)
+				go sendWords(sig, sig2)
+			}
+
+		} else if msg.Message == "reset" {
+			messageChannel <- message{Message: "reset"}
+
+		} else if len(*msg.Answer) > -1 {
+
+			log.Println("ANSmsg", msg)
+			answerChannel <- answer{Answer: validateAnswer(*msg.Answer, regex), Conn: ws}
+
+		} else {
+
+			log.Println("other msg", msg)
+
+			messageChannel <- msg
 		}
+
 	}
 }
 

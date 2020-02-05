@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { signin, signedin } from '../styles/Form.module.css';
+import { inv, signin, signedin } from '../styles/Form.module.css';
 
-export default function Form({ answered, dupeName, playerName, hasJoined, onEnter, playing }) {
+export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing }) {
 
     const regex = /^[a-z0-9 -]+$/i;
     const NAME_MAX_LENGTH = 10;
@@ -28,6 +28,10 @@ export default function Form({ answered, dupeName, playerName, hasJoined, onEnte
 
     return (
         <section className={ !hasJoined ? signin : [signin, signedin].join(' ') }>
+          {
+            invalidInput &&
+            <p className={ inv }>Letters, numbers, space, and dash only</p>
+          }
           <label>{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
           <input
             autoFocus

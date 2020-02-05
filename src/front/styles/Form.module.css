@@ -6,6 +6,14 @@
     justify-content: space-between;
     align-items: center;
 }
+.inv{
+    position: absolute;
+    color: #800000;
+    background-color: #ffee58;
+    font-weight: bold;
+    width: 90%;
+    max-width: 600px;
+}
 
 
 .p{
@@ -14,6 +22,7 @@
 
 
 .signin{
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

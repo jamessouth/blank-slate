@@ -39,6 +39,12 @@ export default function App() {
     dispatch
   ] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setInvalidInput(false);
+    }, 3750);
+  }, [invalidInput]);
+
   
   useEffect(() => {
     console.log('connect to server...', Date.now());
@@ -50,6 +56,14 @@ export default function App() {
 
 
     
+
+
+
+
+
+
+    
+
 
 
     ws.addEventListener('message', function (e) {
@@ -238,13 +252,14 @@ export default function App() {
       {
         connected && !winners &&
           <Form
-            dupeName={ dupeName }
-            playerName={ playerName }
             answered={ answered }
+            dupeName={ dupeName }
             hasJoined={ hasJoined }
+            invalidInput={ invalidInput }
             onEnter={ val => send(val) }
-            send={ send }
+            playerName={ playerName }
             playing={ !!newWord }
+            send={ send }
           />
       }
 
