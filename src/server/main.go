@@ -2,20 +2,16 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	re "regexp"
-	"runtime"
-	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/jamessouth/blank-slate/src/server/data"
 )
 
-// "watchFileChanges": true,
 type game struct {
 	InProgress bool `json:"inProgress"`
 }
@@ -38,7 +34,7 @@ func validateName(s string, r *re.Regexp) error {
 	return nil
 }
 
-func stripAnswer(s string, r *re.Regexp) string {
+func sanitizeAnswer(s string, r *re.Regexp) string {
 	return r.ReplaceAllLiteralString(s, "")
 }
 
@@ -69,12 +65,15 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
+const (
+	winningScore = 25
+)
+
 var (
-	clients   = make(map[*websocket.Conn]player)
-	clientsMu sync.Mutex
+	clients = make(map[*websocket.Conn]player)
+	// clientsMu sync.Mutex
 
 	messageChannel = make(chan interface{})
-	// playersListChannel = make(chan st.PlayersList)
 
 	upgrader = websocket.Upgrader{}
 
@@ -82,9 +81,9 @@ var (
 
 	nameList []string
 
-	nameRegex = re.MustCompile(`(?i)^[a-z0-8 '-]+$`)
+	nameRegex = re.MustCompile(`(?i)^[a-z0-9 '-]+$`)
 
-	answerRegex = re.MustCompile(`(?i)[^a-z0-8 '-]+`)
+	answerRegex = re.MustCompile(`(?i)[^a-z0-9 '-]+`)
 
 	colorList = stringList(data.Colors).shuffleList()
 
@@ -97,7 +96,7 @@ var (
 	numAns = 0
 )
 
-func nameCheck(s string, names []string) bool {
+func checkForDuplicateName(s string, names []string) bool {
 	for _, n := range names {
 		if n == s {
 			return true
@@ -122,6 +121,7 @@ func formatTiedWinners(s []player) string {
 	if len(s) == 2 {
 		return s[0].Name + " and " + s[1].Name
 	}
+
 	res := ""
 	for _, p := range s[:len(s)-1] {
 		res += p.Name + ", "
@@ -132,8 +132,7 @@ func formatTiedWinners(s []player) string {
 func checkForWin(clients map[*websocket.Conn]player) []player {
 	var res []player
 	for _, p := range clients {
-		log.Println(p)
-		if p.Score >= 9 {
+		if p.Score >= winningScore {
 			res = append(res, p)
 		}
 	}
@@ -149,13 +148,12 @@ func getPlayers(m map[*websocket.Conn]player) []player {
 }
 
 func (p player) updatePlayer(n int, s string) player {
-	log.Println("s         ", s)
 	p.Score += n
 	p.Answer = s
 	return p
 }
 
-func forEach(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st string) {
+func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st string) {
 	for _, v := range s {
 		clients[v] = clients[v].updatePlayer(n, st)
 	}
@@ -163,15 +161,14 @@ func forEach(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st 
 
 func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]player) {
 	for s, v := range answers {
-		log.Println("ans    ", v)
 		if s == "" {
-			forEach(v, clients, 0, s)
+			updateEachPlayer(v, clients, 0, s)
 		} else if len(v) > 2 {
-			forEach(v, clients, 1, s)
+			updateEachPlayer(v, clients, 1, s)
 		} else if len(v) == 2 {
-			forEach(v, clients, 3, s)
+			updateEachPlayer(v, clients, 3, s)
 		} else {
-			forEach(v, clients, 0, s)
+			updateEachPlayer(v, clients, 0, s)
 		}
 	}
 }
@@ -191,42 +188,19 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-	// clients[ws] = ""
-	// log.Println("game", game.Players)
-	// for c := range clients {
-
-	// 	log.Println("43ws conn: ", clients[c])
-	// }
-
-	// log.Println("colors", colorList, len(colorList))
-	log.Println("words", wordList, len(wordList), runtime.NumGoroutine())
 
 	for {
 		var msg message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			log.Println("50error: ", err)
+			log.Println("msg read or ws error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
-
 				sock, ok := clients[ws]
 				if ok {
-					log.Println("ccccc in clients map")
 					colorList = append(colorList, sock.Color)
-				} else {
-					log.Println("ggggggg not in map")
 				}
-
 				delete(clients, ws)
-				log.Println()
-				log.Println()
-				log.Println("GOOOOOODBYEEEE", runtime.NumGoroutine())
-				// pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
-				log.Println()
-				log.Println()
-				// game.Players = st.Message{Players: utils.GetPlayers(clients)}
-				// log.Println("playerList: ", game.Players)
 				messageChannel <- players{Players: getPlayers(clients)}
-
 			}
 			delete(clients, ws)
 			if len(clients) == 0 {
@@ -236,139 +210,79 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				wordList = stringList(data.Words).shuffleList()
 				answers = make(map[string][]*websocket.Conn)
 				numAns = 0
-				// err
-			}
-			for c := range clients {
-
-				log.Println("61", clients[c])
 			}
 			break
 		}
 
-		log.Println("MSG  ", msg)
-		log.Println("answerlength", msg.Answer)
-		fmt.Printf("%+v\n", msg)
-
 		if msg.Name != "" {
 			if err = validateName(msg.Name, nameRegex); err != nil {
-				log.Println("invalid", err)
 				err := ws.WriteJSON(message{Message: "invalid"})
 				if err != nil {
 					log.Printf("error writing to client: %v", err)
 				}
 			} else {
-
 				var playerColor string
 				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-
 				clients[ws] = player{Name: msg.Name, Color: playerColor, Score: 0}
-				dupe := nameCheck(msg.Name, nameList)
-
-				if dupe {
+				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})
 					if err != nil {
-						log.Printf("99error: %v", err)
-						// delete(clients, client)
+						log.Printf("duplicate name error: %v", err)
 					}
-					// ws.Close()
 					delete(clients, ws)
 					colorList = append(colorList, playerColor)
-					// break
 				} else {
-
 					err = ws.WriteJSON(playerJSON{player{Name: msg.Name, Color: playerColor}})
 					if err != nil {
-						log.Printf("n111error: %v", err)
-						// delete(clients, client)
+						log.Printf("name ok write error: %v", err)
 					}
-
 					nameList = append(nameList, msg.Name)
-
-					log.Println("67", clients)
-					// game.Players = st.PlayersList{Players: utils.GetPlayers(clients)}
-					// log.Println("68", game.Players)
-
-					// playersListChannel <- game.Players
-
-					// pList, err := json.Marshal(game.Players)
-					// if err != nil {
-					// 	log.Printf("n111error: %v", err)
-					// 	// delete(clients, client)
-					// }
-
 					messageChannel <- players{Players: getPlayers(clients)}
-
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
 				}
 			}
 		} else if msg.Message == "start" {
-
 			if !gameobj.InProgress {
 				gameobj.InProgress = true
-
 				const startDelay = 6
-
-				timerDone := make(chan bool)
+				sig, sig2, timerDone := make(chan bool), make(chan bool), make(chan bool)
 				ticker := time.NewTicker(time.Second)
-
 				go handleTimers(timerDone, ticker, startDelay)
-
 				time.Sleep(startDelay * time.Second)
 				ticker.Stop()
 				timerDone <- true
 				close(timerDone)
-
-				log.Println("ready")
-				var sig = make(chan bool)
-				var sig2 = make(chan bool)
 				go sendWords(sig, sig2)
 			}
-
 		} else if msg.Message == "reset" {
 			messageChannel <- message{Message: "reset"}
-
 		} else if len(*msg.Answer) > -1 {
-
-			log.Println("ANSmsg", msg)
-			answerChannel <- answer{Answer: stripAnswer(*msg.Answer, answerRegex), Conn: ws}
-
+			answerChannel <- answer{Answer: sanitizeAnswer(*msg.Answer, answerRegex), Conn: ws}
 		} else {
-
-			log.Println("other msg", msg)
-
+			log.Println("other msg: ", msg)
 			messageChannel <- msg
 		}
-
 	}
 }
 
-func anss(s chan bool, s2 chan bool) {
-
-	log.Println("AAAAAAAAAanss running", runtime.NumGoroutine())
-	// pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
-
+func handleAnswers(s chan bool, s2 chan bool) {
 	done := make(chan bool)
-
 	for {
 		select {
 		case <-done:
-			log.Println("done222222", time.Now())
 			return
 		case ans := <-answerChannel:
 			numAns++
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
-			log.Println("num", numAns, ans, answers)
 			if numAns == len(clients) {
 				scoreAnswers(answers, clients)
 				messageChannel <- players{Players: getPlayers(clients)}
-
 				if winners := checkForWin(clients); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)
 					s <- true
-
 				} else if len(winners) == 1 {
 					messageChannel <- gamewinners{Winners: winners[0].Name}
 					close(s2)
@@ -376,53 +290,35 @@ func anss(s chan bool, s2 chan bool) {
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
-
 					time.Sleep(2 * time.Second)
-					log.Println("sss", time.Now())
 					s2 <- true
 				}
-				log.Println("done", time.Now())
 				return
 			}
-			// case <-ticker.C:
 		}
 	}
-	// done <- true
-	// ticker.Stop()
 }
 
 func sendWords(s chan bool, s2 chan bool) {
-	log.Println("SSSSSENDW", runtime.NumGoroutine())
 	for msg := range serveGame(wordList, s, s2) {
-
 		messageChannel <- word{Word: msg}
-		go anss(s, s2)
-
+		go handleAnswers(s, s2)
 	}
-	log.Println("REACH HERERERERERE")
-	// if <-s {
 	return
-	// }
 }
 
 func serveGame(wl []string, s, s2 chan bool) <-chan string {
-	log.Println("SEEEEEEERVEG", runtime.NumGoroutine())
 	ch := make(chan string)
 	go func() {
 		for _, w := range wl {
-
 			select {
 			case <-s:
-				log.Println("SSSSSS MESSAGE", s)
 				close(ch)
 				return
 			default:
-
-				log.Println("SSSIIIZZZEEE", w)
 				ch <- w
 				<-s2
 			}
-
 		}
 		close(ch)
 	}()
@@ -430,15 +326,11 @@ func serveGame(wl []string, s, s2 chan bool) <-chan string {
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
-
 	for {
-		log.Println(time.Now(), countdown)
 		select {
 		case <-done:
-			log.Println("done")
 			return
 		case <-tick.C:
-			// log.Println(time.Now(), countdown)
 			messageChannel <- gametime{Time: countdown}
 			countdown--
 		}
@@ -446,14 +338,12 @@ func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
 }
 
 func handlePlayerMessages() {
-
 	for {
 		msg := <-messageChannel
-		log.Println("95", msg, len(messageChannel))
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("99error: %v", err)
+				log.Printf("message channel error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
@@ -461,30 +351,11 @@ func handlePlayerMessages() {
 	}
 }
 
-// func handleServerMessages() {
-// 	for {
-// 		msg := <-playersListChannel
-// 		log.Println("110no of clients: ", len(clients), len(playersListChannel))
-// 		for client := range clients {
-// 			err := client.WriteJSON(msg)
-// 			if err != nil {
-// 				log.Printf("114error: %v", err)
-// 				client.Close()
-// 				delete(clients, client)
-// 			}
-// 		}
-// 	}
-// }
-
 func main() {
-	fmt.Println("working...")
 	fs := http.FileServer(http.Dir("../dist"))
 	http.Handle("/", fs)
-
 	http.HandleFunc("/ws", handleConnections)
-
 	go handlePlayerMessages()
-
 	log.Println("server running on port 8000")
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
