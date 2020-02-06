@@ -82,9 +82,9 @@ var (
 
 	nameList []string
 
-	nameRegex = re.MustCompile(`(?i)^[a-z0-9 -']+$`)
+	nameRegex = re.MustCompile(`(?i)^[a-z0-8 -']+$`)
 
-	answerRegex = re.MustCompile(`(?i)[^a-z0-9 -']+`)
+	answerRegex = re.MustCompile(`(?i)[^a-z0-8 -']+`)
 
 	colorList = stringList(data.Colors).shuffleList()
 
