@@ -46,7 +46,7 @@ export default function App() {
   }, [invalidInput]);
 
   useEffect(() => {
-    ws.addEventListener('open', function (e) {
+    ws.addEventListener('open', function () {
       setConnected(true);
     }, false);
 
@@ -61,65 +61,66 @@ export default function App() {
       } = JSON.parse(e.data);
 
       switch (true) {
-        case !!message:
-          switch (message) {
-            case 'duplicate':
-              setDupeName(true);
-              break;
-            case 'invalid':
-              setInvalidInput(true);
-              break;
-            case 'progress':
-              setGameHasBegun(true);
-              setShowStartTimer(true);
-              break;
-            case 'reset':
-              window.location.reload();
-              break;
-            default:
-              console.log('no case for this message found: ', message);
-          }
+      case !!message:
+        switch (message) {
+        case 'duplicate':
+          setDupeName(true);
           break;
-        case !!player:
-          const { color, name } = player;
-          setPlayerColor(color);
-          dispatch({ type: 'player', name });
-          setHasJoined(true);
+        case 'invalid':
+          setInvalidInput(true);
           break;
-        case !!players:
-          dispatch({ type: 'players', players });
-          setDupeName(false);
-          break;
-        case !!time:
+        case 'progress':
+          setGameHasBegun(true);
           setShowStartTimer(true);
-          setShowStartButton(false);
-          setTimer(time - 1);
           break;
-        case !!winners:
-          dispatch({ type: 'winners', winners });
-          setWinners(winners)
-          dispatch({ type: 'word', word: '' });
-          setTimeout(() => {
-            setShowReset(true);
-          }, 5000);
-          break
-        case !!word:
-          setAnswered(false);
-          setShowSVGTimer(true);
-          dispatch({ type: 'word', word });
-          setShowWords(true);
-          setShowStartTimer(false);
+        case 'reset':
+          window.location.reload();
           break;
-        default:
-          console.log('no case found: ', e.data);
+        default: // eslint-disable-next-line no-console
+          console.log('no case for this message found: ', message);
+        }
+        break;
+      case !!player: {
+        const { color, name } = player;
+        setPlayerColor(color);
+        dispatch({ type: 'player', name });
+        setHasJoined(true);
+        break;
+      }
+      case !!players:
+        dispatch({ type: 'players', players });
+        setDupeName(false);
+        break;
+      case !!time:
+        setShowStartTimer(true);
+        setShowStartButton(false);
+        setTimer(time - 1);
+        break;
+      case !!winners:
+        dispatch({ type: 'winners', winners });
+        setWinners(winners)
+        dispatch({ type: 'word', word: '' });
+        setTimeout(() => {
+          setShowReset(true);
+        }, 5000);
+        break
+      case !!word:
+        setAnswered(false);
+        setShowSVGTimer(true);
+        dispatch({ type: 'word', word });
+        setShowWords(true);
+        setShowStartTimer(false);
+        break;
+      default: // eslint-disable-next-line no-console
+        console.log('no case found: ', e.data);
       }
     }, false);
 
-    ws.addEventListener('error', function (e) {
+    ws.addEventListener('error', function (e) { // eslint-disable-next-line no-console
       console.log(e, Date.now());
     }, false);
 
-    ws.addEventListener('close', function (e) {
+    ws.addEventListener('close', function () {
       setConnected(false);
     }, false);
 
@@ -145,13 +146,13 @@ export default function App() {
   function startGame() {
     setShowStartButton(false);
     ws.send(JSON.stringify({
-      message: "start"
+      message: 'start'
     }));
   }
   
   function resetGame() {
     ws.send(JSON.stringify({
-      message: "reset"
+      message: 'reset'
     }));
   }
 
