@@ -6,10 +6,10 @@ const ScriptExtHTMLWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
-  // mode: 'production',
-  // devtool: 'source-map',
+  // mode: 'development',
+  // devtool: 'inline-source-map',
+  mode: 'production',
+  devtool: 'source-map',
   entry: {
     main: './src/front/index.js',
   },
@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.m?js$/,
         include: [
-          path.resolve(__dirname, 'src/'),
+          path.resolve(__dirname, 'src/front/'),
         ],
         exclude: /(node_modules|\.test\.js$)/,
         use: {
@@ -34,14 +34,14 @@ module.exports = {
                 '@babel/preset-env',
                 {
                   'useBuiltIns': 'usage',
-                  'corejs': '3.3.2',
+                  'corejs': '3.6.4',
                 },
               ],
               [
                 '@babel/preset-react',
                 {
                   'useBuiltIns': true,
-                  'development': true,
+                  'development': false,
                 },
               ],
             ],
