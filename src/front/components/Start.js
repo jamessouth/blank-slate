@@ -27,7 +27,7 @@ export default function Start({ gameHasBegun, onClick, players }) {
 
 }
 
-Start.PropTypes = {
+Start.propTypes = {
   gameHasBegun: PropTypes.bool,
   onClick: PropTypes.func,
   players: PropTypes.array

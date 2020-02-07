@@ -17,6 +17,6 @@ export default function Name({ playerName }) {
 
 }
 
-Name.PropTypes = {
+Name.propTypes = {
   playerName: PropTypes.string
 }

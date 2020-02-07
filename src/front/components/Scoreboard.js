@@ -34,7 +34,7 @@ export default function Scoreboard({ players, word }) {
   );
 }
 
-Scoreboard.PropTypes = {
+Scoreboard.propTypes = {
   players: PropTypes.array,
   word: PropTypes.string
 }

@@ -10,6 +10,6 @@ export default function Timer({ timer }) {
 
 }
 
-Timer.PropTypes = {
+Timer.propTypes = {
   timer: PropTypes.number
 }

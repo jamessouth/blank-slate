@@ -25,7 +25,7 @@ export default function Word({ onAnimationEnd, playerColor, showSVGTimer, word }
 
 }
 
-Word.PropTypes = {
+Word.propTypes = {
   onAnimationEnd: PropTypes.func,
   playerColor: PropTypes.string,
   showSVGTimer: PropTypes.bool,

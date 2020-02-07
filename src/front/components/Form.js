@@ -68,7 +68,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
   );
 }
 
-Form.PropTypes = {
+Form.propTypes = {
   answered: PropTypes.bool,
   dupeName: PropTypes.bool,
   hasJoined: PropTypes.bool,
