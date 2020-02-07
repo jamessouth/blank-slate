@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { inv, signin, signedin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing }) {
-
     const regex = /[^a-z0-9 '-]+/i;
     const NAME_MAX_LENGTH = 10;
     const ANSWER_MAX_LENGTH = 16;

@@ -12,8 +12,6 @@ const server = 'ws://localhost:8000';
 const ws = new WebSocket(server + '/ws');
 
 export default function App() {
-  console.log('app');
-
   const [hasJoined, setHasJoined] = useState(false);
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
@@ -40,39 +38,17 @@ export default function App() {
   ] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    console.log('useeee: ', 'timeout');
     if (invalidInput) {
-
       setTimeout(() => {
-        console.log('useeee: ', 'timeout5555555555555');
         setInvalidInput(false);
       }, 3750);
     }
   }, [invalidInput]);
 
-  
   useEffect(() => {
-    console.log('connect to server...', Date.now());
-
     ws.addEventListener('open', function (e) {
       setConnected(true);
-      console.log(e, Date.now());
     }, false);
-
-
-    
-
-
-    
-    
-
-
-
-
-
-    
-
-
 
     ws.addEventListener('message', function (e) {
       const {
@@ -83,7 +59,6 @@ export default function App() {
         winners,
         word
       } = JSON.parse(e.data);
-      console.log('msg: ', e.data);
 
       switch (true) {
         case !!message:
@@ -138,10 +113,7 @@ export default function App() {
         default:
           console.log('no case found: ', e.data);
       }
-
-
     }, false);
-
 
     ws.addEventListener('error', function (e) {
       console.log(e, Date.now());
@@ -149,18 +121,12 @@ export default function App() {
 
     ws.addEventListener('close', function (e) {
       setConnected(false);
-      console.log(e, Date.now());
     }, false);
-
-
 
     return function cleanup() {
       ws.close(1000);
     };
-
   }, []);
-
-
 
   function send(text) {
     if (!hasJoined) {
@@ -176,46 +142,31 @@ export default function App() {
     }
   }
 
-
-  
-
-
-
   function startGame() {
-    console.log('start');
     setShowStartButton(false);
     ws.send(JSON.stringify({
       message: "start"
     }));
   }
+  
   function resetGame() {
     ws.send(JSON.stringify({
       message: "reset"
     }));
   }
 
-
   return (
     <main>
       <Name
         playerName={ playerName }
       />
-
-
-
       <h1 style={{backgroundColor: playerColor}} className={ h1 }>{ h1Text }</h1>
-
-
       {
         players.length > 0 && connected &&
-          
-
-
           <Scoreboard
             players={ players }
             word={ oldWord }
           />
-          
       }
       {
         hasJoined && connected &&
@@ -270,28 +221,14 @@ export default function App() {
             send={ send }
           />
       }
-
       {
         !connected &&
         <p>Server not available. Please try again.</p>
       }
-
-
-
     </main>
   );
 }
 
-// className={ button }
-
-
-
 // Image by <a href="https://pixabay.com/users/stux-12364/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Thanks for your Like • donations welcome</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Pixabay</a>
 
-
-
 // Image by <a href="https://pixabay.com/users/b0red-4473488/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">b0red</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">Pixabay</a>
-
-
-
-// 454

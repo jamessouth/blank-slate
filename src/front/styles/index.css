@@ -11,9 +11,6 @@
 body{
   background: url('../../assets/mob.jpg') no-repeat top/cover;
 }
-/* main{
-  
-} */
 button{
   font-size: 1.25rem;
   color: #4c4952;
@@ -32,21 +29,15 @@ button:disabled{
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  /* overflow-x: hidden; */
 }
-
 .h1{
   font-size: 3rem;
   font-family: 'Architects Daughter', cursive;
-  /* text-align: center; */
   margin: 44px 0 1.25em;
   -webkit-mask-image: url('../../assets/decaying.png');
   mask-image: url('../../assets/decaying.png');
   /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
 }
-
-
-
 .winner{
   font-size: 3rem;
   font-family: 'Luckiest Guy', cursive;
@@ -62,27 +53,18 @@ button:disabled{
       filter: hue-rotate(360deg);
   }
 }
-
 @media screen and (min-width: 414px){
   .h1{
     font-size: 3.5rem;
   }
 }
-
-
 @media screen and (min-width: 768px){
   body{
     background: url('../../assets/tab.jpg') no-repeat top/cover;
   }
 }
-
-
 @media screen and (min-width: 1440px){
   body{
     background: url('../../assets/big.jpg') no-repeat top/cover;
   }
 }
-
-
-
-/* 5 */

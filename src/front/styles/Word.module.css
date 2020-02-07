@@ -13,6 +13,13 @@
     font-size: 2.5em;
     padding: 0 24px;
 }
+rect{
+    fill: transparent;
+    stroke-width: 10;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: change 20s linear forwards 1;
+}
 svg{
     overflow: visible;
     position: absolute;
@@ -20,13 +27,6 @@ svg{
     left: 0;
     width: 100%;
     height: 100%;
-}
-rect{
-    fill: transparent;
-    stroke-width: 10;
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 0;
-    animation: change 20s linear forwards 1;
 }
 @keyframes change {
     to {

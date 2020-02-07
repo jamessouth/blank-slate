@@ -14,13 +14,12 @@
     width: 90%;
     max-width: 600px;
 }
-
-
 .p{
     font-size: 12px;
 }
-
-
+.signedin{
+    height: 150px;
+}
 .signin{
     position: relative;
     display: flex;
@@ -39,7 +38,4 @@
     background-color: whitesmoke;
     border: none;
     color: #4c4952;
-}
-.signedin{
-    height: 150px;
 }
