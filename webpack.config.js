@@ -96,6 +96,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: './src/front/index.html',
       title: 'Blank Slate',
+      favicon: './src/assets/icons/favicon-16x16.png'
     }),
     new ScriptExtHTMLWebpackPlugin({
       defaultAttribute: 'async',
