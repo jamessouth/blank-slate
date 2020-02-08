@@ -176,11 +176,7 @@ func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.C
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 	upgrader.CheckOrigin = func(r *http.Request) bool {
-		origin, ok := r.Header["Origin"]
-		if ok && origin[0] == "http://localhost:4200" {
-			return true
-		}
-		return false
+		return true
 	}
 
 	ws, err := upgrader.Upgrade(w, r, nil)
