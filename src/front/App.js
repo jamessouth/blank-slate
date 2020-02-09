@@ -8,7 +8,7 @@ import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
 import { div, h1, winner } from './styles/index.css';
 
-const server = 'ws://localhost:8000';
+const server = process.env.WS;
 const ws = new WebSocket(server + '/ws');
 
 export default function App() {
