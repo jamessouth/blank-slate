@@ -348,7 +348,7 @@ func handlePlayerMessages() {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./"))
+	fs := http.FileServer(http.Dir("./dist"))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", handleConnections)
 	go handlePlayerMessages()
