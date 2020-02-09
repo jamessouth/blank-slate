@@ -4,9 +4,9 @@
   "description": "clone of Blank Slate, a party game",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --env.ENV=prod --env.WS='wss://blank-slate.herokuapp.com'",
-    "build:local": "webpack --env.ENV=prod --env.WS='ws://localhost:8000'",
-    "dev": "webpack-dev-server --env.ENV=dev --env.WS='ws://localhost:8000'",
+    "build": "webpack --env.ENV=prod --env.WS=wss://blank-slate.herokuapp.com/ws",
+    "build:local": "webpack --env.ENV=prod --env.WS=ws://localhost:8000/ws",
+    "dev": "webpack-dev-server --env.ENV=dev --env.WS=ws://localhost:8000/ws",
     "lint": "eslint --fix src/front/ && echo 'Linted!'",
     "local": "heroku local -p 8000",
     "test": "echo \"Error: no test specified\" && exit 1"

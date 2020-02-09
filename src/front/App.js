@@ -8,8 +8,7 @@ import Word from './components/Word';
 import Scoreboard from './components/Scoreboard';
 import { div, h1, winner } from './styles/index.css';
 
-const server = process.env.WS;
-const ws = new WebSocket(server + '/ws');
+const ws = new WebSocket(process.env.WS);
 
 export default function App() {
   const [hasJoined, setHasJoined] = useState(false);

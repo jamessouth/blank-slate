@@ -10,7 +10,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
   const [inputText, setInputText] = useState('');
   const [maxLength, setMaxLength] = useState(NAME_MAX_LENGTH);
   const [disableSubmit, setDisableSubmit] = useState(true);
-  const [isValidInput, setIsValidInput] = useState(false);
+  const [isValidInput, setIsValidInput] = useState(true);
   const [badChar, setBadChar] = useState(null);
 
   useEffect(() => {
