@@ -36,6 +36,7 @@ export default function App() {
     dispatch
   ] = useReducer(reducer, initialState);
 
+
   useEffect(() => {
     if (invalidInput) {
       setTimeout(() => {
@@ -43,6 +44,26 @@ export default function App() {
       }, 3750);
     }
   }, [invalidInput]);
+
+  // useEffect(() => {
+  //   console.log('ping: ueeeeee', );
+  //   let ping;
+  //   if (!hasJoined) {
+
+  //     ping = setInterval(() => {
+  //       console.log('ka ping: ', );
+  //       ws.send(JSON.stringify({
+  //         message: 'keepAlive'
+  //       }));
+        
+  //     }, 5000);
+  //   }
+  //     if (showStartTimer) {
+  //       console.log('kill: ', );
+  //       clearInterval(ping);
+  //     }
+
+  // }, [hasJoined, showStartTimer]);
 
   useEffect(() => {
     ws.addEventListener('open', function () {
