@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	re "regexp"
 	"time"
 
@@ -352,8 +353,12 @@ func main() {
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", handleConnections)
 	go handlePlayerMessages()
-	log.Println("server running on port 8000")
-	err := http.ListenAndServe(":8000", nil)
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = "8000"
+	}
+	log.Println("server running on port " + port)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
