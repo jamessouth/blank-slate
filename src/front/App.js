@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { initialState, reducer } from './reducers/appState';
 import Form from './components/Form';
+import KeepAlive from './components/KeepAlive';
 import Name from './components/Name';
+import Scoreboard from './components/Scoreboard';
 import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
-import Scoreboard from './components/Scoreboard';
 import { div, h1, winner } from './styles/index.css';
 
 const ws = new WebSocket(process.env.WS);
@@ -16,6 +17,7 @@ export default function App() {
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [pingServer, setPingServer] = useState(true);
   const [showSVGTimer, setShowSVGTimer] = useState(true);
   const [showReset, setShowReset] = useState(false);
   const [winners, setWinners] = useState('');
@@ -36,7 +38,6 @@ export default function App() {
     dispatch
   ] = useReducer(reducer, initialState);
 
-
   useEffect(() => {
     if (invalidInput) {
       setTimeout(() => {
@@ -44,26 +45,6 @@ export default function App() {
       }, 3750);
     }
   }, [invalidInput]);
-
-  // useEffect(() => {
-  //   console.log('ping: ueeeeee', );
-  //   let ping;
-  //   if (!hasJoined) {
-
-  //     ping = setInterval(() => {
-  //       console.log('ka ping: ', );
-  //       ws.send(JSON.stringify({
-  //         message: 'keepAlive'
-  //       }));
-        
-  //     }, 5000);
-  //   }
-  //     if (showStartTimer) {
-  //       console.log('kill: ', );
-  //       clearInterval(ping);
-  //     }
-
-  // }, [hasJoined, showStartTimer]);
 
   useEffect(() => {
     ws.addEventListener('open', function () {
@@ -125,6 +106,7 @@ export default function App() {
         }, 5000);
         break
       case !!word:
+        setPingServer(false);
         setAnswered(false);
         setShowSVGTimer(true);
         dispatch({ type: 'word', word });
@@ -176,8 +158,20 @@ export default function App() {
     }));
   }
 
+  function pingWS() {
+    ws.send(JSON.stringify({
+      message: 'keepAlive'
+    }));
+  }
+
   return (
     <main>
+      {
+        pingServer &&
+          <KeepAlive
+            pingWS={ pingWS }
+          />
+      }
       <Name
         playerName={ playerName }
       />
