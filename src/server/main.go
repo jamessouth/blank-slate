@@ -175,7 +175,6 @@ func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.C
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
-
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
 	}
@@ -256,7 +255,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if msg.Message == "reset" {
 			messageChannel <- message{Message: "reset"}
 		} else if msg.Message == "keepAlive" {
-
 		} else if len(*msg.Answer) > -1 {
 			answerChannel <- answer{Answer: sanitizeAnswer(*msg.Answer, answerRegex), Conn: ws}
 		} else {
