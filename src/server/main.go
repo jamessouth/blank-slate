@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	re "regexp"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -36,7 +37,8 @@ func validateName(s string, r *re.Regexp) error {
 }
 
 func sanitizeAnswer(s string, r *re.Regexp) string {
-	return r.ReplaceAllLiteralString(s, "")
+	a := r.ReplaceAllLiteralString(s, "")
+	return strings.ToLower(a)
 }
 
 type player struct {

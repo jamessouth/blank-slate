@@ -18,7 +18,7 @@ rect{
     stroke-width: 10;
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
-    animation: change 20s linear forwards 1;
+    animation: change 35s linear forwards 1;
 }
 svg{
     overflow: visible;
