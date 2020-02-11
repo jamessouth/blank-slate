@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { inv, signin, signedin } from '../styles/Form.module.css';
 
-export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing }) {
+export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing, submitSignal }) {
   const regex = /[^a-z0-9 '-]+/i;
   const NAME_MAX_LENGTH = 10;
   const ANSWER_MAX_LENGTH = 16;
@@ -30,6 +30,13 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
   }, [hasJoined]);
 
   useEffect(() => {
+    if (submitSignal) {
+      onEnter(inputText);
+      setInputText('');
+    }
+  }, [inputText, onEnter, submitSignal]);
+
+  useEffect(() => {
     setDisableSubmit((inputText.length < INPUT_MIN_LENGTH || inputText.length > maxLength) || answered || invalidInput || !isValidInput || (hasJoined && !playing));
   }, [inputText, maxLength, answered, invalidInput, isValidInput, hasJoined, playing]);
 
@@ -52,7 +59,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         } }
         onChange={ e => setInputText(e.target.value) }
         type="text"
-        placeholder={ !dupeName && hasJoined ? 'Answer' : 'Name' }
+        placeholder={ !dupeName && hasJoined ? 'Answer - min length 2' : 'Name' }
       />
       <button
         type="button"
@@ -75,5 +82,6 @@ Form.propTypes = {
   invalidInput: PropTypes.bool,
   onEnter: PropTypes.func,
   playerName: PropTypes.string,
-  playing: PropTypes.bool
+  playing: PropTypes.bool,
+  submitSignal: PropTypes.bool
 }

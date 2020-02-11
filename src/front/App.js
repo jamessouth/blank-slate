@@ -11,12 +11,14 @@ import { div, h1, winner } from './styles/index.css';
 
 const ws = new WebSocket(process.env.WS);
 
+
 export default function App() {
   const [hasJoined, setHasJoined] = useState(false);
   const [connected, setConnected] = useState(false);
   const [showStartTimer, setShowStartTimer] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [submitSignal, setSubmitSignal] = useState(false);
   const [pingServer, setPingServer] = useState(true);
   const [showSVGTimer, setShowSVGTimer] = useState(true);
   const [showReset, setShowReset] = useState(false);
@@ -138,6 +140,7 @@ export default function App() {
       }));
     } else {
       setAnswered(true);
+      setSubmitSignal(false);
       setShowSVGTimer(false);
       ws.send(JSON.stringify({
         answer: text,
@@ -203,7 +206,7 @@ export default function App() {
             {
               showWords && hasJoined && !winners &&
                 <Word
-                  onAnimationEnd={ () => send('') }
+                  onAnimationEnd={ () => setSubmitSignal(true) }
                   playerColor={ playerColor }
                   showSVGTimer={ showSVGTimer }
                   word={ newWord }
@@ -233,7 +236,7 @@ export default function App() {
             onEnter={ val => send(val) }
             playerName={ playerName }
             playing={ !!newWord }
-            send={ send }
+            submitSignal={ submitSignal }
           />
       }
       {

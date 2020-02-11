@@ -164,7 +164,7 @@ func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]player, n
 
 func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]player) {
 	for s, v := range answers {
-		if s == "" {
+		if len(s) < 2 {
 			updateEachPlayer(v, clients, 0, s)
 		} else if len(v) > 2 {
 			updateEachPlayer(v, clients, 1, s)
