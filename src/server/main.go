@@ -114,10 +114,12 @@ func (l stringList) shuffleList() []string {
 	t := time.Now().UnixNano()
 	rand.Seed(t)
 
-	rand.Shuffle(len(l), func(i, j int) {
-		l[i], l[j] = l[j], l[i]
+	newlist := append([]string(nil), l...)
+
+	rand.Shuffle(len(newlist), func(i, j int) {
+		newlist[i], newlist[j] = newlist[j], newlist[i]
 	})
-	return l
+	return newlist
 }
 
 func formatTiedWinners(s []player) string {
@@ -151,9 +153,10 @@ func getPlayers(m map[*websocket.Conn]player) []player {
 }
 
 func (p player) updatePlayer(n int, s string) player {
-	p.Score += n
-	p.Answer = s
-	return p
+	newplayer := p
+	newplayer.Score += n
+	newplayer.Answer = s
+	return newplayer
 }
 
 func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st string) {
