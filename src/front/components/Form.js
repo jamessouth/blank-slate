@@ -38,7 +38,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
 
   useEffect(() => {
     if (submitSignal) {
-      onEnter(inputText);
+      onEnter(inputText.slice(0, ANSWER_MAX_LENGTH));
       setInputText('');
     }
   }, [inputText, onEnter, submitSignal]);
@@ -61,7 +61,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         spellCheck="false"
         onKeyPress={ ({ key }) => {
           if (key == 'Enter' && !disableSubmit) {
-            onEnter(inputText);
+            onEnter(inputText.slice(0, ANSWER_MAX_LENGTH));
             setInputText('');
           }
         } }
@@ -73,7 +73,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
       <button
         type="button"
         onClick={() => {
-          onEnter(inputText);
+          onEnter(inputText.slice(0, ANSWER_MAX_LENGTH));
           setInputText('');
         }}
         { ...(disableSubmit ? { 'disabled': true } : {}) }

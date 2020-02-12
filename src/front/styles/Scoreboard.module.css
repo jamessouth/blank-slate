@@ -64,7 +64,7 @@
 }
 @media screen and (max-width: 450px){
     .h2{
-        letter-spacing: 0px;
+        letter-spacing: -1px;
     }
 }
 @media screen and (min-width: 1024px){
