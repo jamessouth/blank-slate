@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { inv, signin, signedin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing, submitSignal }) {
+  const inputBox = useRef(null);
   const regex = /[^a-z0-9 '-]+/i;
   const NAME_MAX_LENGTH = 10;
   const ANSWER_MAX_LENGTH = 16;
@@ -22,6 +23,12 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
     }
     setIsValidInput(!test);
   }, [inputText, regex]);
+
+  useEffect(() => {
+    if (answered) {
+      inputBox.current.blur();
+    }
+  }, [answered]);
 
   useEffect(() => {
     if (hasJoined) {
@@ -49,6 +56,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
       <label>{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
       <input
         autoFocus
+        ref={ inputBox }
         value={ inputText }
         spellCheck="false"
         onKeyPress={ ({ key }) => {
@@ -59,7 +67,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         } }
         onChange={ e => setInputText(e.target.value) }
         type="text"
-        placeholder={ !dupeName && hasJoined ? 'min length: 2' : 'Name' }
+        placeholder={ !dupeName && hasJoined ? 'length: 2 - 16' : 'Name' }
         { ...(answered ? { 'readOnly': true } : {}) }
       />
       <button
