@@ -59,7 +59,8 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         } }
         onChange={ e => setInputText(e.target.value) }
         type="text"
-        placeholder={ !dupeName && hasJoined ? 'Answer - min length 2' : 'Name' }
+        placeholder={ !dupeName && hasJoined ? 'min length: 2' : 'Name' }
+        { ...(answered ? { 'readOnly': true } : {}) }
       />
       <button
         type="button"
