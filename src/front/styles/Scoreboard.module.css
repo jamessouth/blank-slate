@@ -62,6 +62,11 @@
     justify-content: space-around;
     align-items: center;
 }
+@media screen and (max-width: 450px){
+    .h2{
+        letter-spacing: 0px;
+    }
+}
 @media screen and (min-width: 1024px){
     .div{
         width: 40%;
