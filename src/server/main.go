@@ -125,14 +125,6 @@ func formatTiedWinners(s []p.Player) string {
 	return res + "and " + s[len(s)-1].Name
 }
 
-func getPlayers(m map[*websocket.Conn]p.Player) []p.Player {
-	var list []p.Player
-	for _, v := range m {
-		list = append(list, v)
-	}
-	return list
-}
-
 func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]p.Player, n int, st string) {
 	for _, v := range s {
 		clients[v] = clients[v].UpdatePlayer(n, st)
@@ -175,7 +167,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clientsMap, ws)
-				messageChannel <- players{Players: getPlayers(clientsMap)}
+				messageChannel <- players{Players: clientsMap.GetPlayers()}
 			}
 			delete(clientsMap, ws)
 			if len(clientsMap) == 0 {
@@ -212,7 +204,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("name ok write error: %v", err)
 					}
 					nameList = append(nameList, msg.Name)
-					messageChannel <- players{Players: getPlayers(clientsMap)}
+					messageChannel <- players{Players: clientsMap.GetPlayers()}
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
@@ -254,7 +246,7 @@ func handleAnswers(s chan bool, s2 chan bool) {
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			if numAns == len(clientsMap) {
 				scoreAnswers(answers, clientsMap)
-				messageChannel <- players{Players: getPlayers(clientsMap)}
+				messageChannel <- players{Players: clientsMap.GetPlayers()}
 				if winners := clientsMap.CheckForWin(); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)

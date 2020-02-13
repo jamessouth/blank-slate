@@ -9,7 +9,7 @@ const winningScore = 25
 
 type Clients map[*websocket.Conn]p.Player
 
-// CheckForWin checks to see if one or more players has won the game
+// CheckForWin returns a slice of one or more players who have won the game
 func (c Clients) CheckForWin() []p.Player {
 	var res []p.Player
 	for _, p := range c {
@@ -18,4 +18,13 @@ func (c Clients) CheckForWin() []p.Player {
 		}
 	}
 	return res
+}
+
+// GetPlayers returns a slice containing players' names
+func (c Clients) GetPlayers() []p.Player {
+	var list []p.Player
+	for _, v := range c {
+		list = append(list, v)
+	}
+	return list
 }
