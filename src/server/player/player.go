@@ -1,8 +1,6 @@
 package player
 
-// import ()
-
-// Player holds info on each player
+// Player holds info on each player: last answer, name, color, and score
 type Player struct {
 	Answer string `json:"answer"`
 	Name   string `json:"name"`

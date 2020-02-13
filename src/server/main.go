@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	c "github.com/jamessouth/blank-slate/src/server/clients"
 	"github.com/jamessouth/blank-slate/src/server/data"
 	p "github.com/jamessouth/blank-slate/src/server/player"
 )
@@ -62,12 +63,8 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
-const (
-	winningScore = 25
-)
-
 var (
-	clients = make(map[*websocket.Conn]p.Player)
+	clientsMap = make(c.Clients)
 	// clientsMu sync.Mutex
 
 	messageChannel = make(chan interface{})
@@ -128,16 +125,6 @@ func formatTiedWinners(s []p.Player) string {
 	return res + "and " + s[len(s)-1].Name
 }
 
-func checkForWin(clients map[*websocket.Conn]p.Player) []p.Player {
-	var res []p.Player
-	for _, p := range clients {
-		if p.Score >= winningScore {
-			res = append(res, p)
-		}
-	}
-	return res
-}
-
 func getPlayers(m map[*websocket.Conn]p.Player) []p.Player {
 	var list []p.Player
 	for _, v := range m {
@@ -183,15 +170,15 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("msg read or ws error: ", err)
 			if err.Error() == "websocket: close 1001 (going away)" {
-				sock, ok := clients[ws]
+				sock, ok := clientsMap[ws]
 				if ok {
 					colorList = append(colorList, sock.Color)
 				}
-				delete(clients, ws)
-				messageChannel <- players{Players: getPlayers(clients)}
+				delete(clientsMap, ws)
+				messageChannel <- players{Players: getPlayers(clientsMap)}
 			}
-			delete(clients, ws)
-			if len(clients) == 0 {
+			delete(clientsMap, ws)
+			if len(clientsMap) == 0 {
 				gameobj.InProgress = false
 				nameList = []string{}
 				colorList = stringList(data.Colors).shuffleList()
@@ -211,13 +198,13 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			} else {
 				var playerColor string
 				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-				clients[ws] = p.Player{Name: msg.Name, Color: playerColor, Score: 0}
+				clientsMap[ws] = p.Player{Name: msg.Name, Color: playerColor, Score: 0}
 				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})
 					if err != nil {
 						log.Printf("duplicate name error: %v", err)
 					}
-					delete(clients, ws)
+					delete(clientsMap, ws)
 					colorList = append(colorList, playerColor)
 				} else {
 					err = ws.WriteJSON(playerJSON{p.Player{Name: msg.Name, Color: playerColor}})
@@ -225,7 +212,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("name ok write error: %v", err)
 					}
 					nameList = append(nameList, msg.Name)
-					messageChannel <- players{Players: getPlayers(clients)}
+					messageChannel <- players{Players: getPlayers(clientsMap)}
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
@@ -265,10 +252,10 @@ func handleAnswers(s chan bool, s2 chan bool) {
 		case ans := <-answerChannel:
 			numAns++
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
-			if numAns == len(clients) {
-				scoreAnswers(answers, clients)
-				messageChannel <- players{Players: getPlayers(clients)}
-				if winners := checkForWin(clients); len(winners) > 1 {
+			if numAns == len(clientsMap) {
+				scoreAnswers(answers, clientsMap)
+				messageChannel <- players{Players: getPlayers(clientsMap)}
+				if winners := clientsMap.CheckForWin(); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)
 					s <- true
@@ -329,12 +316,12 @@ func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
 func handlePlayerMessages() {
 	for {
 		msg := <-messageChannel
-		for client := range clients {
+		for client := range clientsMap {
 			err := client.WriteJSON(msg)
 			if err != nil {
 				log.Printf("message channel error: %v", err)
 				client.Close()
-				delete(clients, client)
+				delete(clientsMap, client)
 			}
 		}
 	}
