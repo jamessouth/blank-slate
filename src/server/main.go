@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/jamessouth/blank-slate/src/server/data"
+	p "github.com/jamessouth/blank-slate/src/server/player"
 )
 
 type game struct {
@@ -41,19 +42,12 @@ func sanitizeAnswer(s string, r *re.Regexp) string {
 	return strings.ToLower(a)
 }
 
-type player struct {
-	Answer string `json:"answer"`
-	Name   string `json:"name"`
-	Color  string `json:"color"`
-	Score  int    `json:"score"`
-}
-
 type playerJSON struct {
-	Player player `json:"player"`
+	Player p.Player `json:"player"`
 }
 
 type players struct {
-	Players []player `json:"players"`
+	Players []p.Player `json:"players"`
 }
 
 type gamewinners struct {
@@ -73,7 +67,7 @@ const (
 )
 
 var (
-	clients = make(map[*websocket.Conn]player)
+	clients = make(map[*websocket.Conn]p.Player)
 	// clientsMu sync.Mutex
 
 	messageChannel = make(chan interface{})
@@ -122,7 +116,7 @@ func (l stringList) shuffleList() []string {
 	return newlist
 }
 
-func formatTiedWinners(s []player) string {
+func formatTiedWinners(s []p.Player) string {
 	if len(s) == 2 {
 		return s[0].Name + " and " + s[1].Name
 	}
@@ -134,8 +128,8 @@ func formatTiedWinners(s []player) string {
 	return res + "and " + s[len(s)-1].Name
 }
 
-func checkForWin(clients map[*websocket.Conn]player) []player {
-	var res []player
+func checkForWin(clients map[*websocket.Conn]p.Player) []p.Player {
+	var res []p.Player
 	for _, p := range clients {
 		if p.Score >= winningScore {
 			res = append(res, p)
@@ -144,28 +138,21 @@ func checkForWin(clients map[*websocket.Conn]player) []player {
 	return res
 }
 
-func getPlayers(m map[*websocket.Conn]player) []player {
-	var list []player
+func getPlayers(m map[*websocket.Conn]p.Player) []p.Player {
+	var list []p.Player
 	for _, v := range m {
 		list = append(list, v)
 	}
 	return list
 }
 
-func (p player) updatePlayer(n int, s string) player {
-	newplayer := p
-	newplayer.Score += n
-	newplayer.Answer = s
-	return newplayer
-}
-
-func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]player, n int, st string) {
+func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]p.Player, n int, st string) {
 	for _, v := range s {
-		clients[v] = clients[v].updatePlayer(n, st)
+		clients[v] = clients[v].UpdatePlayer(n, st)
 	}
 }
 
-func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]player) {
+func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]p.Player) {
 	for s, v := range answers {
 		if len(s) < 2 {
 			updateEachPlayer(v, clients, 0, s)
@@ -224,7 +211,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			} else {
 				var playerColor string
 				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-				clients[ws] = player{Name: msg.Name, Color: playerColor, Score: 0}
+				clients[ws] = p.Player{Name: msg.Name, Color: playerColor, Score: 0}
 				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})
 					if err != nil {
@@ -233,7 +220,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					delete(clients, ws)
 					colorList = append(colorList, playerColor)
 				} else {
-					err = ws.WriteJSON(playerJSON{player{Name: msg.Name, Color: playerColor}})
+					err = ws.WriteJSON(playerJSON{p.Player{Name: msg.Name, Color: playerColor}})
 					if err != nil {
 						log.Printf("name ok write error: %v", err)
 					}
