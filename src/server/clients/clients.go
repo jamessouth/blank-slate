@@ -5,26 +5,17 @@ import (
 	p "github.com/jamessouth/blank-slate/src/server/player"
 )
 
-const winningScore = 25
-
 type Clients map[*websocket.Conn]p.Player
 
-// CheckForWin returns a slice of one or more players who have won the game
-func (c Clients) CheckForWin() []p.Player {
-	var res []p.Player
-	for _, p := range c {
-		if p.Score >= winningScore {
-			res = append(res, p)
+// GetPlayersOrWinners returns a function that returns a slice of either all players' names or the winner(s) of the game
+func (c Clients) GetPlayersOrWinners(comp int) func() []p.Player {
+	return func() []p.Player {
+		var res []p.Player
+		for _, p := range c {
+			if p.Score >= comp {
+				res = append(res, p)
+			}
 		}
+		return res
 	}
-	return res
-}
-
-// GetPlayers returns a slice containing players' names
-func (c Clients) GetPlayers() []p.Player {
-	var list []p.Player
-	for _, v := range c {
-		list = append(list, v)
-	}
-	return list
 }

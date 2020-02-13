@@ -63,6 +63,8 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
+const winningScore = 25
+
 var (
 	clientsMap = make(c.Clients)
 	// clientsMu sync.Mutex
@@ -167,7 +169,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clientsMap, ws)
-				messageChannel <- players{Players: clientsMap.GetPlayers()}
+				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
 			}
 			delete(clientsMap, ws)
 			if len(clientsMap) == 0 {
@@ -204,7 +206,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("name ok write error: %v", err)
 					}
 					nameList = append(nameList, msg.Name)
-					messageChannel <- players{Players: clientsMap.GetPlayers()}
+					messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
@@ -246,8 +248,8 @@ func handleAnswers(s chan bool, s2 chan bool) {
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			if numAns == len(clientsMap) {
 				scoreAnswers(answers, clientsMap)
-				messageChannel <- players{Players: clientsMap.GetPlayers()}
-				if winners := clientsMap.CheckForWin(); len(winners) > 1 {
+				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
+				if winners := clientsMap.GetPlayersOrWinners(winningScore)(); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)
 					s <- true
