@@ -127,26 +127,6 @@ func formatTiedWinners(s []p.Player) string {
 	return res + "and " + s[len(s)-1].Name
 }
 
-func updateEachPlayer(s []*websocket.Conn, clients map[*websocket.Conn]p.Player, n int, st string) {
-	for _, v := range s {
-		clients[v] = clients[v].UpdatePlayer(n, st)
-	}
-}
-
-func scoreAnswers(answers map[string][]*websocket.Conn, clients map[*websocket.Conn]p.Player) {
-	for s, v := range answers {
-		if len(s) < 2 {
-			updateEachPlayer(v, clients, 0, s)
-		} else if len(v) > 2 {
-			updateEachPlayer(v, clients, 1, s)
-		} else if len(v) == 2 {
-			updateEachPlayer(v, clients, 3, s)
-		} else {
-			updateEachPlayer(v, clients, 0, s)
-		}
-	}
-}
-
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
@@ -247,7 +227,7 @@ func handleAnswers(s chan bool, s2 chan bool) {
 			numAns++
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			if numAns == len(clientsMap) {
-				scoreAnswers(answers, clientsMap)
+				clientsMap.ScoreAnswers(answers)
 				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
 				if winners := clientsMap.GetPlayersOrWinners(winningScore)(); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
