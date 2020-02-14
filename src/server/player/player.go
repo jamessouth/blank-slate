@@ -8,14 +8,14 @@ type Player struct {
 	Score  int    `json:"score"`
 }
 
-// UpdatePlayer takes a player and the change in their score and returns a new updated player
+// UpdatePlayerScore takes a player and the change in their score and returns a new updated player
 func (p Player) UpdatePlayerScore(n int) (newplayer Player) {
 	newplayer = p
 	newplayer.Score += n
 	return
 }
 
-// UpdatePlayer takes a player and their sanitized but otherwise unprocessed answer (as they entered it) and returns a new updated player
+// UpdatePlayerAnswer takes a player and their sanitized but otherwise unprocessed answer (as they entered it) and returns a new updated player
 func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
 	newplayer = p
 	newplayer.Answer = s

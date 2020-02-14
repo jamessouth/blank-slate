@@ -29,13 +29,14 @@ func (c Clients) updateEachScore(s []*websocket.Conn, n int) {
 // ScoreAnswers calculates the players' scores each round
 func (c Clients) ScoreAnswers(answers map[string][]*websocket.Conn) {
 	for s, v := range answers {
-		if len(s) < 2 {
+		switch {
+		case len(s) < 2:
 			c.updateEachScore(v, 0)
-		} else if len(v) > 2 {
+		case len(v) > 2:
 			c.updateEachScore(v, 1)
-		} else if len(v) == 2 {
+		case len(v) == 2:
 			c.updateEachScore(v, 3)
-		} else {
+		default:
 			c.updateEachScore(v, 0)
 		}
 	}

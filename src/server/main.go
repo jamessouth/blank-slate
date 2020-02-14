@@ -40,6 +40,9 @@ func validateName(s string, r *re.Regexp) error {
 
 func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
 	return func(s string) (a string) {
+		if len(s) > 16 {
+			s = s[:16]
+		}
 		a = r.ReplaceAllLiteralString(s, "")
 		return
 	}
@@ -84,9 +87,9 @@ var (
 
 	blockRegex = re.MustCompile(`(?i)^[a-z '-]+$`)
 
-	sanitizeRegex = re.MustCompile(`(?i)[^a-z '-]+`)
+	sanitizeRegex = re.MustCompile(`(?i)[^a-z '-]`)
 
-	compareRegex = re.MustCompile(`[^a-z]+`)
+	compareRegex = re.MustCompile(`[^a-z]`)
 
 	sanitizeMessage = sanitizeMessageClosure(sanitizeRegex)
 
@@ -224,7 +227,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if msg.Message == "keepAlive" {
 		} else if len(*msg.Answer) > -1 {
 			ans := sanitizeMessage(*msg.Answer)
-			clientsMap[ws].UpdatePlayerAnswer(ans)
+			clientsMap[ws] = clientsMap[ws].UpdatePlayerAnswer(ans)
 			answerChannel <- answer{Answer: processAnswers(ans, compareRegex), Conn: ws}
 		} else {
 			newMsg := sanitizeMessage(msg.Message)
