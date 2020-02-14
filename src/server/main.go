@@ -38,9 +38,11 @@ func validateName(s string, r *re.Regexp) error {
 	return nil
 }
 
-func sanitizeAnswer(s string, r *re.Regexp) string {
-	a := r.ReplaceAllLiteralString(s, "")
-	return strings.ToLower(a)
+func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
+	return func(s string) string {
+		a := r.ReplaceAllLiteralString(s, "")
+		return a
+	}
 }
 
 type playerJSON struct {
@@ -63,7 +65,10 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
-const winningScore = 25
+const (
+	winningScore = 25
+	playerComp   = -1
+)
 
 var (
 	clientsMap = make(c.Clients)
@@ -77,9 +82,11 @@ var (
 
 	nameList []string
 
-	nameRegex = re.MustCompile(`(?i)^[a-z0-9 '-]+$`)
+	blockRegex = re.MustCompile(`(?i)^[a-z0-9 '-]+$`)
 
-	answerRegex = re.MustCompile(`(?i)[^a-z0-9 '-]+`)
+	sanitizeRegex = re.MustCompile(`(?i)[^a-z0-9 '-]+`)
+
+	sanitizeMessage = sanitizeMessageClosure(sanitizeRegex)
 
 	colorList = stringList(data.Colors).shuffleList()
 
@@ -149,7 +156,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clientsMap, ws)
-				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
+				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(playerComp)()}
 			}
 			delete(clientsMap, ws)
 			if len(clientsMap) == 0 {
@@ -164,7 +171,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if msg.Name != "" {
-			if err = validateName(msg.Name, nameRegex); err != nil {
+			if err = validateName(msg.Name, blockRegex); err != nil {
 				err := ws.WriteJSON(message{Message: "invalid"})
 				if err != nil {
 					log.Printf("error writing to client: %v", err)
@@ -186,7 +193,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("name ok write error: %v", err)
 					}
 					nameList = append(nameList, msg.Name)
-					messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
+					messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(playerComp)()}
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
@@ -209,10 +216,12 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			messageChannel <- message{Message: "reset"}
 		} else if msg.Message == "keepAlive" {
 		} else if len(*msg.Answer) > -1 {
-			answerChannel <- answer{Answer: sanitizeAnswer(*msg.Answer, answerRegex), Conn: ws}
+			ans := sanitizeMessage(*msg.Answer)
+			answerChannel <- answer{Answer: strings.ToLower(ans), Conn: ws}
 		} else {
-			log.Println("other msg: ", msg)
-			messageChannel <- msg
+			newMsg := sanitizeMessage(msg.Message)
+			log.Println("other msg: ", newMsg)
+			messageChannel <- newMsg
 		}
 	}
 }
@@ -228,7 +237,7 @@ func handleAnswers(s chan bool, s2 chan bool) {
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			if numAns == len(clientsMap) {
 				clientsMap.ScoreAnswers(answers)
-				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(-1)()}
+				messageChannel <- players{Players: clientsMap.GetPlayersOrWinners(playerComp)()}
 				if winners := clientsMap.GetPlayersOrWinners(winningScore)(); len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)
