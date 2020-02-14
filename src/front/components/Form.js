@@ -4,7 +4,7 @@ import { inv, signin, signedin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing, submitSignal }) {
   const inputBox = useRef(null);
-  const regex = /[^a-z0-9 '-]+/i;
+  const regex = /[^a-z '-]+/i;
   const NAME_MAX_LENGTH = 10;
   const ANSWER_MAX_LENGTH = 16;
   const INPUT_MIN_LENGTH = 2;

@@ -170,7 +170,7 @@ export default function App() {
   return (
     <main>
       {
-        pingServer &&
+        pingServer && connected &&
           <KeepAlive
             pingWS={ pingWS }
           />

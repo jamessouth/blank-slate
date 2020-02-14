@@ -82,9 +82,11 @@ var (
 
 	nameList []string
 
-	blockRegex = re.MustCompile(`(?i)^[a-z0-9 '-]+$`)
+	blockRegex = re.MustCompile(`(?i)^[a-z '-]+$`)
 
-	sanitizeRegex = re.MustCompile(`(?i)[^a-z0-9 '-]+`)
+	sanitizeRegex = re.MustCompile(`(?i)[^a-z '-]+`)
+
+	compareRegex = re.MustCompile(`[^a-z]+`)
 
 	sanitizeMessage = sanitizeMessageClosure(sanitizeRegex)
 
@@ -120,6 +122,12 @@ func (l stringList) shuffleList() []string {
 		newlist[i], newlist[j] = newlist[j], newlist[i]
 	})
 	return newlist
+}
+
+func processAnswers(s string, r *re.Regexp) (ans string) {
+	a := strings.ToLower(s)
+	ans = r.ReplaceAllLiteralString(a, "")
+	return
 }
 
 func formatTiedWinners(s []p.Player) string {
@@ -218,7 +226,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if len(*msg.Answer) > -1 {
 			ans := sanitizeMessage(*msg.Answer)
 			clientsMap[ws].UpdatePlayerAnswer(ans)
-			answerChannel <- answer{Answer: strings.ToLower(ans), Conn: ws}
+			answerChannel <- answer{Answer: processAnswers(ans, compareRegex), Conn: ws}
 		} else {
 			newMsg := sanitizeMessage(msg.Message)
 			log.Println("other msg: ", newMsg)
