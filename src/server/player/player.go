@@ -9,15 +9,15 @@ type Player struct {
 }
 
 // UpdatePlayer takes a player and the change in their score and returns a new updated player
-func (p Player) UpdatePlayerScore(n int) Player {
-	newplayer := p
+func (p Player) UpdatePlayerScore(n int) (newplayer Player) {
+	newplayer = p
 	newplayer.Score += n
-	return newplayer
+	return
 }
 
 // UpdatePlayer takes a player and their sanitized but otherwise unprocessed answer (as they entered it) and returns a new updated player
-func (p Player) UpdatePlayerAnswer(s string) Player {
-	newplayer := p
+func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
+	newplayer = p
 	newplayer.Answer = s
-	return newplayer
+	return
 }

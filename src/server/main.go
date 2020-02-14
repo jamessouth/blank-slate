@@ -39,9 +39,9 @@ func validateName(s string, r *re.Regexp) error {
 }
 
 func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
-	return func(s string) string {
-		a := r.ReplaceAllLiteralString(s, "")
-		return a
+	return func(s string) (a string) {
+		a = r.ReplaceAllLiteralString(s, "")
+		return
 	}
 }
 
@@ -112,16 +112,16 @@ func checkForDuplicateName(s string, names []string) bool {
 
 type stringList []string
 
-func (l stringList) shuffleList() []string {
+func (l stringList) shuffleList() (newlist []string) {
 	t := time.Now().UnixNano()
 	rand.Seed(t)
 
-	newlist := append([]string(nil), l...)
+	newlist = append([]string(nil), l...)
 
 	rand.Shuffle(len(newlist), func(i, j int) {
 		newlist[i], newlist[j] = newlist[j], newlist[i]
 	})
-	return newlist
+	return
 }
 
 func processAnswers(s string, r *re.Regexp) (ans string) {
@@ -130,12 +130,11 @@ func processAnswers(s string, r *re.Regexp) (ans string) {
 	return
 }
 
-func formatTiedWinners(s []p.Player) string {
+func formatTiedWinners(s []p.Player) (res string) {
 	if len(s) == 2 {
 		return s[0].Name + " and " + s[1].Name
 	}
 
-	res := ""
 	for _, p := range s[:len(s)-1] {
 		res += p.Name + ", "
 	}
@@ -235,7 +234,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleAnswers(s chan bool, s2 chan bool) {
+func handleAnswers(s, s2 chan bool) {
 	done := make(chan bool)
 	for {
 		select {
@@ -267,7 +266,7 @@ func handleAnswers(s chan bool, s2 chan bool) {
 	}
 }
 
-func sendWords(s chan bool, s2 chan bool) {
+func sendWords(s, s2 chan bool) {
 	for msg := range serveGame(wordList, s, s2) {
 		messageChannel <- word{Word: msg}
 		go handleAnswers(s, s2)
@@ -275,8 +274,8 @@ func sendWords(s chan bool, s2 chan bool) {
 	return
 }
 
-func serveGame(wl []string, s, s2 chan bool) <-chan string {
-	ch := make(chan string)
+func serveGame(wl []string, s, s2 chan bool) (ch chan string) {
+	ch = make(chan string)
 	go func() {
 		for _, w := range wl {
 			select {
@@ -290,7 +289,7 @@ func serveGame(wl []string, s, s2 chan bool) <-chan string {
 		}
 		close(ch)
 	}()
-	return ch
+	return
 }
 
 func handleTimers(done chan bool, tick *time.Ticker, countdown int) {
