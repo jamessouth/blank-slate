@@ -217,6 +217,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		} else if msg.Message == "keepAlive" {
 		} else if len(*msg.Answer) > -1 {
 			ans := sanitizeMessage(*msg.Answer)
+			clientsMap[ws].UpdatePlayerAnswer(ans)
 			answerChannel <- answer{Answer: strings.ToLower(ans), Conn: ws}
 		} else {
 			newMsg := sanitizeMessage(msg.Message)

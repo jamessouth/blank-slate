@@ -21,9 +21,9 @@ func (c Clients) GetPlayersOrWinners(comp int) func() []p.Player {
 	}
 }
 
-func (c Clients) updateEachPlayer(s []*websocket.Conn, n int, st string) {
+func (c Clients) updateEachScore(s []*websocket.Conn, n int) {
 	for _, v := range s {
-		c[v] = c[v].UpdatePlayer(n, st)
+		c[v] = c[v].UpdatePlayerScore(n)
 	}
 }
 
@@ -31,13 +31,13 @@ func (c Clients) updateEachPlayer(s []*websocket.Conn, n int, st string) {
 func (c Clients) ScoreAnswers(answers map[string][]*websocket.Conn) {
 	for s, v := range answers {
 		if len(s) < 2 {
-			c.updateEachPlayer(v, 0, s)
+			c.updateEachScore(v, 0)
 		} else if len(v) > 2 {
-			c.updateEachPlayer(v, 1, s)
+			c.updateEachScore(v, 1)
 		} else if len(v) == 2 {
-			c.updateEachPlayer(v, 3, s)
+			c.updateEachScore(v, 3)
 		} else {
-			c.updateEachPlayer(v, 0, s)
+			c.updateEachScore(v, 0)
 		}
 	}
 }
