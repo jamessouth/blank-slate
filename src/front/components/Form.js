@@ -67,7 +67,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         } }
         onChange={ e => setInputText(e.target.value) }
         type="text"
-        placeholder={ !dupeName && hasJoined ? 'length: 2 - 16' : 'Name' }
+        placeholder={ !dupeName && hasJoined ? `length: 2 - ${ANSWER_MAX_LENGTH}` : `length: 2 - ${NAME_MAX_LENGTH}` }
         { ...(answered ? { 'readOnly': true } : {}) }
       />
       <button
