@@ -2,15 +2,35 @@ package clients
 
 import (
 	"github.com/gorilla/websocket"
-	p "github.com/jamessouth/blank-slate/src/server/player"
 )
 
+// Player holds info on each player: last answer, name, color, and score
+type Player struct {
+	Answer string `json:"answer"`
+	Name   string `json:"name"`
+	Color  string `json:"color"`
+	Score  int    `json:"score"`
+}
+
+func (p Player) updatePlayerScore(n int) (newplayer Player) {
+	newplayer = p
+	newplayer.Score += n
+	return
+}
+
+// UpdatePlayerAnswer takes a player and their sanitized but otherwise unprocessed answer (as they entered it) and returns a new updated player
+func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
+	newplayer = p
+	newplayer.Answer = s
+	return
+}
+
 // Clients is a map of websocket connections to players
-type Clients map[*websocket.Conn]p.Player
+type Clients map[*websocket.Conn]Player
 
 // GetPlayersOrWinners returns a function that returns a slice of either all players' names or the winner(s) of the game
-func (c Clients) GetPlayersOrWinners(comp int) func() []p.Player {
-	return func() (res []p.Player) {
+func (c Clients) GetPlayersOrWinners(comp int) func() []Player {
+	return func() (res []Player) {
 		for _, p := range c {
 			if p.Score >= comp {
 				res = append(res, p)
@@ -22,7 +42,7 @@ func (c Clients) GetPlayersOrWinners(comp int) func() []p.Player {
 
 func (c Clients) updateEachScore(s []*websocket.Conn, n int) {
 	for _, v := range s {
-		c[v] = c[v].UpdatePlayerScore(n)
+		c[v] = c[v].updatePlayerScore(n)
 	}
 }
 
