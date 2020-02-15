@@ -16,6 +16,7 @@ function reducer(state, { type, name, players, winners, word }) {
   case 'players':
     return {
       ...state,
+      oldWord: state.newWord,
       players
     };
   case 'winners': {
@@ -28,7 +29,6 @@ function reducer(state, { type, name, players, winners, word }) {
   case 'word':
     return {
       ...state,
-      oldWord: state.newWord,
       newWord: word
     };
   default:
