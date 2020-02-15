@@ -55,7 +55,7 @@ export default function App() {
     ws.addEventListener('message', function (e) {
       const {
         message,
-        player,
+        Player,
         players,
         time,
         winners,
@@ -82,8 +82,8 @@ export default function App() {
           console.log('no case for this message found: ', message);
         }
         break;
-      case !!player: {
-        const { color, name } = player;
+      case !!Player: {
+        const { color, name } = Player;
         setPlayerColor(color);
         dispatch({ type: 'player', name });
         setHasJoined(true);

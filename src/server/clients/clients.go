@@ -4,6 +4,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// JSONPlayer type avoids infinite recursion when using anon struct in websocket WriteJSON
+type JSONPlayer Player
+
 // Player holds info on each player: last answer, name, color, and score
 type Player struct {
 	Answer string `json:"answer"`

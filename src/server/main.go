@@ -47,10 +47,6 @@ func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
 	}
 }
 
-type playerJSON struct {
-	Player c.Player `json:"player"`
-}
-
 type players struct {
 	Players []c.Player `json:"players"`
 }
@@ -198,7 +194,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					delete(clients, ws)
 					colorList = append(colorList, playerColor)
 				} else {
-					err = ws.WriteJSON(playerJSON{c.Player{Name: msg.Name, Color: playerColor}})
+					err = ws.WriteJSON(struct {
+						Player c.JSONPlayer
+					}{
+						Player: c.JSONPlayer{Name: msg.Name, Color: playerColor},
+					})
 					if err != nil {
 						log.Printf("name ok write error: %v", err)
 					}
