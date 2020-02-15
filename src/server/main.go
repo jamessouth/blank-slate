@@ -180,7 +180,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		if msg.Name != "" {
+		switch {
+		case msg.Name != "":
 			if err = validateName(msg.Name, blockRegex); err != nil {
 				err := ws.WriteJSON(message{Message: "invalid"})
 				if err != nil {
@@ -209,7 +210,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			}
-		} else if msg.Message == "start" {
+		case msg.Message == "start":
 			if !gameobj.InProgress {
 				gameobj.InProgress = true
 				const startDelay = 6
@@ -222,14 +223,14 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				close(timerDone)
 				go sendWords(sig, sig2)
 			}
-		} else if msg.Message == "reset" {
+		case msg.Message == "reset":
 			messageChannel <- message{Message: "reset"}
-		} else if msg.Message == "keepAlive" {
-		} else if len(*msg.Answer) > -1 {
+		case msg.Message == "keepAlive":
+		case len(*msg.Answer) > -1:
 			ans := sanitizeMessage(*msg.Answer)
 			clientsMap[ws] = clientsMap[ws].UpdatePlayerAnswer(ans)
 			answerChannel <- answer{Answer: processAnswers(ans, compareRegex), Conn: ws}
-		} else {
+		default:
 			newMsg := sanitizeMessage(msg.Message)
 			log.Println("other msg: ", newMsg)
 			messageChannel <- newMsg
