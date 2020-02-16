@@ -15,6 +15,10 @@ type Player struct {
 	Score  int    `json:"score"`
 }
 
+type Players struct {
+	Players []Player `json:"players"`
+}
+
 func (p Player) updatePlayerScore(n int) (newplayer Player) {
 	newplayer = p
 	newplayer.Score += n
@@ -32,11 +36,11 @@ func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
 type Clients map[*websocket.Conn]Player
 
 // GetPlayersOrWinners returns a function that returns a slice of either all players' names or the winner(s) of the game
-func (c Clients) GetPlayersOrWinners(comp int) func() []Player {
-	return func() (res []Player) {
+func (c Clients) GetPlayersOrWinners(comp int) func() Players {
+	return func() (res Players) {
 		for _, p := range c {
 			if p.Score >= comp {
-				res = append(res, p)
+				res.Players = append(res.Players, p)
 			}
 		}
 		return
