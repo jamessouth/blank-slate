@@ -24,6 +24,10 @@ type players struct {
 	Players []Player `json:"players"`
 }
 
+func InitPlayer(name, color string) (p player) {
+	return player{Name: name, Color: color, Score: 0}
+}
+
 func (ps players) FormatWinners() (gw gamewinners) {
 	plrs := ps.Players
 	if len(plrs) == 1 {

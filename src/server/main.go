@@ -166,7 +166,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			} else {
 				var playerColor string
 				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-				clients[ws] = c.Player{Name: msg.Name, Color: playerColor, Score: 0}
+				clients[ws] = c.InitPlayer(msg.Name, playerColor)
 				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})
 					if err != nil {
