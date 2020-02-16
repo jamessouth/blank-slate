@@ -47,10 +47,6 @@ func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
 	}
 }
 
-type gamewinners struct {
-	Winners string `json:"winners"`
-}
-
 type word struct {
 	Word string `json:"word"`
 }
@@ -122,17 +118,6 @@ func processAnswers(s string, r *re.Regexp) (ans string) {
 	a := strings.ToLower(s)
 	ans = r.ReplaceAllLiteralString(a, "")
 	return
-}
-
-func formatTiedWinners(s []c.Player) (res string) {
-	if len(s) == 2 {
-		return s[0].Name + " and " + s[1].Name
-	}
-
-	for _, p := range s[:len(s)-1] {
-		res += p.Name + ", "
-	}
-	return res + "and " + s[len(s)-1].Name
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -241,12 +226,8 @@ func handleAnswers(s, s2 chan bool) {
 			if numAns == len(clients) {
 				clients.ScoreAnswers(answers)
 				messageChannel <- clients.GetPlayers()
-				if winners := clients.GetWinners(winningScore).Players; len(winners) > 1 {
-					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
-					close(s2)
-					s <- true
-				} else if len(winners) == 1 {
-					messageChannel <- gamewinners{Winners: winners[0].Name}
+				if winners := clients.GetWinners(winningScore); len(winners.Players) > 0 {
+					messageChannel <- winners.FormatWinners()
 					close(s2)
 					s <- true
 				} else {

@@ -8,8 +8,12 @@ type PlayerJSON struct {
 	Player Player `json:"player"`
 }
 
+type gamewinners struct {
+	Winners string `json:"winners"`
+}
+
 // Player holds info on each player: last answer, name, color, and score
-type Player struct {
+type player struct {
 	Answer string `json:"answer"`
 	Name   string `json:"name"`
 	Color  string `json:"color"`
@@ -18,6 +22,22 @@ type Player struct {
 
 type players struct {
 	Players []Player `json:"players"`
+}
+
+func (ps players) FormatWinners() (gw gamewinners) {
+	plrs := ps.Players
+	if len(plrs) == 1 {
+		return gamewinners{Winners: plrs[0].Name}
+	}
+	if len(plrs) == 2 {
+		return gamewinners{Winners: plrs[0].Name + " and " + plrs[1].Name}
+	}
+
+	res := ""
+	for _, p := range plrs[:len(plrs)-1] {
+		res += p.Name + ", "
+	}
+	return gamewinners{Winners: res + "and " + plrs[len(plrs)-1].Name}
 }
 
 func (p Player) updatePlayerScore(n int) (newplayer Player) {
