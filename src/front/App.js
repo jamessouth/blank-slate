@@ -14,6 +14,7 @@ const ws = new WebSocket(process.env.WS);
 
 
 
+
 export default function App() {
   const [hasJoined, setHasJoined] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -58,7 +59,7 @@ export default function App() {
     ws.addEventListener('message', function (e) {
       const {
         message,
-        Player,
+        player,
         players,
         time,
         winners,
@@ -85,8 +86,8 @@ export default function App() {
           console.log('no case for this message found: ', message);
         }
         break;
-      case !!Player: {
-        const { color, name } = Player;
+      case !!player: {
+        const { color, name } = player;
         setPlayerColor(color);
         dispatch({ type: 'player', name });
         setHasJoined(true);
