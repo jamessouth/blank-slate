@@ -175,7 +175,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					delete(clients, ws)
 					colorList = append(colorList, playerColor)
 				} else {
-					err = ws.WriteJSON(c.PlayerJSON{Player: c.Player{Name: msg.Name, Color: playerColor}})
+					err = ws.WriteJSON(c.PlayerJSON{Player: clients[ws]})
 					if err != nil {
 						log.Printf("name ok write error: %v", err)
 					}

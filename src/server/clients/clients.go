@@ -4,44 +4,49 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// PlayerJSON adds a player key to the resulting JSON to ease parsing on the front end
 type PlayerJSON struct {
 	Player Player `json:"player"`
 }
 
-type gamewinners struct {
+// Gamewinners JSON encodes the list of winners
+type Gamewinners struct {
 	Winners string `json:"winners"`
 }
 
 // Player holds info on each player: last answer, name, color, and score
-type player struct {
+type Player struct {
 	Answer string `json:"answer"`
 	Name   string `json:"name"`
 	Color  string `json:"color"`
 	Score  int    `json:"score"`
 }
 
-type players struct {
+// Players list of all players to populate scoreboard
+type Players struct {
 	Players []Player `json:"players"`
 }
 
-func InitPlayer(name, color string) (p player) {
-	return player{Name: name, Color: color, Score: 0}
+// InitPlayer initializes a player struct
+func InitPlayer(name, color string) (p Player) {
+	return Player{Name: name, Color: color, Score: 0}
 }
 
-func (ps players) FormatWinners() (gw gamewinners) {
+// FormatWinners builds a string of winners' names and returns it in a struct
+func (ps Players) FormatWinners() (gw Gamewinners) {
 	plrs := ps.Players
 	if len(plrs) == 1 {
-		return gamewinners{Winners: plrs[0].Name}
+		return Gamewinners{Winners: plrs[0].Name}
 	}
 	if len(plrs) == 2 {
-		return gamewinners{Winners: plrs[0].Name + " and " + plrs[1].Name}
+		return Gamewinners{Winners: plrs[0].Name + " and " + plrs[1].Name}
 	}
 
 	res := ""
 	for _, p := range plrs[:len(plrs)-1] {
 		res += p.Name + ", "
 	}
-	return gamewinners{Winners: res + "and " + plrs[len(plrs)-1].Name}
+	return Gamewinners{Winners: res + "and " + plrs[len(plrs)-1].Name}
 }
 
 func (p Player) updatePlayerScore(n int) (newplayer Player) {
@@ -61,7 +66,7 @@ func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
 type Clients map[*websocket.Conn]Player
 
 // GetPlayers returns a slice of all the players' names
-func (c Clients) GetPlayers() (list players) {
+func (c Clients) GetPlayers() (list Players) {
 	for _, p := range c {
 		list.Players = append(list.Players, p)
 	}
@@ -69,7 +74,7 @@ func (c Clients) GetPlayers() (list players) {
 }
 
 // GetWinners returns a slice of the winner(s) of the game, if any
-func (c Clients) GetWinners(comp int) (list players) {
+func (c Clients) GetWinners(comp int) (list Players) {
 	for _, p := range c {
 		if p.Score >= comp {
 			list.Players = append(list.Players, p)
