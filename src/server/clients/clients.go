@@ -15,7 +15,7 @@ type Player struct {
 	Score  int    `json:"score"`
 }
 
-type Players struct {
+type players struct {
 	Players []Player `json:"players"`
 }
 
@@ -35,16 +35,22 @@ func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
 // Clients is a map of websocket connections to players
 type Clients map[*websocket.Conn]Player
 
-// GetPlayersOrWinners returns a function that returns a slice of either all players' names or the winner(s) of the game
-func (c Clients) GetPlayersOrWinners(comp int) func() Players {
-	return func() (res Players) {
-		for _, p := range c {
-			if p.Score >= comp {
-				res.Players = append(res.Players, p)
-			}
-		}
-		return
+// GetPlayers returns a slice of all the players' names
+func (c Clients) GetPlayers() (list players) {
+	for _, p := range c {
+		list.Players = append(list.Players, p)
 	}
+	return
+}
+
+// GetWinners returns a slice of the winner(s) of the game, if any
+func (c Clients) GetWinners(comp int) (list players) {
+	for _, p := range c {
+		if p.Score >= comp {
+			list.Players = append(list.Players, p)
+		}
+	}
+	return
 }
 
 func (c Clients) updateEachScore(s []*websocket.Conn, n int) {

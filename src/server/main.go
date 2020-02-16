@@ -157,7 +157,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clients, ws)
-				messageChannel <- clients.GetPlayersOrWinners(playerComp)()
+				messageChannel <- clients.GetPlayers()
 			}
 			delete(clients, ws)
 			if len(clients) == 0 {
@@ -199,7 +199,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("name ok write error: %v", err)
 					}
 					nameList = append(nameList, msg.Name)
-					messageChannel <- clients.GetPlayersOrWinners(playerComp)()
+					messageChannel <- clients.GetPlayers()
 					if gameobj.InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
@@ -244,8 +244,8 @@ func handleAnswers(s, s2 chan bool) {
 			answers[ans.Answer] = append(answers[ans.Answer], ans.Conn)
 			if numAns == len(clients) {
 				clients.ScoreAnswers(answers)
-				messageChannel <- clients.GetPlayersOrWinners(playerComp)()
-				if winners := clients.GetPlayersOrWinners(winningScore)().Players; len(winners) > 1 {
+				messageChannel <- clients.GetPlayers()
+				if winners := clients.GetWinners(winningScore).Players; len(winners) > 1 {
 					messageChannel <- gamewinners{Winners: formatTiedWinners(winners)}
 					close(s2)
 					s <- true
