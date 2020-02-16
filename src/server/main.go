@@ -55,10 +55,7 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
-const (
-	winningScore = 25
-	playerComp   = -1
-)
+const winningScore = 25
 
 var (
 	clients = make(c.Clients)
