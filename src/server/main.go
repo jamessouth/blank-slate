@@ -139,7 +139,9 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clients, ws)
-				messageChannel <- clients.GetPlayers()
+				if len(clients) > 0 {
+					messageChannel <- clients.GetPlayers()
+				}
 			}
 			delete(clients, ws)
 			if len(clients) == 0 {

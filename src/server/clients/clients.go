@@ -32,7 +32,10 @@ func (c Clients) GetPlayers() (list Players) {
 	for _, p := range c {
 		list.Players = append(list.Players, p)
 	}
-	return
+	if len(list.Players) > 0 {
+		return
+	}
+	return Players{}
 }
 
 // GetWinners returns a slice of the winner(s) of the game, if any
@@ -42,7 +45,10 @@ func (c Clients) GetWinners(comp int) (list Players) {
 			list.Players = append(list.Players, p)
 		}
 	}
-	return
+	if len(list.Players) > 0 {
+		return
+	}
+	return Players{}
 }
 
 func (c Clients) updateEachScore(s []*websocket.Conn, n int) {
