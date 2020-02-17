@@ -161,8 +161,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					log.Printf("error writing to client: %v", err)
 				}
 			} else {
-				var playerColor string
-				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
+				playerColor, colorList := colorList[len(colorList)-1], colorList[:len(colorList)-1]
 				clients[ws] = c.InitPlayer(msg.Name, playerColor)
 				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})

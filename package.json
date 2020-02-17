@@ -6,10 +6,12 @@
   "scripts": {
     "build": "webpack --env.ENV=prod --env.WS=wss://blank-slate.herokuapp.com/ws",
     "build:local": "webpack --env.ENV=prod --env.WS=ws://localhost:8000/ws",
+    "cover": "go tool cover -html c.out",
     "dev": "webpack-dev-server --env.ENV=dev --env.WS=ws://localhost:8000/ws",
     "lint": "eslint --fix src/front/ && echo 'Linted!'",
     "local": "heroku local -p 8000",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "go test -v github.com/jamessouth/blank-slate/src/server/clients",
+    "test:coverage": "go test -coverprofile c.out github.com/jamessouth/blank-slate/src/server/clients"
   },
   "repository": {
     "type": "git",
