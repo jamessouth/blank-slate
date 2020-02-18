@@ -2,7 +2,7 @@
 
 ### React, Go, Heroku, websockets
 
-#### Play here:
+### Play here:
 
 [![](https://img.shields.io/badge/heroku-deployed-purple.svg?color=430098&style=for-the-badge&logo=Heroku)](http://blank-slate.herokuapp.com/)
 
