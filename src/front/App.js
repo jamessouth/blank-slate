@@ -11,10 +11,6 @@ import { div, h1, winner } from './styles/index.css';
 
 const ws = new WebSocket(process.env.WS);
 
-
-
-
-
 export default function App() {
   const [hasJoined, setHasJoined] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -249,7 +245,3 @@ export default function App() {
     </main>
   );
 }
-
-// Image by <a href="https://pixabay.com/users/stux-12364/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Thanks for your Like • donations welcome</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1072366">Pixabay</a>
-
-// Image by <a href="https://pixabay.com/users/b0red-4473488/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">b0red</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3170418">Pixabay</a>
