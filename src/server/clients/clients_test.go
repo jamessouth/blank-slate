@@ -7,17 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var (
-	ws1          = &websocket.Conn{}
-	ws2          = &websocket.Conn{}
-	ws3          = &websocket.Conn{}
-	ws4          = &websocket.Conn{}
-	ws5          = &websocket.Conn{}
-	oneClient    = map[*websocket.Conn]Player{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
-	threeClients = map[*websocket.Conn]Player{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
-	fourClients  = map[*websocket.Conn]Player{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}}
-	fiveClients  = map[*websocket.Conn]Player{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 25}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}, ws5: Player{Answer: "", Name: "vera", Color: "#960000", Score: 1}}
-)
+var ws1, ws2, ws3, ws4, ws5 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
 
 func TestFormatWinners(t *testing.T) {
 	onePlayer := Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}
@@ -45,13 +35,17 @@ func TestFormatWinners(t *testing.T) {
 }
 
 func TestGetPlayers(t *testing.T) {
+	var ws1, ws2, ws3 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
+	oneClient := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
+	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}
+
 	tests := map[string]struct {
 		cl   Clients
 		want Players
 	}{
 		"no players":    {cl: Clients{}, want: Players{}},
 		"one player":    {cl: oneClient, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}},
-		"three players": {cl: threeClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}}},
+		"three players": {cl: threeClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}}},
 	}
 
 	for name, tc := range tests {
@@ -66,6 +60,12 @@ func TestGetPlayers(t *testing.T) {
 }
 
 func TestGetWinners(t *testing.T) {
+	var ws1, ws2, ws3, ws4, ws5 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
+	oneClient := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
+	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
+	fourClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}}
+	fiveClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 25}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}, ws5: Player{Answer: "", Name: "vera", Color: "#960000", Score: 1}}
+
 	tests := map[string]struct {
 		cl   Clients
 		want Players
@@ -87,22 +87,29 @@ func TestGetWinners(t *testing.T) {
 	}
 }
 
-func TestUpdatenPlayerAnswer(t *testing.T) {
-	t.Skip()
+func TestScoreAnswers(t *testing.T) {
+	var ws1, ws2, ws3 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
+	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
+	threeClients2 := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
+	threeClients3 := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
+	moreThanTwo := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 3}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 2}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}
+	exactlyTwo := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 5}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 4}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
+
 	tests := map[string]struct {
-		ans  string
-		pl   Player
-		want Player
+		cl   Clients
+		ans  map[string][]*websocket.Conn
+		want Clients
 	}{
-		"was blank": {ans: "tern", pl: Player{Answer: "", Name: "bill", Color: "#800000", Score: 0}, want: Player{Answer: "tern", Name: "bill", Color: "#800000", Score: 0}},
-		"replace":   {ans: "broom", pl: Player{Answer: "chair", Name: "bill", Color: "#800000", Score: 10}, want: Player{Answer: "broom", Name: "bill", Color: "#800000", Score: 10}},
-		"no answer": {ans: "", pl: Player{Answer: "hat", Name: "bill", Color: "#800000", Score: 20}, want: Player{Answer: "", Name: "bill", Color: "#800000", Score: 20}},
+		"one-letter answer":            {cl: threeClients, ans: map[string][]*websocket.Conn{"a": {ws1}, "b": {ws2, ws3}}, want: threeClients},
+		"more than 2 of same answer":   {cl: threeClients2, ans: map[string][]*websocket.Conn{"all": {ws1, ws2, ws3}}, want: moreThanTwo},
+		"exactly 2 of same answer":     {cl: threeClients3, ans: map[string][]*websocket.Conn{"all": {ws1, ws2}, "red": {ws3}}, want: exactlyTwo},
+		"each player answers uniquely": {cl: threeClients, ans: map[string][]*websocket.Conn{"all": {ws1}, "saw": {ws2}, "red": {ws3}}, want: threeClients},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := tc.pl.UpdatePlayerAnswer(tc.ans)
-			diff := cmp.Diff(tc.want, got)
+			tc.cl.ScoreAnswers(tc.ans)
+			diff := cmp.Diff(tc.want, tc.cl)
 			if diff != "" {
 				t.Fatalf(diff)
 			}
