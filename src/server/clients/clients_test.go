@@ -7,7 +7,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var ws1, ws2, ws3, ws4, ws5 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
+var (
+	ws1, ws2, ws3, ws4, ws5 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
+
+	oneClient = Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
+
+	threeClients = Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}
+)
 
 func TestFormatWinners(t *testing.T) {
 	onePlayer := Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}
@@ -35,10 +41,6 @@ func TestFormatWinners(t *testing.T) {
 }
 
 func TestGetPlayers(t *testing.T) {
-	var ws1, ws2, ws3 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
-	oneClient := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
-	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}
-
 	tests := map[string]struct {
 		cl   Clients
 		want Players
@@ -60,9 +62,6 @@ func TestGetPlayers(t *testing.T) {
 }
 
 func TestGetWinners(t *testing.T) {
-	var ws1, ws2, ws3, ws4, ws5 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
-	oneClient := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}
-	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
 	fourClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}}
 	fiveClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 25}, ws4: Player{Answer: "", Name: "tom", Color: "#870000", Score: 1}, ws5: Player{Answer: "", Name: "vera", Color: "#960000", Score: 1}}
 
@@ -88,8 +87,6 @@ func TestGetWinners(t *testing.T) {
 }
 
 func TestScoreAnswers(t *testing.T) {
-	var ws1, ws2, ws3 = &websocket.Conn{}, &websocket.Conn{}, &websocket.Conn{}
-	threeClients := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
 	threeClients2 := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
 	threeClients3 := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 2}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}
 	moreThanTwo := Clients{ws1: Player{Answer: "", Name: "bill", Color: "#800000", Score: 3}, ws2: Player{Answer: "", Name: "sally", Color: "#80e000", Score: 2}, ws3: Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}
