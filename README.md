@@ -1,7 +1,8 @@
 # blank-slate
 
+![](https://img.shields.io/badge/react-js-brightgreen.svg?color=61dafb&logo=React)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/jamessouth/blank-slate?logo=Go)
-[![Heroku App Status](http://heroku-shields.herokuapp.com/blank-slate)](http://blank-slate.herokuapp.com)
+![](https://img.shields.io/badge/heroku-deployed-brightgreen.svg?color=430098&logo=Heroku)
 ![](https://img.shields.io/badge/awesome-yes-brightgreen.svg)
 
 React, Go, Heroku, websockets
