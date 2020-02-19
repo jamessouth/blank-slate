@@ -1,5 +1,5 @@
 const initialState = {
-  h1Text: 'BLANK SLATE',
+  h1Text: 'CLEAN TABLET',
   newWord: '',
   oldWord: '',
   playerName: '',

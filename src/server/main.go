@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	c "github.com/jamessouth/blank-slate/src/server/clients"
-	"github.com/jamessouth/blank-slate/src/server/data"
+	c "github.com/jamessouth/clean-tablet/src/server/clients"
+	"github.com/jamessouth/clean-tablet/src/server/data"
 )
 
 type game struct {

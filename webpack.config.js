@@ -101,7 +101,7 @@ module.exports = env => {
       new CleanWebpackPlugin(),
       new HTMLWebpackPlugin({
         template: './src/front/index.html',
-        title: 'Blank Slate',
+        title: 'Clean Tablet',
         favicon: './src/assets/icons/favicon-16x16.png'
       }),
       new ScriptExtHTMLWebpackPlugin({
