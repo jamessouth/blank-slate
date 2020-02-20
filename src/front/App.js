@@ -18,21 +18,21 @@ export default function App() {
     h1Text,
     hasJoined,
     invalidInput,
+    message,
     newWord,
     oldWord,
     pingServer,
-    pingWS,
     playerColor,
     playerName,
     players,
-    resetGame,
     send,
+    setShowStartButton,
+    setSubmitSignal,
     showReset,
     showStartButton,
     showStartTimer,
     showSVGTimer,
     showWords,
-    startGame,
     submitSignal,
     timer,
     winners
@@ -43,7 +43,7 @@ export default function App() {
       {
         pingServer && connected &&
           <KeepAlive
-            pingWS={ pingWS }
+            pingWS={ () => message('keepAlive') }
           />
       }
       <Name
@@ -63,7 +63,10 @@ export default function App() {
             {
               showStartButton && hasJoined &&
                 <Start
-                  onClick={ startGame }
+                  onClick={ () => {
+                    message('start');
+                    setShowStartButton(false);
+                  } }
                   players={ players }
                   gameHasBegun={ gameHasBegun }
                 />
@@ -90,7 +93,7 @@ export default function App() {
               showReset &&
                 <button
                   type="button"
-                  onClick={ resetGame }
+                  onClick={ () => message('reset') }
                 >
                   Play Again
                 </button>
