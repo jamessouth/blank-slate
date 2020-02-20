@@ -242,6 +242,7 @@ export default function App() {
         !connected &&
         <p>Server not available. Please try again.</p>
       }
+      <footer><a rel="noopener noreferrer" target="_blank" href="https://github.com/jamessouth/clean-tablet">GitHub repo (opens in new tab)</a></footer>
     </main>
   );
 }
