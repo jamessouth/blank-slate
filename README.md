@@ -2,6 +2,12 @@
 
 ### React, Go, Heroku, websockets
 
+### Play here:
+
+[![](https://img.shields.io/badge/heroku-deployed-purple.svg?color=430098&style=for-the-badge&logo=Heroku)](http://clean-tablet.herokuapp.com/)
+
+This is a clone of Blank Slate, a party game, which you can learn more about [here](https://theop.games/products/game/blank-slate/).  It is a simple and fun game and my family has several physical copies.  I played for the first time at Thanksgiving 2019 and thought it would make a good software project.  I built the front end with React and the back end with Go and I have deployed it on Heroku.  You need at least three people to play.
+
 --------------------------------------------------------------------------------------------------------------------------
 
 #### TODO:
