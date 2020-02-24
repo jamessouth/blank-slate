@@ -31,6 +31,16 @@ button:disabled{
   flex-direction: column;
   justify-content: center;
 }
+footer{
+  margin-top: 1em;
+}
+footer a{
+  padding: 4px;
+}
+footer a:focus,
+footer a:hover{
+  border: 2px solid #ffee58;
+}
 .h1{
   font-size: 3rem;
   font-family: 'Architects Daughter', cursive;
