@@ -24,6 +24,11 @@ button:disabled{
   cursor: not-allowed;
   filter: contrast(0.25);
 }
+button:focus,
+button:hover{
+  outline: 2px dashed #ffee58;
+  outline-offset: 4px;
+}
 .div{
   height: 240px;
   display: flex;
