@@ -9,6 +9,8 @@ import Word from './components/Word';
 import { div, h1, winner } from './styles/index.css';
 import useAppState from './utils/useAppState';
 
+
+
 export default function App() {
   const {
     answered,

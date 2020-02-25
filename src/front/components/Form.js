@@ -53,8 +53,9 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         (invalidInput || !isValidInput) &&
               <p className={ inv }>{ badChar ? badChar : 'That input'} is not allowed</p>
       }
-      <label>{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
+      <label htmlFor="inputbox">{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
       <input
+        id="inputbox"
         autoFocus
         ref={ inputBox }
         value={ inputText }
