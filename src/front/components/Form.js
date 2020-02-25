@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { inv, signin, signedin } from '../styles/Form.module.css';
+import { bg, inv, signin } from '../styles/Form.module.css';
 
 export default function Form({ answered, dupeName, hasJoined, invalidInput, onEnter, playerName, playing, submitSignal }) {
   const inputBox = useRef(null);
@@ -48,7 +48,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
   }, [inputText, maxLength, answered, invalidInput, isValidInput, hasJoined, playing]);
 
   return (
-    <section className={ !hasJoined ? signin : [signin, signedin].join(' ') }>
+    <section className={ signin }>
       {
         (invalidInput || !isValidInput) &&
               <p className={ inv }>{ badChar ? badChar : 'That input'} is not allowed</p>
@@ -70,6 +70,7 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
         placeholder={ !dupeName && hasJoined ? `length: 2 - ${ANSWER_MAX_LENGTH}` : `length: 2 - ${NAME_MAX_LENGTH}` }
         { ...(answered ? { 'readOnly': true } : {}) }
       />
+      <span className={ bg }></span>
       <button
         type="button"
         onClick={() => {

@@ -17,9 +17,6 @@
 .p{
     font-size: 12px;
 }
-.signedin{
-    height: 150px;
-}
 .signin{
     position: relative;
     display: flex;
@@ -35,7 +32,54 @@
     width: 60%;
     font-size: 1.25rem;
     text-align: initial;
-    background-color: whitesmoke;
+    background-color: transparent;
     border: none;
+    border-bottom: 1px solid whitesmoke;
     color: #4c4952;
+}
+.signin input[type="text"]:not(:focus){
+    color: whitesmoke;
+}
+.signin input[type="text"]::placeholder,
+.signin input[type="text"]::-webkit-input-placeholder{
+
+    
+    color: whitesmoke;
+}
+.signin input[type="text"]:focus::placeholder,
+.signin input[type="text"]:focus::-webkit-input-placeholder{
+
+    
+    color: #757575;
+}
+/* .signin input[type="text"]::before{
+    content: "";
+    width: 60%;
+    background-color: whitesmoke;
+    position: absolute;
+    left: 20%;
+    top: 41%;
+    height: 26px;
+} */
+/* .signin input[type="text"]:not(:focus) {
+    transition: 0.3s;
+}
+.signin input[type="text"]:focus {
+    background-color: transparent;
+    transition: .1s;
+    transition-delay: .3s;
+} */
+.signin input[type="text"] ~ .bg{
+    position: absolute;
+    left: 20%;
+    top: 40.5%;
+    height: 26px;
+    width: 0;
+    background-color: whitesmoke;
+    transition: .3s;
+    z-index: -1;
+}
+.signin input[type="text"]:focus ~ .bg{
+    transition: .3s;
+    width: 60%;
 }
