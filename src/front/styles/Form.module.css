@@ -42,33 +42,12 @@
 }
 .signin input[type="text"]::placeholder,
 .signin input[type="text"]::-webkit-input-placeholder{
-
-    
     color: whitesmoke;
 }
 .signin input[type="text"]:focus::placeholder,
 .signin input[type="text"]:focus::-webkit-input-placeholder{
-
-    
     color: #757575;
 }
-/* .signin input[type="text"]::before{
-    content: "";
-    width: 60%;
-    background-color: whitesmoke;
-    position: absolute;
-    left: 20%;
-    top: 41%;
-    height: 26px;
-} */
-/* .signin input[type="text"]:not(:focus) {
-    transition: 0.3s;
-}
-.signin input[type="text"]:focus {
-    background-color: transparent;
-    transition: .1s;
-    transition-delay: .3s;
-} */
 .signin input[type="text"] ~ .bg{
     position: absolute;
     left: 20%;
