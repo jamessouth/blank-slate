@@ -4,6 +4,7 @@ import { initialState, reducer } from '../reducers/appState';
 const ws = new WebSocket(process.env.WS);
 
 export default function useAppState() {
+
   const [answered, setAnswered] = useState(false);
   const [connected, setConnected] = useState(false);
   const [dupeName, setDupeName] = useState(false);
@@ -172,4 +173,5 @@ export default function useAppState() {
     timer,
     winners
   };
+  
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { bg, inv, signin } from '../styles/Form.module.css';
+import useFormState from '../hooks/useFormState';
 
 export default function Form({
   answered,
@@ -13,7 +14,23 @@ export default function Form({
   submitSignal,
 }) {
 
-
+  const {
+    ANSWER_MAX_LENGTH,
+    badChar,
+    disableSubmit,
+    inputBox,
+    inputText,
+    isValidInput,
+    NAME_MAX_LENGTH,
+    setInputText,
+  } = useFormState(
+    answered,
+    hasJoined,
+    invalidInput,
+    onEnter,
+    playing,
+    submitSignal,
+  );
 
   return (
     <section className={ signin }>
@@ -49,7 +66,7 @@ export default function Form({
         }}
         { ...(disableSubmit ? { 'disabled': true } : {}) }
       >
-            Submit
+        Submit
       </button>
     </section>
   );

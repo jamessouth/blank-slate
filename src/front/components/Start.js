@@ -9,14 +9,14 @@ export default function Start({ gameHasBegun, onClick, players }) {
     <div style={{width: '100%'}}>
       {
         !gameHasBegun &&
-                    <button
-                      aria-live="polite"
-                      type="button"
-                      onClick={ onClick }
-                      { ...(players.length < 3 ? { 'disabled': true } : {}) }
-                    >
-                      { players.length < 3 ? 'Need ' + (3 - players.length) + ' more ' + ppl : 'Start Game' }
-                    </button>
+          <button
+            aria-live="polite"
+            type="button"
+            onClick={ onClick }
+            { ...(players.length < 3 ? { 'disabled': true } : {}) }
+          >
+            { players.length < 3 ? 'Need ' + (3 - players.length) + ' more ' + ppl : 'Start Game' }
+          </button>
       }
     </div>
   );

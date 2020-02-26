@@ -16,14 +16,14 @@ export default function Word({
       <svg preserveAspectRatio="none">
         {
           showSVGTimer &&
-                        <rect
-                          x="0"
-                          y="0"
-                          width="100%"
-                          height="100%"
-                          onAnimationEnd={ onAnimationEnd }
-                          style={{stroke: playerColor}}
-                        />
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              onAnimationEnd={ onAnimationEnd }
+              style={{stroke: playerColor}}
+            />
         }
       </svg>
       <p aria-label={ blankPos } role="alert" className={ p }>{ word }</p>

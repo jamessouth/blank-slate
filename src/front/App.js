@@ -10,6 +10,7 @@ import { div, h1, winner } from './styles/index.css';
 import useAppState from './hooks/useAppState';
 
 export default function App() {
+
   const {
     answered,
     connected,
@@ -120,4 +121,5 @@ export default function App() {
       <footer><a rel="noopener noreferrer" target="_blank" href="https://github.com/jamessouth/clean-tablet">GitHub repo (opens in new tab)</a></footer>
     </main>
   );
+  
 }
