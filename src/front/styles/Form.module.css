@@ -37,9 +37,7 @@
     border-bottom: 1px solid whitesmoke;
     color: #4c4952;
 }
-.signin input[type="text"]:not(:focus){
-    color: whitesmoke;
-}
+.signin input[type="text"]:not(:focus),
 .signin input[type="text"]::placeholder,
 .signin input[type="text"]::-webkit-input-placeholder{
     color: whitesmoke;

@@ -6,7 +6,6 @@ export default function Timer({ timer }) {
 
   return (
     <p
-      aria-live="assertive"
       role="alert"
       className={ p }
     >

@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { div, flipL, flipR, h2, li, offScreenLeft, offScreenRight, onScreen, p, score, ul } from '../styles/Scoreboard.module.css';
+import {
+  div,
+  flipL,
+  flipR,
+  h2,
+  li,
+  offScreenLeft,
+  offScreenRight,
+  onScreen,
+  p,
+  score,
+  ul,
+} from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 import mapFn from '../utils/mapFn';
 
 export default function Scoreboard({ players, word }) {
+
   const [showScores, setShowScores] = useState(true);
 
   const scoreList = players
@@ -19,7 +32,7 @@ export default function Scoreboard({ players, word }) {
     <div style={{ height: `calc(95px + (28px * ${players.length}))` }} className={ score }>
       <button
         type="button"
-        aria-label={ showScores ? "show answers" : "show scores" }
+        aria-label={ showScores ? 'show answers' : 'show scores' }
         onClick={ () => setShowScores(!showScores) }
         className={ showScores ? flipR : flipL }
       ></button>
@@ -43,6 +56,7 @@ export default function Scoreboard({ players, word }) {
       </div>
     </div>
   );
+  
 }
 
 Scoreboard.propTypes = {
