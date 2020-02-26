@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { p } from '../styles/Timer.module.css';
 
 export default function Timer({ timer }) {
 
   return (
     <p
       role="alert"
-      className={ p }
+      style={{color: '#ffee58', fontSize: '5em'}}
     >
       { timer }
     </p>

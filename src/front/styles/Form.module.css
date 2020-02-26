@@ -1,11 +1,3 @@
-.inputdiv{
-    display: flex;
-    flex-direction: column;
-    height: 90px;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
 .inv{
     position: absolute;
     color: #800000;
@@ -13,9 +5,6 @@
     font-weight: bold;
     width: 90%;
     max-width: 600px;
-}
-.p{
-    font-size: 12px;
 }
 .signin{
     position: relative;
