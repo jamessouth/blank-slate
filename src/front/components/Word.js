@@ -4,6 +4,8 @@ import { div, p } from '../styles/Word.module.css';
 
 export default function Word({ onAnimationEnd, playerColor, showSVGTimer, word }) {
 
+  const blankPos = word.startsWith("_") ? "word, blank first" : "word, blank last";
+
   return (
     <div className={ div }>
       <svg preserveAspectRatio="none">
@@ -19,7 +21,7 @@ export default function Word({ onAnimationEnd, playerColor, showSVGTimer, word }
                         />
         }
       </svg>
-      <p className={ p }>{ word }</p>
+      <p aria-label={ blankPos } role="alert" className={ p }>{ word }</p>
     </div>
   );
 
@@ -31,3 +33,5 @@ Word.propTypes = {
   showSVGTimer: PropTypes.bool,
   word: PropTypes.string
 }
+
+// aria-live="assertive"

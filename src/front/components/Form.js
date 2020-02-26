@@ -51,11 +51,12 @@ export default function Form({ answered, dupeName, hasJoined, invalidInput, onEn
     <section className={ signin }>
       {
         (invalidInput || !isValidInput) &&
-              <p className={ inv }>{ badChar ? badChar : 'That input'} is not allowed</p>
+              <p aria-live="assertive" className={ inv }>{ badChar ? badChar : 'That input'} is not allowed</p>
       }
-      <label htmlFor="inputbox">{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
+      <label aria-live="assertive" htmlFor="inputbox">{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
       <input
         id="inputbox"
+        autoComplete="off"
         autoFocus
         ref={ inputBox }
         value={ inputText }

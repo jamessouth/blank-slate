@@ -23,23 +23,23 @@ export default function Scoreboard({ players, word }) {
         onClick={ () => setShowScores(!showScores) }
         className={ showScores ? flipR : flipL }
       ></button>
-      <div className={ showScores ? [div, onScreen].join(' ') : [div, offScreenLeft].join(' ') }>
-        <h2
-          className={ h2 }
-          aria-hidden={ showScores ? false : true }
-        >
+      <div
+        className={ showScores ? [div, onScreen].join(' ') : [div, offScreenLeft].join(' ') }
+        { ...(showScores ? {} : { 'aria-hidden': true }) }
+      >
+        <h2 className={ h2 }>
           Players:&nbsp;&nbsp;{ scoreList.length }
         </h2>
-        <ul className={ ul }>{ scoreList }</ul>
+        <ul aria-label="scores" className={ ul }>{ scoreList }</ul>
       </div>
-      <div className={ showScores ? [div, offScreenRight].join(' ') : [div, onScreen].join(' ') }>
-        <h2
-          className={ h2 }
-          aria-hidden={ showScores ? true : false }
-        >
+      <div
+        className={ showScores ? [div, offScreenRight].join(' ') : [div, onScreen].join(' ') }
+        { ...(showScores ? { 'aria-hidden': true } : {}) }
+      >
+        <h2 className={ h2 }>
           Word:&nbsp;&nbsp;{ word }
         </h2>
-        <ul className={ ul }>{ answerList }</ul>
+        <ul aria-label="answers" className={ ul }>{ answerList }</ul>
       </div>
     </div>
   );

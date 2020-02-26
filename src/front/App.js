@@ -11,6 +11,11 @@ import useAppState from './utils/useAppState';
 
 
 
+
+
+
+
+
 export default function App() {
   const {
     answered,
@@ -89,7 +94,7 @@ export default function App() {
                 />
             }
             {
-              winners && <p className={ winner }>{ winners } { winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>
+              winners && <p aria-live="assertive" role="alert" className={ winner }>{ winners } { winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>
             }
             {
               showReset &&
