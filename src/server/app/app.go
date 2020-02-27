@@ -17,7 +17,7 @@ import (
 
 // Init kicks off the app
 func Init() {
-	fs := http.FileServer(http.Dir("./dist"))
+	fs := http.FileServer(http.Dir("../dist"))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", handleConnections)
 	go handlePlayerMessages()
@@ -54,7 +54,7 @@ func validateName(s string, r *re.Regexp) error {
 	return nil
 }
 
-func sanitizeMessageClosure(r *re.Regexp) func(s string) string {
+func sanitizeMessageFactory(r *re.Regexp) func(s string) string {
 	return func(s string) (a string) {
 		if len(s) > 16 {
 			s = s[:16]
@@ -92,7 +92,7 @@ var (
 
 	compareRegex = re.MustCompile(`[^a-z]`)
 
-	sanitizeMessage = sanitizeMessageClosure(sanitizeRegex)
+	sanitizeMessage = sanitizeMessageFactory(sanitizeRegex)
 
 	colorList = stringList(data.Colors).shuffleList()
 

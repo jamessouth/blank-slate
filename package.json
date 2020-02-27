@@ -10,8 +10,10 @@
     "dev": "webpack-dev-server --env.ENV=dev --env.WS=ws://localhost:8000/ws",
     "lint": "eslint --fix src/front/ && echo 'Linted!'",
     "local": "heroku local -p 8000",
-    "test": "go test -v github.com/jamessouth/clean-tablet/src/server/clients",
-    "test:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients"
+    "test:app": "go test -v github.com/jamessouth/clean-tablet/src/server/app",
+    "test:app:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/app",
+    "test:clients": "go test -v github.com/jamessouth/clean-tablet/src/server/clients",
+    "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients"
   },
   "repository": {
     "type": "git",
