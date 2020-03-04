@@ -17,7 +17,7 @@ import (
 
 // Init kicks off the app
 func Init() {
-	fs := http.FileServer(http.Dir("../dist"))
+	fs := http.FileServer(http.Dir("./dist"))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", handleConnections)
 	go handlePlayerMessages()
