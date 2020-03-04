@@ -13,7 +13,8 @@
     "test:app": "go test -v github.com/jamessouth/clean-tablet/src/server/app",
     "test:app:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/app",
     "test:clients": "go test -v github.com/jamessouth/clean-tablet/src/server/clients",
-    "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients"
+    "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients",
+    "test:data:words": "go test -v github.com/jamessouth/clean-tablet/src/server/data"
   },
   "repository": {
     "type": "git",
