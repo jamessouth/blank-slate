@@ -16,7 +16,6 @@ This is a clone of Blank Slate, a party game, which you can learn more about [he
 2.  continue refactoring backend
 3.  allow for multiple games
 4.  add words
-5.  a11y
 
 --------------------------------------------------------------------------------------------------------------------------
 
