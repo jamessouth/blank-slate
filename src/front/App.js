@@ -29,6 +29,7 @@ export default function App() {
     send,
     setShowStartButton,
     setSubmitSignal,
+    showAnswers,
     showReset,
     showStartButton,
     showStartTimer,
@@ -55,6 +56,7 @@ export default function App() {
         players.length > 0 && connected &&
           <Scoreboard
             players={ players }
+            showAnswers={ showAnswers }
             word={ oldWord }
           />
       }

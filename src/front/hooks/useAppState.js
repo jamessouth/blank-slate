@@ -13,6 +13,7 @@ export default function useAppState() {
   const [invalidInput, setInvalidInput] = useState(false);
   const [pingServer, setPingServer] = useState(true);
   const [playerColor, setPlayerColor] = useState(null);
+  const [showAnswers, setShowAnswers] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showStartButton, setShowStartButton] = useState(true);
   const [showStartTimer, setShowStartTimer] = useState(false);
@@ -77,6 +78,7 @@ export default function useAppState() {
       case !!players:
         dispatch({ type: 'players', players });
         setDupeName(false);
+        setShowAnswers(true);
         break;
       case !!time:
         setShowStartTimer(true);
@@ -125,6 +127,14 @@ export default function useAppState() {
     }
   }, [invalidInput]);
 
+  useEffect(() => {
+    if (showAnswers) {
+      setTimeout(() => {
+        setShowAnswers(false);
+      }, 5500);
+    }
+  }, [showAnswers]);
+
   function send(text) {
     if (!hasJoined) {
       ws.send(JSON.stringify({
@@ -164,6 +174,7 @@ export default function useAppState() {
     send,
     setShowStartButton,
     setSubmitSignal,
+    showAnswers,
     showReset,
     showStartButton,
     showStartTimer,
