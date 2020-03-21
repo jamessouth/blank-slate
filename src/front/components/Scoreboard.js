@@ -30,12 +30,6 @@ export default function Scoreboard({ players, word }) {
 
   return (
     <div style={{ height: `calc(95px + (28px * ${players.length}))` }} className={ score }>
-      <button
-        type="button"
-        aria-label={ showScores ? 'show answers' : 'show scores' }
-        onClick={ () => setShowScores(!showScores) }
-        className={ showScores ? flipR : flipL }
-      ></button>
       <div
         className={ showScores ? [div, onScreen].join(' ') : [div, offScreenLeft].join(' ') }
         { ...(showScores ? {} : { 'aria-hidden': true }) }

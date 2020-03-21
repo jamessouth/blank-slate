@@ -16,7 +16,8 @@ button{
   color: #4c4952;
   background-color: #f0f0f0;
   height: 28px;
-  width: 40%;
+  width: 70%;
+  max-width: 250px;
   cursor: pointer;
   border: none;
 }

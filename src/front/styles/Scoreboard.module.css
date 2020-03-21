@@ -9,10 +9,7 @@
     width: 100%;
     position: absolute;
 }
-.flipL{
-    transform: rotateY(180deg);
-  }
-.div, .flipL, .flipR{
+.div{
     transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
 }
 .li{
@@ -20,7 +17,7 @@
     flex-direction: row;
     width: 100%;
     height: 28px;
-    padding: 0 16px;
+    padding: 0 4px;
     justify-content: space-between;
     align-items: center;
     font-size: 18px;
@@ -43,19 +40,11 @@
     position: relative;
     overflow-x: hidden;
 }
-.score button{
-    position: absolute;
-    z-index: 1;
-    right: 10%;
-    background: url('../../assets/finger.png') no-repeat center/contain;
-    height: 33px;
-    width: 64px;
-}
 .ul{
     background-color: rgba(255, 238, 88, .8);
     border: 2px solid #ffee58;
-    padding: 1em;
-    width: 80%;
+    padding: .25em;
+    width: 96%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
