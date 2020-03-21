@@ -249,7 +249,7 @@ func handleAnswers(s, s2 chan bool) {
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
-					time.Sleep(7 * time.Second)
+					time.Sleep(270 * time.Second)
 					s2 <- true
 				}
 				return

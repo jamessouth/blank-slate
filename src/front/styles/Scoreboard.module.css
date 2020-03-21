@@ -1,17 +1,10 @@
 .h2{
     margin-bottom: 1.25em;
     text-align: initial;
-    margin-left: 10%;
+    margin-left: 5%;
 }
-.div{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
-}
-.div{
-    transition: transform 0.7s cubic-bezier(0.68,-0.02, 0.79, 0.75);
-}
+
+
 .li{
     display: flex;
     flex-direction: row;
@@ -26,12 +19,7 @@
 .p{
     font-size: 16px;
 }
-.score{
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    overflow-x: hidden;
-}
+
 .ul{
     background-color: rgba(255, 238, 88, .8);
     border: 2px solid #ffee58;
@@ -49,19 +37,5 @@
     }
 }
 @media screen and (min-width: 1024px){
-    .div{
-        width: 40%;
-        position: initial;
-    }
-    .offScreenRight{
-        transform: translateX(0%);
-    }
-    .score{
-        justify-content: space-around;
-        position: initial;
-        overflow-x: initial;
-    }
-    .score button{
-      display: none;
-    }
+
 }
