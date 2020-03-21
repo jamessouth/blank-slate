@@ -4,6 +4,7 @@ const initialState = {
   oldWord: '',
   playerName: '',
   players: [],
+  showAnswers: false,
 };
   
 function reducer(state, { type, name, players, winners, word }) {
@@ -17,7 +18,8 @@ function reducer(state, { type, name, players, winners, word }) {
     return {
       ...state,
       oldWord: state.newWord,
-      players
+      players,
+      showAnswers: !!state.newWord
     };
   case 'winners': {
     const win = winners.includes(state.playerName) ? 'YOU WON!!' : 'YOU LOST!!';
@@ -29,7 +31,8 @@ function reducer(state, { type, name, players, winners, word }) {
   case 'word':
     return {
       ...state,
-      newWord: word
+      newWord: word,
+      showAnswers: false
     };
   default:
     throw new Error('Reducer action type not recognized');
