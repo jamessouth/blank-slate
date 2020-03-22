@@ -55,6 +55,7 @@ export default function App() {
       {
         players.length > 0 && connected &&
           <Scoreboard
+            playerName={ playerName }
             players={ players }
             showAnswers={ showAnswers }
             word={ oldWord }

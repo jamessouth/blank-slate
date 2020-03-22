@@ -1,10 +1,12 @@
+.ft{
+    font-size: 22px;
+    font-family: 'Anonymous Pro', monospace;
+}
 .h2{
     margin-bottom: 1.25em;
     text-align: initial;
-    margin-left: 5%;
+    margin-left: 4%;
 }
-
-
 .li{
     display: flex;
     flex-direction: row;
@@ -15,27 +17,15 @@
     align-items: center;
     font-size: 18px;
 }
-
-.p{
-    font-size: 16px;
-}
-
 .ul{
     background-color: rgba(255, 238, 88, .8);
     border: 2px solid #ffee58;
     padding: .5em;
     width: 90%;
+    max-width: 500px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-}
-@media screen and (max-width: 450px){
-    .h2{
-        letter-spacing: -1px;
-    }
-}
-@media screen and (min-width: 1024px){
-
 }

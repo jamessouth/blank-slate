@@ -1,29 +1,38 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  ft,
   h2,
   li,
-  p,
   ul,
 } from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 import mapFn from '../utils/mapFn';
-
-
-
-export default function Scoreboard({ players, showAnswers, word }) {
+// check font letters, aria labels
+export default function Scoreboard({
+  playerName,
+  players,
+  showAnswers,
+  word,
+}) {
 
   const scoreList = players
     .sort(playerSort('score', -1))
     .map(mapFn('score', li));
 
+  const rank = scoreList.findIndex(l => l.key.split('_')[0] == playerName) + 1;
+
   const answerList = players
     .sort(playerSort('answer', 1))
-    .map(mapFn('answer', li, p));
+    .map(mapFn('answer', li, ft));
+
+  const titleBegin = showAnswers ? 'Last word:' : 'Scores:';
+
+  const titleEnd = showAnswers ? word : `You're no. ${rank}!`;
 
   return (
     <div style={{ height: `calc(95px + (28px * ${players.length}))`, width: '100%' }}>
-      <h2 className={ h2 }>{ showAnswers ? `Last round: ${word}` : "Scores:"}</h2>
+      <h2 className={ h2 }>{ titleBegin }&nbsp;&nbsp;{ titleEnd }</h2>
       <ul
         aria-label={ showAnswers ? "answers" : "scores" }
         className={ ul }
@@ -36,6 +45,7 @@ export default function Scoreboard({ players, showAnswers, word }) {
 }
 
 Scoreboard.propTypes = {
+  playerName: PropTypes.string,
   players: PropTypes.array,
   showAnswers: PropTypes.bool,
   word: PropTypes.string
