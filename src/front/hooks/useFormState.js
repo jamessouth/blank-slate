@@ -11,8 +11,8 @@ export default function useFormState(
 
   const inputBox = useRef(null);
   const regex = /[^a-z '-]+/i;
-  const NAME_MAX_LENGTH = 8;
-  const ANSWER_MAX_LENGTH = 10;
+  const NAME_MAX_LENGTH = 10;
+  const ANSWER_MAX_LENGTH = 12;
   const INPUT_MIN_LENGTH = 2;
   const [inputText, setInputText] = useState('');
   const [maxLength, setMaxLength] = useState(NAME_MAX_LENGTH);

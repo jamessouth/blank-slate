@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  ft,
   h2,
+  h22,
   li,
   ul,
 } from '../styles/Scoreboard.module.css';
 import playerSort from '../utils/playerSort';
 import mapFn from '../utils/mapFn';
 // check font letters, aria labels
+
 export default function Scoreboard({
   playerName,
   players,
@@ -24,7 +25,7 @@ export default function Scoreboard({
 
   const answerList = players
     .sort(playerSort('answer', 1))
-    .map(mapFn('answer', li, ft));
+    .map(mapFn('answer', li));
 
   const titleBegin = showAnswers ? 'Last word:' : 'Scores:';
 
@@ -32,7 +33,7 @@ export default function Scoreboard({
 
   return (
     <div style={{ height: `calc(95px + (28px * ${players.length}))`, width: '100%' }}>
-      <h2 className={ h2 }>{ titleBegin }&nbsp;&nbsp;{ titleEnd }</h2>
+      <h2 className={ showAnswers ? h22 : h2 }>{ titleBegin }&nbsp;{ titleEnd }</h2>
       <ul
         aria-label={ showAnswers ? "answers" : "scores" }
         className={ ul }

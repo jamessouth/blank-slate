@@ -29,7 +29,7 @@
 .signin input[type="text"]:not(:focus),
 .signin input[type="text"]::placeholder,
 .signin input[type="text"]::-webkit-input-placeholder{
-    color: whitesmoke;
+    color: #f5f5f5bb;
 }
 .signin input[type="text"]:focus::placeholder,
 .signin input[type="text"]:focus::-webkit-input-placeholder{
