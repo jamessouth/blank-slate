@@ -33,7 +33,25 @@ func Init() {
 }
 
 type game struct {
-	InProgress bool `json:"inProgress"`
+	inProgress              bool
+	clients                 c.Clients
+	nameList                []string
+	colorList, wordList     stringList
+	answers                 map[string][]*websocket.Conn
+	numberOfAnswersReceived int
+}
+
+func initGame(colors, words stringList) game {
+	// data.Colors
+	return game{
+		inProgress:              false,
+		clients:                 make(c.Clients),
+		nameList:                []string{},
+		colorList:               stringList(colors).shuffleList(),
+		wordList:                stringList(words).shuffleList(),
+		answers:                 make(map[string][]*websocket.Conn),
+		numberOfAnswersReceived: 0,
+	}
 }
 
 type answer struct {
@@ -75,16 +93,18 @@ type gametime struct {
 const winningScore = 25
 
 var (
-	clients = make(c.Clients)
+	gameID = 0
+
+	gameList = make(map[int]game)
 	// clientsMu sync.Mutex
+
+	conns = make(map[*websocket.Conn]bool)
 
 	messageChannel = make(chan interface{})
 
 	upgrader = websocket.Upgrader{}
 
-	gameobj = game{InProgress: false}
-
-	nameList []string
+	gameobj = game{inProgress: false}
 
 	blockRegex = re.MustCompile(`(?i)^[a-z '-]+$`)
 
@@ -101,8 +121,6 @@ var (
 	answers = make(map[string][]*websocket.Conn)
 
 	answerChannel = make(chan answer, 1)
-
-	numAns = 0
 )
 
 func checkForDuplicateName(s string, names []string) bool {
@@ -144,6 +162,17 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
+
+	if len(conns) > 8 {
+
+	} else if len(conns)%8 == 1 {
+		log.Println("initGame")
+		gameList[gameID] = initGame(data.Colors, data.Words)
+		gameID++
+	}
+	conns[ws] = true
+
+	log.Println(ws)
 
 	for {
 		var msg message
