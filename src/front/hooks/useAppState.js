@@ -9,6 +9,7 @@ export default function useAppState() {
   const [connected, setConnected] = useState(false);
   const [dupeName, setDupeName] = useState(false);
   const [gameHasBegun, setGameHasBegun] = useState(false);
+  const [gameNumber, setGameNumber] = useState(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
   const [pingServer, setPingServer] = useState(true);
@@ -37,9 +38,10 @@ export default function useAppState() {
     ws.addEventListener('open', function () {
       setConnected(true);
     }, false);
-    
+
     ws.addEventListener('message', function (e) {
       const {
+        gamenumber,
         message,
         player,
         players,
@@ -47,8 +49,11 @@ export default function useAppState() {
         winners,
         word
       } = JSON.parse(e.data);
-    
+
       switch (true) {
+      case !!gamenumber: 
+        setGameNumber(gamenumber);
+        break;
       case !!message:
         switch (message) {
         case 'duplicate':
@@ -129,6 +134,7 @@ export default function useAppState() {
   function send(text) {
     if (!hasJoined) {
       ws.send(JSON.stringify({
+        gamenumber: gamenumber,
         name: text,
       }));
     } else {
@@ -137,13 +143,15 @@ export default function useAppState() {
       setShowSVGTimer(false);
       ws.send(JSON.stringify({
         answer: text,
+        gamenumber: gamenumber,
       }));
     }
   }
 
   function message(msg) {
     ws.send(JSON.stringify({
-      message: msg
+      gamenumber: gamenumber,
+      message: msg,
     }));
   }
 
@@ -152,6 +160,7 @@ export default function useAppState() {
     connected,
     dupeName,
     gameHasBegun,
+    gameNumber,
     h1Text,
     hasJoined,
     invalidInput,

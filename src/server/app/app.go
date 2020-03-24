@@ -3,7 +3,6 @@ package app
 import (
 	"errors"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	re "regexp"
@@ -13,6 +12,7 @@ import (
 	"github.com/gorilla/websocket"
 	c "github.com/jamessouth/clean-tablet/src/server/clients"
 	"github.com/jamessouth/clean-tablet/src/server/data"
+	"github.com/jamessouth/clean-tablet/src/server/game"
 )
 
 // Init kicks off the app
@@ -32,37 +32,16 @@ func Init() {
 	}
 }
 
-type game struct {
-	inProgress              bool
-	clients                 c.Clients
-	nameList                []string
-	colorList, wordList     stringList
-	answers                 map[string][]*websocket.Conn
-	numberOfAnswersReceived int
-}
-
-func initGame(colors, words stringList) game {
-	// data.Colors
-	return game{
-		inProgress:              false,
-		clients:                 make(c.Clients),
-		nameList:                []string{},
-		colorList:               stringList(colors).shuffleList(),
-		wordList:                stringList(words).shuffleList(),
-		answers:                 make(map[string][]*websocket.Conn),
-		numberOfAnswersReceived: 0,
-	}
-}
-
 type answer struct {
 	Answer string          `json:"answer"`
 	Conn   *websocket.Conn `json:"conn"`
 }
 
 type message struct {
-	Answer  *string `json:"answer,omitempty"`
-	Name    string  `json:"name,omitempty"`
-	Message string  `json:"message,omitempty"`
+	Answer     *string `json:"answer,omitempty"`
+	GameNumber int     `json:"gamenumber,omitempty"`
+	Message    string  `json:"message,omitempty"`
+	Name       string  `json:"name,omitempty"`
 }
 
 func validateName(s string, r *re.Regexp) error {
@@ -95,7 +74,7 @@ const winningScore = 25
 var (
 	gameID = 0
 
-	gameList = make(map[int]game)
+	gameList = make(map[int]game.Game)
 	// clientsMu sync.Mutex
 
 	conns = make(map[*websocket.Conn]bool)
@@ -104,7 +83,7 @@ var (
 
 	upgrader = websocket.Upgrader{}
 
-	gameobj = game{inProgress: false}
+	// gameobj = game{inProgress: false}
 
 	blockRegex = re.MustCompile(`(?i)^[a-z '-]+$`)
 
@@ -114,37 +93,14 @@ var (
 
 	sanitizeMessage = sanitizeMessageFactory(sanitizeRegex)
 
-	colorList = stringList(data.Colors).shuffleList()
+	// colorList = stringList(data.Colors).shuffleList()
 
-	wordList = stringList(data.Words).shuffleList()
+	// wordList = stringList(data.Words).shuffleList()
 
-	answers = make(map[string][]*websocket.Conn)
+	// answers = make(map[string][]*websocket.Conn)
 
 	answerChannel = make(chan answer, 1)
 )
-
-func checkForDuplicateName(s string, names []string) bool {
-	for _, n := range names {
-		if n == s {
-			return true
-		}
-	}
-	return false
-}
-
-type stringList []string
-
-func (l stringList) shuffleList() (newlist []string) {
-	t := time.Now().UnixNano()
-	rand.Seed(t)
-
-	newlist = append([]string(nil), l...)
-
-	rand.Shuffle(len(newlist), func(i, j int) {
-		newlist[i], newlist[j] = newlist[j], newlist[i]
-	})
-	return
-}
 
 func processAnswers(s string, r *re.Regexp) (ans string) {
 	a := strings.ToLower(s)
@@ -162,17 +118,22 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer ws.Close()
-
-	if len(conns) > 8 {
-
-	} else if len(conns)%8 == 1 {
-		log.Println("initGame")
-		gameList[gameID] = initGame(data.Colors, data.Words)
-		gameID++
-	}
 	conns[ws] = true
 
-	log.Println(ws)
+	if len(conns)%2 == 1 {
+		gameID++
+		log.Println("initGame")
+		gameList[gameID] = game.InitGame(data.Colors[:2], data.Words[:2], gameID)
+
+	}
+
+	err = ws.WriteJSON(message{GameNumber: gameID})
+	if err != nil {
+		log.Printf("error writing to client: %v", err)
+	}
+
+	log.Println(ws.RemoteAddr())
+	log.Println(gameList)
 
 	for {
 		var msg message
@@ -209,24 +170,26 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					log.Printf("error writing to client: %v", err)
 				}
 			} else {
-				var playerColor string
-				playerColor, colorList = colorList[len(colorList)-1], colorList[:len(colorList)-1]
-				clients[ws] = c.InitPlayer(msg.Name, playerColor)
-				if dupe := checkForDuplicateName(msg.Name, nameList); dupe {
+				playerColor := gameList[msg.GameNumber].GetPlayerColor()
+
+				gameList[msg.GameNumber].UpdateGameColorList("remove", "")
+
+				gameList[msg.GameNumber].Clients[ws] = c.InitPlayer(msg.Name, playerColor)
+				if dupe := gameList[msg.GameNumber].NameList.CheckForDuplicateName(msg.Name); dupe {
 					err := ws.WriteJSON(message{Message: "duplicate"})
 					if err != nil {
 						log.Printf("duplicate name error: %v", err)
 					}
-					delete(clients, ws)
-					colorList = append(colorList, playerColor)
+					delete(gameList[msg.GameNumber].Clients, ws)
+					gameList[msg.GameNumber].UpdateGameColorList("add", playerColor)
 				} else {
-					err = ws.WriteJSON(c.PlayerJSON{Player: clients[ws]})
+					err = ws.WriteJSON(c.PlayerJSON{Player: gameList[msg.GameNumber].Clients[ws]})
 					if err != nil {
 						log.Printf("name ok write error: %v", err)
 					}
-					nameList = append(nameList, msg.Name)
-					messageChannel <- clients.GetPlayers()
-					if gameobj.InProgress {
+					gameList[msg.GameNumber].AddNameToNameList(msg.Name)
+					messageChannel <- gameList[msg.GameNumber].Clients.GetPlayers()
+					if gameList[msg.GameNumber].InProgress {
 						messageChannel <- message{Message: "progress"}
 					}
 				}
