@@ -1,3 +1,6 @@
+.animDiv{
+    animation: erase 3s cubic-bezier(.03,.74,.03,1) forwards 1;
+}
 .div{
     background-color: whitesmoke;
     position: relative;
@@ -31,5 +34,10 @@ svg{
 @keyframes change {
     to {
         stroke-dashoffset: 1000;
+    }
+}
+@keyframes erase {
+    to {
+        opacity: 0;
     }
 }

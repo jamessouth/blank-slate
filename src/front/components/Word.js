@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { div, p } from '../styles/Word.module.css';
+import { animDiv, div, p } from '../styles/Word.module.css';
 
 export default function Word({
   onAnimationEnd,
   playerColor,
+  showAnswers,
   showSVGTimer,
   word,
 }) {
@@ -12,7 +13,7 @@ export default function Word({
   const blankPos = word.startsWith('_') ? 'word, blank first' : 'word, blank last';
 
   return (
-    <div className={ div }>
+    <div className={ showAnswers ? [animDiv, div].join(' ') : div }>
       <svg preserveAspectRatio="none">
         {
           showSVGTimer &&
@@ -35,6 +36,7 @@ export default function Word({
 Word.propTypes = {
   onAnimationEnd: PropTypes.func,
   playerColor: PropTypes.string,
+  showAnswers: PropTypes.bool,
   showSVGTimer: PropTypes.bool,
   word: PropTypes.string,
 }

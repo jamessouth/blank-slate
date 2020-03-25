@@ -58,6 +58,7 @@ export default function App() {
             playerName={ playerName }
             players={ players }
             showAnswers={ showAnswers }
+            winners={ !!winners }
             word={ oldWord }
           />
       }
@@ -86,6 +87,7 @@ export default function App() {
                 <Word
                   onAnimationEnd={ () => setSubmitSignal(true) }
                   playerColor={ playerColor }
+                  showAnswers={ showAnswers }
                   showSVGTimer={ showSVGTimer }
                   word={ newWord }
                 />
