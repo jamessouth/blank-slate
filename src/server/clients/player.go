@@ -28,10 +28,3 @@ func (p Player) updatePlayerScore(n int) (newplayer Player) {
 	newplayer.Score += n
 	return
 }
-
-// UpdatePlayerAnswer takes a player and their sanitized but otherwise unprocessed answer (as they entered it) and returns a new updated player
-func (p Player) UpdatePlayerAnswer(s string) (newplayer Player) {
-	newplayer = p
-	newplayer.Answer = s
-	return
-}

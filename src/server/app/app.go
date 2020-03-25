@@ -75,6 +75,8 @@ type gametime struct {
 const winningScore = 25
 
 var (
+	secondsPerRound = time.Duration(10)
+
 	clients = make(c.Clients)
 	// clientsMu sync.Mutex
 
@@ -220,7 +222,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		case msg.Message == "keepAlive":
 		case len(*msg.Answer) > -1:
 			ans := sanitizeMessage(*msg.Answer)
-			clients[ws] = clients[ws].UpdatePlayerAnswer(ans)
 			answerChannel <- answer{Answer: processAnswers(ans, compareRegex), Conn: ws}
 		default:
 			newMsg := sanitizeMessage(msg.Message)
@@ -249,7 +250,7 @@ func handleAnswers(s, s2 chan bool) {
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
-					time.Sleep(10 * time.Second)
+					time.Sleep(secondsPerRound * time.Second)
 					s2 <- true
 				}
 				return
