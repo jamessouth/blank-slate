@@ -56,10 +56,11 @@ func validateName(s string, r *re.Regexp) error {
 
 func sanitizeMessageFactory(r *re.Regexp) func(s string) string {
 	return func(s string) (a string) {
-		if len(s) > 16 {
-			s = s[:16]
+		if len(s) > answerMaxLength {
+			s = s[:answerMaxLength]
 		}
 		a = r.ReplaceAllLiteralString(s, "")
+		a = strings.ToLower(a)
 		return
 	}
 }
@@ -77,6 +78,10 @@ const winningScore = 25
 var (
 	clients = make(c.Clients)
 	// clientsMu sync.Mutex
+
+	answerMaxLength = 12
+
+	secondsPerRound = time.Duration(10)
 
 	messageChannel = make(chan interface{})
 
@@ -129,8 +134,7 @@ func (l stringList) shuffleList() (newlist []string) {
 }
 
 func processAnswers(s string, r *re.Regexp) (ans string) {
-	a := strings.ToLower(s)
-	ans = r.ReplaceAllLiteralString(a, "")
+	ans = r.ReplaceAllLiteralString(s, "")
 	return
 }
 
@@ -249,7 +253,7 @@ func handleAnswers(s, s2 chan bool) {
 				} else {
 					answers = make(map[string][]*websocket.Conn)
 					numAns = 0
-					time.Sleep(10 * time.Second)
+					time.Sleep(secondsPerRound * time.Second)
 					s2 <- true
 				}
 				return
