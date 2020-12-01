@@ -60,7 +60,12 @@ module.exports = env => {
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
-            "style-loader",
+            {
+              loader: "style-loader",
+              options: {
+                esModule: false,
+              },
+            },
             {
               loader: "css-loader",
               options: {
