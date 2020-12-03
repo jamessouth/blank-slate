@@ -8,6 +8,7 @@
     "build:local": "webpack --env.ENV=prod --env.WS=ws://localhost:8000/ws",
     "cover": "go tool cover -html c.out",
     "dev": "webpack-dev-server --env.ENV=dev --env.WS=ws://localhost:8000/ws",
+    "dev:back": "go run ./src/server/main.go",
     "lint": "eslint --fix src/front/ && echo 'Linted!'",
     "local": "heroku local -p 8000",
     "test:app": "go test -v github.com/jamessouth/clean-tablet/src/server/app",
@@ -27,10 +28,12 @@
   },
   "homepage": "https://github.com/jamessouth/clean-tablet#readme",
   "dependencies": {
+    "@aws-amplify/ui-react": "^0.2.31",
+    "aws-amplify": "^3.3.11",
     "core-js": "^3.6.4",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

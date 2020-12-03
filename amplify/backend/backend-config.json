@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "cleantabletd2f49234": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

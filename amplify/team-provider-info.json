@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cleantablet-dev-01808-authRole",
+      "UnauthRoleArn": "arn:aws:iam::270222239701:role/amplify-cleantablet-dev-01808-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::270222239701:role/amplify-cleantablet-dev-01808-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-cleantablet-dev-01808-deployment",
+      "UnauthRoleName": "amplify-cleantablet-dev-01808-unauthRole",
+      "StackName": "amplify-cleantablet-dev-01808",
+      "StackId": "arn:aws:cloudformation:us-east-2:270222239701:stack/amplify-cleantablet-dev-01808/51ea59a0-352f-11eb-95ee-0a94a8a9e3b8",
+      "AmplifyAppId": "d37hqzsmy1qzl2"
+    },
+    "categories": {
+      "auth": {
+        "cleantabletd2f49234": {}
+      }
+    }
+  }
+}
