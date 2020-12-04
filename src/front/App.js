@@ -8,8 +8,15 @@ import Timer from './components/Timer';
 import Word from './components/Word';
 import { div, h1, winner } from './styles/index.css';
 import useAppState from './hooks/useAppState';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+// import signInTheme from './styles/signInTheme';
 
-export default function App() {
+const signInTheme = {
+  signInButtonIcon: { 'display': 'none' },
+  
+};
+
+const App = () => {
 
   const {
     answered,
@@ -42,89 +49,70 @@ export default function App() {
 
   return (
     <main>
-      {
-        pingServer && connected &&
-          <KeepAlive
-            pingWS={ () => message('keepAlive') }
-          />
-      }
+      {pingServer && connected &&
+        <KeepAlive
+          pingWS={() => message('keepAlive')} />}
       <Name
-        playerName={ playerName }
-      />
-      <h1 style={{backgroundColor: playerColor}} className={ h1 }>{ h1Text }</h1>
-      {
-        players.length > 0 && connected &&
-          <Scoreboard
-            playerName={ playerName }
-            players={ players }
-            showAnswers={ showAnswers }
-            winners={ !!winners }
-            word={ oldWord }
-          />
-      }
-      {
-        hasJoined && connected &&
-          <div className={ div }>
-            {
-              showStartButton && hasJoined &&
-                <Start
-                  onClick={ () => {
-                    message('start');
-                    setShowStartButton(false);
-                  } }
-                  players={ players }
-                  gameHasBegun={ gameHasBegun }
-                />
-            }
-            {
-              showStartTimer && timer > 0 &&
-                <Timer
-                  timer={ timer }
-                />
-            }
-            {
-              showWords && hasJoined && !winners &&
-                <Word
-                  onAnimationEnd={ () => setSubmitSignal(true) }
-                  playerColor={ playerColor }
-                  showAnswers={ showAnswers }
-                  showSVGTimer={ showSVGTimer }
-                  word={ newWord }
-                />
-            }
-            {
-              winners && <p aria-live="assertive" role="alert" className={ winner }>{ winners } { winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>
-            }
-            {
-              showReset &&
-                <button
-                  type="button"
-                  onClick={ () => message('reset') }
-                >
-                  Play Again
-                </button>
-            }
-          </div>
-      }
-      {
-        connected && !winners &&
-          <Form
-            answered={ answered }
-            dupeName={ dupeName }
-            hasJoined={ hasJoined }
-            invalidInput={ invalidInput }
-            onEnter={ val => send(val) }
-            playerName={ playerName }
-            playing={ !!newWord }
-            submitSignal={ submitSignal }
-          />
-      }
-      {
-        !connected &&
-        <p style={{ fontSize: '18px' }}>Server not available. Please try again.</p>
-      }
+        playerName={playerName} />
+      <h1 style={{ backgroundColor: playerColor }} className={h1}>{h1Text}</h1>
+      {players.length > 0 && connected &&
+        <Scoreboard
+          playerName={playerName}
+          players={players}
+          showAnswers={showAnswers}
+          winners={!!winners}
+          word={oldWord} />}
+      {hasJoined && connected &&
+        <div className={div}>
+          {showStartButton && hasJoined &&
+            <Start
+              onClick={() => {
+                message('start');
+                setShowStartButton(false);
+              } }
+              players={players}
+              gameHasBegun={gameHasBegun} />}
+          {showStartTimer && timer > 0 &&
+            <Timer
+              timer={timer} />}
+          {showWords && hasJoined && !winners &&
+            <Word
+              onAnimationEnd={() => setSubmitSignal(true)}
+              playerColor={playerColor}
+              showAnswers={showAnswers}
+              showSVGTimer={showSVGTimer}
+              word={newWord} />}
+          {winners && <p aria-live="assertive" role="alert" className={winner}>{winners} {winners.includes(' and ') ? 'Win!!' : 'Wins!!'}</p>}
+          {showReset &&
+            <button
+              type="button"
+              onClick={() => message('reset')}
+            >
+                   Play Again
+            </button>}
+        </div>}
+      {connected && !winners &&
+        <Form
+          answered={answered}
+          dupeName={dupeName}
+          hasJoined={hasJoined}
+          invalidInput={invalidInput}
+          onEnter={val => send(val)}
+          playerName={playerName}
+          playing={!!newWord}
+          submitSignal={submitSignal} />}
+      {!connected &&
+        <p style={{ fontSize: '18px' }}>Server not available. Please try again.</p>}
       <footer><a rel="noopener noreferrer" target="_blank" href="https://github.com/jamessouth/clean-tablet">GitHub repo (opens in new tab)</a></footer>
     </main>
   );
-  
+
 }
+
+const MyTheme = {
+  googleSignInButton: { backgroundColor: "red", borderColor: "red" },
+  button: { backgroundColor: "green", borderColor: "red" },
+  signInButtonIcon: { display: "none" }
+};
+
+export default withAuthenticator(App, {theme:MyTheme});
