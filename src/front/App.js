@@ -6,7 +6,7 @@ import Scoreboard from './components/Scoreboard';
 import Start from './components/Start';
 import Timer from './components/Timer';
 import Word from './components/Word';
-import { div, h1, winner } from './styles/index.css';
+import { arch, div, h1, winner } from './styles/index.css';
 import useAppState from './hooks/useAppState';
 
 import Amplify from "aws-amplify";
@@ -54,10 +54,12 @@ const App = () => {
 
   return (
     <>
-      <h1 className={h1}>CLEAN TABLET</h1>
+      <h1 className={[arch, h1].join(' ')}>CLEAN TABLET</h1>
       <AmplifyAuthenticator>
         <AmplifyFormSection slot="sign-in" submitButtonText="Sign In">
-          <div slot="amplify-form-section-header"><h3>SIGN IN</h3></div>
+          <div slot="amplify-form-section-header">
+            <h3 className={ arch }>SIGN IN</h3>
+          </div>
           <AmplifyAuthFields formFields={['username', 'password']}/>
         </AmplifyFormSection>
         <main>
