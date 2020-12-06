@@ -1,6 +1,4 @@
 {
-    "identityPoolName": "cleantabletd2f49234_identitypool_d2f49234",
-    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "cleantd2f49234",
     "userPoolName": "cleantabletd2f49234_userpool_d2f49234",
     "autoVerifiedAttributes": [
@@ -12,7 +10,7 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
+    "emailVerificationSubject": "Your Clean Tablet login code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -29,10 +27,10 @@
         "email"
     ],
     "userpoolClientLambdaRole": "cleantd2f49234_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "sharedId": "d2f49234",
     "resourceName": "cleantabletd2f49234",
-    "authSelections": "identityPoolAndUserPool",
+    "authSelections": "userPoolOnly",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -45,8 +43,16 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "manual",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
-    "dependsOn": []
+    "dependsOn": [],
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": "{}",
+    "hostedUI": false,
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": []
 }

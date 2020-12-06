@@ -1,3 +1,23 @@
+:root{
+
+  --amplify-background-color: #98989822;
+  --amplify-primary-color: #008000;
+  --amplify-primary-tint: #0000FF; 
+  --amplify-primary-shade: #008000;
+
+}
+
+[slot="amplify-form-section-header"] h3 {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 42px;
+  font-weight: 400;
+  text-align: center;
+  -webkit-mask-image: url('../../assets/decaying.png');
+  mask-image: url('../../assets/decaying.png');
+}
+
+
+
 *{
   margin: 0;
   padding: 0;
