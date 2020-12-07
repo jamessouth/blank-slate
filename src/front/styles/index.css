@@ -14,6 +14,7 @@
 
   
   --amplify-primary-color: #444444;
+  --amplify-primary-shade: var(--amplify-primary-color);
   --amplify-primary-tint: var(--amplify-primary-color);
   /* --amplify-primary-shade: #008000; */
   

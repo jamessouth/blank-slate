@@ -1,4 +1,6 @@
 {
+    "identityPoolName": "cleantabletd2f49234_identitypool_106625ad",
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "cleantd2f49234",
     "userPoolName": "cleantabletd2f49234_userpool_d2f49234",
     "autoVerifiedAttributes": [
@@ -10,7 +12,7 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your Clean Tablet login code",
+    "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -27,10 +29,10 @@
         "email"
     ],
     "userpoolClientLambdaRole": "cleantd2f49234_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": true,
+    "userpoolClientSetAttributes": false,
     "sharedId": "d2f49234",
     "resourceName": "cleantabletd2f49234",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -43,7 +45,7 @@
             "Arn"
         ]
     },
-    "useDefault": "manual",
+    "useDefault": "default",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "dependsOn": [],

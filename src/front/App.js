@@ -11,6 +11,10 @@ import useAppState from './hooks/useAppState';
 
 import Amplify from "aws-amplify";
 import {
+  AuthState,
+  onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
+import {
   withAuthenticator,
   AmplifyAuthenticator,
   AmplifyFormSection,
@@ -23,7 +27,7 @@ import awsExports from "../aws-exports";
 Amplify.configure(awsExports);
 
 const App = () => {
-
+  // console.log('wer: ', AuthState, onAuthUIStateChange);
   const {
     answered,
     connected,
@@ -53,8 +57,19 @@ const App = () => {
     winners
   } = useAppState();
 
+  const [authState, setAuthState] = React.useState();
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+      onAuthUIStateChange((nextAuthState, authData) => {
+          setAuthState(nextAuthState);
+          setUser(authData);
+      });
+  }, []);
+
   return (
     <main>
+      <AmplifySignOut/>
       {pingServer && connected &&
         <KeepAlive
           pingWS={() => message('keepAlive')} />}
