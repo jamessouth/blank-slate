@@ -9,26 +9,32 @@
   color: var(--amplify-smoke-white);
 }
 :root{
-
   --amplify-background-color: #00000000;
+  --amplify-secondary-color: var(--amplify-smoke-white);
+
+  
   --amplify-primary-color: #008000;
   --amplify-primary-tint: #0000FF; 
   --amplify-primary-shade: #008000;
   
 }
 amplify-authenticator{
-  --container-height: 80vh;
+  /* --container-height: 80vh; */
   --border-radius: 0;
   --box-shadow: none;
-  --margin-bottom: 0;
+  /* --margin-bottom: 0; */
 }
 
-[slot="amplify-form-section-header"] h3 {
+
+
+
+/* [slot="amplify-form-section-header"] h3 {
   font-size: 2.5rem;
   font-weight: 400;
-}
+} */
 
 .arch{
+  text-align: center;
   font-family: 'Architects Daughter', cursive;
   -webkit-mask-image: url('../../assets/decaying.png');
   mask-image: url('../../assets/decaying.png');
