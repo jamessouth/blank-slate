@@ -9,18 +9,18 @@
   color: var(--amplify-smoke-white);
 }
 :root{
-  --amplify-background-color: #00000000;
-  --amplify-secondary-color: var(--amplify-smoke-white);
+  --amplify-background-color: var(--amplify-smoke-white);
+  --amplify-secondary-color: var(--amplify-primary-color);
 
   
-  --amplify-primary-color: #008000;
-  --amplify-primary-tint: #0000FF; 
-  --amplify-primary-shade: #008000;
+  --amplify-primary-color: #444444;
+  --amplify-primary-tint: var(--amplify-primary-color);
+  /* --amplify-primary-shade: #008000; */
   
 }
 amplify-authenticator{
   /* --container-height: 80vh; */
-  --border-radius: 0;
+  /* --border-radius: 0; */
   --box-shadow: none;
   /* --margin-bottom: 0; */
 }
@@ -34,6 +34,8 @@ amplify-authenticator{
 } */
 
 .arch{
+  font-size: 3.5rem;
+  margin-top: 44px;
   text-align: center;
   font-family: 'Architects Daughter', cursive;
   -webkit-mask-image: url('../../assets/decaying.png');

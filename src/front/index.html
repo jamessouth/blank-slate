@@ -19,12 +19,22 @@
     
     <title><%= htmlWebpackPlugin.options.title %></title>
     <meta name="description" content="clean tablet, a blank slate clone">
+    <style type="text/css">
+      noscript + h1{
+        font-size: 3.5rem;
+        margin-top: 44px;
+        text-align: center;
+        font-family: 'Architects Daughter', cursive;
+        /* -webkit-mask-image: url('../assets/decaying.png');
+        mask-image: url('../assets/decaying.png'); */
+      }
+    </style>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <!-- <h1 class="arch h1">CLEAN TABLET</h1> -->
+    <h1>CLEAN TABLET</h1>
     <div id="root"></div>
   </body>
 </html>
