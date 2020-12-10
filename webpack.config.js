@@ -118,6 +118,7 @@ module.exports = env => {
       port: 4200,
       contentBase: path.join(__dirname, 'dist'),
       index: 'index.html',
+      historyApiFallback: true,
     },
   }
 };
