@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Form from './components/Form';
+import Lobby from './components/Lobby';
 import KeepAlive from './components/KeepAlive';
 import Name from './components/Name';
 import Scoreboard from './components/Scoreboard';
@@ -19,7 +20,6 @@ import {
   withAuthenticator,
   AmplifyAuthenticator,
   AmplifyFormSection,
-  AmplifySignOut,
   AmplifyAuthFields,
   AmplifySignUp,
 } from '@aws-amplify/ui-react';
@@ -68,28 +68,25 @@ const Login = () => {
           setAuthState(nextAuthState);
           setUser(authData);
       });
-  }, [authState]);
+  }, []);
 
 
-//   handleAuthStateChange={(nextAuthState, authData) => {
-//     setAuthState('signin');
-//     setUser(authData);
-// }}
+
 
 
   return (
     <main>
-        {/* <Switch>
+        <Switch>
+
             <Route exact path="/lobby">
-                <div>lobby</div>
+                <Lobby/>
             </Route>
-
-
             <Route exact path="/">
-                {authState === 'signedin' ? <Redirect to="/lobby"/> : null}
+                {authState === AuthState.SignedIn ? <Redirect to="/lobby"/> : null}
             </Route>
-        </Switch> */}
-      <AmplifySignOut/>
+        </Switch>
+
+
       {/* {pingServer && connected &&
         <KeepAlive
           pingWS={() => message('keepAlive')} />}
