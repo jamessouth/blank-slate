@@ -20,10 +20,10 @@
   
 }
 amplify-authenticator{
-  /* --container-height: 80vh; */
-  /* --border-radius: 0; */
+  --container-height: 80vh;
+  --border-radius: 0;
   --box-shadow: none;
-  /* --margin-bottom: 0; */
+  --margin-bottom: 0;
 }
 
 

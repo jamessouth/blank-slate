@@ -11,7 +11,7 @@ import { arch, div, h1, winner } from './styles/index.css';
 import useAppState from './hooks/useAppState';
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import Amplify from "aws-amplify";
+
 import {
   AuthState,
   onAuthUIStateChange,
@@ -24,8 +24,7 @@ import {
   AmplifySignUp,
 } from '@aws-amplify/ui-react';
 
-import awsExports from "../aws-exports";
-Amplify.configure(awsExports);
+
 
 const Login = () => {
   
