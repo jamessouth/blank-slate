@@ -10,7 +10,7 @@ import {
 
 export default function Lobby() {
    return (
-        <div>lobby
+        <div>lobby is here
 
             
         </div>

@@ -57,34 +57,10 @@ const Login = () => {
     winners
   } = useAppState();
 
-  const [authState, setAuthState] = useState();
-  const [user, setUser] = useState();
-
-  console.log('wer: ', user, authState);
-
-  useEffect(() => {
-      onAuthUIStateChange((nextAuthState, authData) => {
-          setAuthState(nextAuthState);
-          setUser(authData);
-      });
-  }, []);
-
-
-
 
 
   return (
     <main>
-        <Switch>
-
-            <Route exact path="/lobby">
-                <Lobby/>
-            </Route>
-            <Route exact path="/">
-                {authState === AuthState.SignedIn ? <Redirect to="/lobby"/> : null}
-            </Route>
-        </Switch>
-
 
       {/* {pingServer && connected &&
         <KeepAlive

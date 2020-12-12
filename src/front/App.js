@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Entry from './components/Entry';
 import Lobby from './components/Lobby';
-import AuthRoute from './components/AuthRoute';
-import PropRoute from './components/PropRoute';
-import Auth from './components/Auth';
 import { arch, div, h1, winner } from './styles/index.css';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import Amplify from "aws-amplify";
+
+
+
+import awsExports from "../aws-exports";
+Amplify.configure(awsExports);
+import {
+    AuthState,
+    onAuthUIStateChange,
+  } from "@aws-amplify/ui-components";
 
 import {
     withAuthenticator,
@@ -15,22 +22,40 @@ import {
     AmplifySignUp,
   } from '@aws-amplify/ui-react';
 
-export default function App() {
-    const [signedIn, setSignedIn] = useState(false);
+const App = () => {
+    const [authState, setAuthState] = useState();
+    const [user, setUser] = useState();
+  
+    console.log('wer: ', user, authState);
+  
+    useEffect(() => {
+        onAuthUIStateChange((nextAuthState, authData) => {
+            setAuthState(nextAuthState);
+            setUser(authData);
+        });
+    }, []);
+
     return (
         <Router>
             <AmplifySignOut/>
-            <h1 className={[arch, h1].join(' ')} >CLEAN TABLET</h1>
+            
             <div>
-            {signedIn ? 'User is Logged In' : 'Not Logged In'}
+            {authState === AuthState.SignedIn ? 'User is Logged In' : 'Not Logged In'}
             </div>
             <Switch>
-                <Route exact path="/">
+                <Redirect exact from="/" to="/lobby" />
+                {/* <Route exact path="/">
                     <Entry/>
+                </Route> */}
+                <Route exact path="/lobby">
+                    <Lobby/>
+                </Route>
+                <Route exact path="/score">
+                {() => <div>score</div>}
                 </Route>
 
-
-                <PropRoute
+                <Redirect to="/"/>
+                {/* <PropRoute
                     exact
                     path="/auth"
                     component={ Auth }
@@ -42,7 +67,7 @@ export default function App() {
                     path="/lobby"
                     component={ Lobby }
                     auth={ signedIn }
-                />
+                /> */}
                     
                 
                 
@@ -51,3 +76,5 @@ export default function App() {
        
     );
 }
+
+export default withAuthenticator(App);
