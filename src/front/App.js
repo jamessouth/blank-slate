@@ -23,7 +23,7 @@ import {
   } from '@aws-amplify/ui-react';
 
 const App = () => {
-    const [authState, setAuthState] = useState();
+    const [authState, setAuthState] = useState(AuthState.SignedOut);
     const [user, setUser] = useState();
   
     console.log('wer: ', user, authState);
