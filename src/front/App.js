@@ -1,18 +1,15 @@
+import Amplify from "aws-amplify";
+import awsExports from "../aws-exports";
 import React, { useEffect, useState } from 'react';
 import Entry from './components/Entry';
 import Lobby from './components/Lobby';
-import { arch, div, h1, winner } from './styles/index.css';
+// import { arch, div, h1, winner } from './styles/index.css';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import Amplify from "aws-amplify";
 
-
-
-import awsExports from "../aws-exports";
-Amplify.configure(awsExports);
 import {
     AuthState,
     onAuthUIStateChange,
-  } from "@aws-amplify/ui-components";
+} from "@aws-amplify/ui-components";
 
 import {
     withAuthenticator,
@@ -20,10 +17,12 @@ import {
     AmplifySignOut,
     AmplifyAuthFields,
     AmplifySignUp,
-  } from '@aws-amplify/ui-react';
+} from '@aws-amplify/ui-react';
+
+Amplify.configure(awsExports);
 
 const App = () => {
-    const [authState, setAuthState] = useState(AuthState.SignedOut);
+    const [authState, setAuthState] = useState();
     const [user, setUser] = useState();
   
     console.log('wer: ', user, authState);
@@ -37,7 +36,7 @@ const App = () => {
 
     return (
         <Router>
-            <AmplifySignOut/>
+            {/* <AmplifySignOut/> */}
             
             <div>
             {authState === AuthState.SignedIn ? 'User is Logged In' : 'Not Logged In'}
@@ -77,4 +76,5 @@ const App = () => {
     );
 }
 
-export default withAuthenticator(App);
+export default App;
+// export default withAuthenticator(App);

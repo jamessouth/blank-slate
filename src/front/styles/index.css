@@ -1,5 +1,12 @@
 @tailwind base;
 @tailwind components;
+@layer components{
+
+  .decay-mask{
+    -webkit-mask-image: url('../../assets/decaying.png');
+    mask-image: url('../../assets/decaying.png');
+  }
+}
 @tailwind utilities;
 
 *{
@@ -37,16 +44,6 @@ amplify-authenticator{
   font-size: 2.5rem;
   font-weight: 400;
 } */
-
-.arch{
-  font-size: 3.5rem;
-  margin-top: 44px;
-  text-align: center;
-  font-family: 'Architects Daughter', cursive;
-  -webkit-mask-image: url('../../assets/decaying.png');
-  mask-image: url('../../assets/decaying.png');
-  /* self-host google font effect mask image due to cors bug introduced with chrome 79 */
-}
 
 .h1{
   font-size: 3.5rem;

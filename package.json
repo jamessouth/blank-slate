@@ -7,7 +7,7 @@
     "build": "webpack --env.ENV=prod --env.WS=wss://clean-tablet.herokuapp.com/ws",
     "build:local": "webpack --env.ENV=prod --env.WS=ws://localhost:8000/ws",
     "cover": "go tool cover -html c.out",
-    "dev": "parcel -p 4200 ./src/front/index.html",
+    "dev": "npm run watch:css && parcel -p 4200 ./src/front/index.html",
     "dev:back": "go run ./src/server/main.go",
     "lint": "eslint --fix src/front/ && echo 'Linted!'",
     "local": "heroku local -p 8000",
@@ -15,7 +15,8 @@
     "test:app:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/app",
     "test:clients": "go test -v github.com/jamessouth/clean-tablet/src/server/clients",
     "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients",
-    "test:data:words": "go test -v github.com/jamessouth/clean-tablet/src/server/data"
+    "test:data:words": "go test -v github.com/jamessouth/clean-tablet/src/server/data",
+    "watch:css": "postcss ./src/front/styles/index.css -o ./src/front/styles/main.css"
   },
   "repository": {
     "type": "git",
@@ -28,8 +29,8 @@
   },
   "homepage": "https://github.com/jamessouth/clean-tablet#readme",
   "dependencies": {
-    "@aws-amplify/ui-react": "^0.2.31",
-    "aws-amplify": "^3.3.11",
+    "@aws-amplify/ui-react": "^0.2.33",
+    "aws-amplify": "^3.3.13",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -43,7 +44,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "nyc": "^15.0.1",
     "parcel-bundler": "^1.12.4",
-    "postcss": "^7.0.35",
+    "postcss-cli": "^8.3.1",
     "riteway": "^6.1.2",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "tap-nirvana": "^1.1.0",
