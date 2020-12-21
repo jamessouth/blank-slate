@@ -36,7 +36,7 @@ const App = () => {
 
     return (
         <Router>
-            {/* <AmplifySignOut/> */}
+            <AmplifySignOut/>
             
             <div>
             {authState === AuthState.SignedIn ? 'User is Logged In' : 'Not Logged In'}
@@ -76,5 +76,5 @@ const App = () => {
     );
 }
 
-export default App;
-// export default withAuthenticator(App);
+// export default App;
+export default withAuthenticator(App);
