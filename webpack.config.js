@@ -6,12 +6,36 @@ const ScriptExtHTMLWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+
+
 module.exports = env => {
   const envObj = Object.keys(env)
     .reduce((acc, val) => {
       acc[`process.env.${val}`] = JSON.stringify(env[val]);
       return acc;
     }, {});
+
+  const plugins = [
+    new webpack.DefinePlugin(envObj),
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[name].[contenthash].css',
+    }),
+    new HTMLWebpackPlugin({
+      template: './src/front/index.html',
+      title: 'Clean Tablet',
+      favicon: './src/assets/icons/favicon-16x16.png'
+    }),
+    new ScriptExtHTMLWebpackPlugin({
+      defaultAttribute: 'async',
+    }),
+    new webpack.HashedModuleIdsPlugin(),
+  ];
+  
+  if (env.ENV == 'dev') {
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
 
   return {
     mode: env.ENV == 'prod' ? 'production' : 'development',
@@ -20,8 +44,8 @@ module.exports = env => {
       main: './src/front/index.js',
     },
     output: {
-      filename: '[name].[contenthash].js',
-      chunkFilename: '[name].[contenthash].js',
+      filename: env.ENV == 'prod' ? '[name].[contenthash].js' : '[name].[hash].js',
+      chunkFilename: env.ENV == 'prod' ? '[name].[contenthash].js' : '[name].[hash].js',
       path: path.resolve(__dirname, 'dist'),
     },
     module: {
@@ -57,17 +81,17 @@ module.exports = env => {
           include: path.resolve(__dirname, 'src'),
           exclude: /node_modules/,
           use: [
-            {
-              loader: "style-loader",
-              options: {
-                esModule: false,
-              },
-            },
-            // MiniCssExtractPlugin.loader,
+            env.ENV == "dev" ?
+              {
+                loader: "style-loader",
+                options: {
+                  esModule: false,
+                },
+              } :
+              MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
               options: {
-                modules: true,
                 sourceMap: env.ENV == "dev",
                 importLoaders: 1,
               },
@@ -106,28 +130,13 @@ module.exports = env => {
         chunks: 'all',
       },
     },
-    plugins: [
-      new webpack.DefinePlugin(envObj),
-      new CleanWebpackPlugin(),
-      new MiniCssExtractPlugin({
-        filename: '[name].[contenthash].css',
-        chunkFilename: '[name].[contenthash].css',
-      }),
-      new HTMLWebpackPlugin({
-        template: './src/front/index.html',
-        title: 'Clean Tablet',
-        favicon: './src/assets/icons/favicon-16x16.png'
-      }),
-      new ScriptExtHTMLWebpackPlugin({
-        defaultAttribute: 'async',
-      }),
-      new webpack.HashedModuleIdsPlugin(),
-    ],
+    plugins,
     devServer: {
       port: 4200,
       contentBase: path.join(__dirname, 'dist'),
       index: 'index.html',
       historyApiFallback: true,
+      hot: true,
     },
   }
 };
