@@ -33,9 +33,9 @@ module.exports = env => {
     new webpack.HashedModuleIdsPlugin(),
   ];
   
-  if (env.ENV == 'dev') {
-    plugins.push(new webpack.HotModuleReplacementPlugin());
-  }
+  // if (env.ENV == 'dev') {
+  //   plugins.push(new webpack.HotModuleReplacementPlugin());
+  // }
 
   return {
     mode: env.ENV == 'prod' ? 'production' : 'development',
@@ -136,7 +136,7 @@ module.exports = env => {
       contentBase: path.join(__dirname, 'dist'),
       index: 'index.html',
       historyApiFallback: true,
-      hot: true,
+      // hot: true,
     },
   }
 };

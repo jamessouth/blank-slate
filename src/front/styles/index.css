@@ -40,20 +40,18 @@ amplify-authenticator{
 
 
 
-/* [slot="amplify-form-section-header"] h3 {
-  font-size: 2.5rem;
-  font-weight: 400;
-} */
-
-.h1{
-  font-size: 3.5rem;
-  margin-top: 44px;
+[slot="sign-out"] {
+  width: 200px;
+  height: 100px;
+  background-color: red;
 }
+
+
 
 body{
   background: url('../../assets/mob.jpg') no-repeat top/cover;
 }
-button{
+/* button{
   font-size: 1.375rem;
   color: #4c4952;
   background-color: #f0f0f0;
@@ -71,7 +69,7 @@ button:focus,
 button:hover{
   outline: 2px dashed #ffee58;
   outline-offset: 4px;
-}
+} */
 .div{
   height: 240px;
   display: flex;

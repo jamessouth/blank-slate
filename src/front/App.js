@@ -24,7 +24,6 @@ Amplify.configure(awsExports);
 const App = () => {
     const [authState, setAuthState] = useState();
     const [user, setUser] = useState();
-  
     console.log('wer: ', user, authState);
   
     useEffect(() => {
@@ -36,7 +35,12 @@ const App = () => {
 
     return (
         <Router>
-            <AmplifySignOut/>
+
+                <div slot="sign-out">
+                    <AmplifySignOut/>
+
+                </div>
+            {/* </AmplifySignOut> */}
             
             <div>
             {authState === AuthState.SignedIn ? 'User is Logged In' : 'Not Logged In'}
