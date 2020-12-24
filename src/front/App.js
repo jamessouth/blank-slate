@@ -37,13 +37,13 @@ const App = () => {
         <Router>
 
                 <div slot="sign-out">
-                    <AmplifySignOut/>
+                    <AmplifySignOut buttonText="&#128682;"/>
 
                 </div>
             {/* </AmplifySignOut> */}
             
             <div>
-            {authState === AuthState.SignedIn ? 'User is Logged In' : 'Not Logged In'}
+            {authState === AuthState.SignedIn && user ? `${user.username} is Logged In` : 'Not Logged In'}
             </div>
             <Switch>
                 <Redirect exact from="/" to="/lobby" />

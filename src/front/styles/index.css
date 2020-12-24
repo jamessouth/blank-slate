@@ -41,9 +41,12 @@ amplify-authenticator{
 
 
 [slot="sign-out"] {
-  width: 200px;
-  height: 100px;
-  background-color: red;
+  --amplify-primary-color: var(--amplify-smoke-white);
+  /* width: 20px; */
+  position: absolute;
+  top: 1px;
+  /* height: 3rem; */
+  /* background-color: red; */
 }
 
 
