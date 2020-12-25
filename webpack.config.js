@@ -17,6 +17,9 @@ module.exports = env => {
 
   const plugins = [
     new webpack.DefinePlugin(envObj),
+    new webpack.DefinePlugin({
+      'process.env.CT_WS': JSON.stringify(process.env.CT_WS)
+    }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
