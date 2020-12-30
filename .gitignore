@@ -127,7 +127,7 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 
 src/front/styles/main.css
-src/back/handle/connect.json
-src/back/handle/results.json
-src/back/handle/main
-src/back/handle/main.zip
+src/lambda/event.json
+src/lambda/*/results.json
+src/lambda/*/main
+src/lambda/*/main.zip

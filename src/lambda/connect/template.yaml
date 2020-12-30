@@ -5,10 +5,10 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 10
 
 Resources:
-  HandleFunction:
+  ConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
       # CodeUri: handle/

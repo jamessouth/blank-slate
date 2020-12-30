@@ -1,4 +1,4 @@
-module handle
+module connect
 
 go 1.15
 
