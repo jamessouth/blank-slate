@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -33,28 +34,34 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 		logger.Log(fmt.Sprintf("Request: %s /%v, Payload: %s",
 			r.ClientInfo.ServiceName, r.Operation, r.Params))
 	})
-	fmt.Print(req.RequestContext.ConnectionID)
+	// fmt.Print(req.RequestContext.ConnectionID).WithEndpoint("http://192.168.0.101:8000")
 
-	svc := dynamodb.New(sess, aws.NewConfig().WithEndpoint("http://192.168.0.101:8000").WithLogLevel(aws.LogDebugWithHTTPBody))
+	svc := dynamodb.New(sess, aws.NewConfig().WithLogLevel(aws.LogDebugWithHTTPBody))
 
 	// svc.Handlers.Send.PushFront(func(r *request.Request) {
 	// 	r.HTTPRequest.Header.Set("CustomHeader", fmt.Sprintf("%d", 10))
 	// })
+	fmt.Printf("%+v\n", req)
 
 	i, err := dynamodbattribute.MarshalMap(Item{
 		Pk: "CURRENTUSER#" + req.RequestContext.ConnectionID,
 		Sk: "CURRENTUSER#" + req.RequestContext.ConnectionID,
 	})
-	fmt.Println(i)
 	if err != nil {
 		panic(fmt.Sprintf("failed to marshal Record, %v", err))
 	}
 
+	tableName, ok := os.LookupEnv("tableName")
+	if !ok {
+		panic(fmt.Sprintf("%v", "cant find table name"))
+	}
+
 	op, err := svc.PutItem(&dynamodb.PutItemInput{
-		TableName: aws.String("demo"),
-		Item:      i,
+		TableName:              aws.String(tableName),
+		Item:                   i,
+		ReturnConsumedCapacity: aws.String("TOTAL"),
 	})
-	fmt.Println(op)
+	fmt.Println("op", op)
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
@@ -72,11 +79,11 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("tables: , %v", op),
-		StatusCode: 200,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		StatusCode:        200,
+		Headers:           map[string]string{"Content-Type": "application/json"},
+		MultiValueHeaders: map[string][]string{},
+		Body:              fmt.Sprintf("cap used: %v", op.ConsumedCapacity),
+		IsBase64Encoded:   false,
 	}, nil
 }
 
