@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 
-const ws = new WebSocket(process.env.CT_WS);
+// const ws = new WebSocket(process.env.CT_WS);
 
 export default function Lobby() {
-    useEffect(() => {
-        ws.addEventListener('open', function (e) {
-            console.log(e, Date.now());
-          }, false);
+    // useEffect(() => {
+    //     ws.addEventListener('open', function (e) {
+    //         console.log(e, Date.now());
+    //       }, false);
 
-        ws.addEventListener('error', function (e) {
-            console.log(e, Date.now());
-        }, false);
+    //     ws.addEventListener('error', function (e) {
+    //         console.log(e, Date.now());
+    //     }, false);
         
-        ws.addEventListener('close', function (e) {
-              console.log(e, Date.now());
+    //     ws.addEventListener('close', function (e) {
+    //           console.log(e, Date.now());
               
-            }, false);
+    //         }, false);
             
-            return function cleanup() {
-              console.log('cleanup');
-            ws.close(1000);
-          };
-    }, []);
+    //         return function cleanup() {
+    //           console.log('cleanup');
+    //         ws.close(1000);
+    //       };
+    // }, []);
 
     return (
         <div className="flex flex-col mt-8">

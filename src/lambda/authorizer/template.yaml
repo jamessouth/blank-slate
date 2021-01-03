@@ -1,14 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  clean-tablet connect
+  clean-tablet authorizer
 
 Globals:
   Function:
     Timeout: 10
 
 Resources:
-  ConnectFunction:
+  AuthorizerFunction:
     Type: AWS::Serverless::Function
     Properties:
       # CodeUri: handle/
@@ -21,6 +21,6 @@ Resources:
       #     Properties:
       #       Path: /{proxy+}
       #       Method: ANY
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          tableName: demo
+      # Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      #   Variables:
+      #     tableName: demo
