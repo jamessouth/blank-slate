@@ -35,48 +35,20 @@ const App = () => {
 
     return (
         <Router>
-
-                <div slot="sign-out">
-                    <AmplifySignOut buttonText="&#128682;"/>
-
-                </div>
-            {/* </AmplifySignOut> */}
-            
             <div>
-            {authState === AuthState.SignedIn && user ? `${user.username} is Logged In` : 'Not Logged In'}
+                {authState === AuthState.SignedIn && user ? `${user.username} is Logged In` : 'Not Logged In'}
             </div>
             <Switch>
                 <Redirect exact from="/" to="/lobby" />
-                {/* <Route exact path="/">
-                    <Entry/>
-                </Route> */}
                 <Route exact path="/lobby">
                     <Lobby/>
                 </Route>
                 <Route exact path="/score">
                 {() => <div>score</div>}
                 </Route>
-
                 <Redirect to="/"/>
-                {/* <PropRoute
-                    exact
-                    path="/auth"
-                    component={ Auth }
-                    func={ setSignedIn }
-                />
-
-                <AuthRoute
-                    exact
-                    path="/lobby"
-                    component={ Lobby }
-                    auth={ signedIn }
-                /> */}
-                    
-                
-                
             </Switch>
         </Router>
-       
     );
 }
 
