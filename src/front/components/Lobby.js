@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 
 export default function Lobby() {
     const history = useHistory();
+    console.log("lobbbbbbbb");
 
     useEffect(() => {
         const ws = new WebSocket(process.env.CT_WS);
@@ -36,7 +37,7 @@ export default function Lobby() {
 
     return (
         <>
-            <div slot="sign-out">
+            {/* <div slot="sign-out">
                 <AmplifySignOut
                     buttonText="&#128682;"
                     // handleAuthStateChange={
@@ -46,7 +47,7 @@ export default function Lobby() {
                     //     }
                     // }
                 />
-            </div>
+            </div> */}
 
             <div className="flex flex-col mt-8">
                 <button className="mx-auto mb-8 h-40 w-1/2 bg-smoke-100 text-gray-700">
