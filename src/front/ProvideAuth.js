@@ -12,6 +12,11 @@ import React, {
   //useLocation
   "react-router-dom";
   import { authContext } from "./App";
+
+  import {
+    AuthState,
+    onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
   
 //   const fakeAuth = {
 //     isAuthenticated: false,

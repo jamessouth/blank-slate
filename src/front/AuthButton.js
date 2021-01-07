@@ -40,20 +40,12 @@ import React, {
         return history.push("/");
       }
   
-    return auth.user && auth.authState === AuthState.SignedIn ? (
-      <p>
-        Welcome!{auth.user}
-        {/* <button
-          onClick={() => {
-            auth.signout(() => history.push("/"));
-          }}
-        >
-          Sign out
-        </button> */}
+    return auth.user ? (
+      <>
+        <p>{'Welcome! ' + auth.user.username}</p>
         <AmplifySignOut handleAuthStateChange={handleAuthChange}/>
-      </p>
+      </>
     ) : (
       <p>You are not logged in.</p>
     );
   }
-  

@@ -25,7 +25,7 @@ import React, {
       <Route
         {...rest}
         render={({ location }) =>
-          auth.user && auth.authState === AuthState.SignedIn ? (
+          auth.user ? (
             children
           ) : (
             <Redirect

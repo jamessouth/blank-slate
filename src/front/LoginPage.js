@@ -24,6 +24,7 @@ import {
     AmplifyAuthenticator,
     AmplifyFormSection,
     AmplifyAuthFields,
+    AmplifyConfirmSignUp,
     AmplifySignIn,
     AmplifySignUp,
   } from '@aws-amplify/ui-react';
@@ -53,19 +54,32 @@ export default function LoginPage() {
     // }, []);
 
     const handleAuthChange = (authState, userData) => {
-        console.log("chgin b4", authState, userData);
+        console.log("login: ", authState, userData);
         auth.setAuthState(authState);
-        auth.setUser(userData);
+        if (authState === AuthState.SignedIn) {
+            auth.setUser(userData);
+        }
         // console.log("chgin after", auth);
         return history.replace(from);
       }
 
+    // switch (auth.authState) {
+    //     case AuthState.SignUp:
+    //         return (
+    //             <AmplifySignUp handleAuthStateChange={handleAuthChange}/>
+    //         );
+    //     case AuthState.SignIn:
+    //         return (
+    //             <AmplifySignIn handleAuthStateChange={handleAuthChange}/>
+    //         );
+    //     case AuthState.ConfirmSignUp:
+    //         return (
+    //             <AmplifyConfirmSignUp handleAuthStateChange={handleAuthChange}/>
+    //         );
+    // }
+
 
     return auth.authState === AuthState.SignUp ? (
-        // <div>
-        //     <p>You must log in to view the page at {from.pathname}</p>
-        //     <button onClick={login}>Log in</button>
-        // </div>
         <AmplifySignUp handleAuthStateChange={handleAuthChange}/>
         ) : (
         <AmplifySignIn handleAuthStateChange={handleAuthChange}/>
