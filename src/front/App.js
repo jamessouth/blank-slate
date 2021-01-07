@@ -35,16 +35,7 @@ Amplify.configure(awsExports);
 export const authContext = createContext();
 
 const App = () => {
-    const [authState, setAuthState] = useState();
-    const [user, setUser] = useState();
-    console.log('wer: ', user, authState);
-  
-    useEffect(() => {
-        onAuthUIStateChange((nextAuthState, authData) => {
-            setAuthState(nextAuthState);
-            setUser(authData);
-        });
-    }, []);
+
 
     return (
         <ProvideAuth>
