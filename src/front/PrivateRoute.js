@@ -13,6 +13,11 @@ import React, {
     //useLocation
   } from "react-router-dom";
   import { authContext } from "./App";
+
+  import {
+    AuthState,
+    onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
   
   export default function PrivateRoute({ children, ...rest }) {
     let auth = useContext(authContext);
@@ -20,7 +25,7 @@ import React, {
       <Route
         {...rest}
         render={({ location }) =>
-          auth.user ? (
+          auth.user && auth.authState === AuthState.SignedIn ? (
             children
           ) : (
             <Redirect

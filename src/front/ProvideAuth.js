@@ -44,8 +44,9 @@ import React, {
   
   function useProvideAuth() {
       const [user, setUser] = useState();
+      const [authState, setAuthState] = useState();
       
-      console.log('user: ', user);
+      // console.log('provide: ', user, authState);
       // const signin = (cb) => {
           //   return fakeAuth.signin(() => {
     //     setUser("user");
@@ -61,6 +62,8 @@ import React, {
     // };
   
     return {
+      authState,
+      setAuthState,
       user,
       setUser
     };

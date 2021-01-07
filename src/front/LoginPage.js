@@ -1,7 +1,7 @@
 import React, {
     useContext,
     //createContext,
-    useState,
+    //useState,
 } from "react";
 import {
     //BrowserRouter as Router,
@@ -13,6 +13,11 @@ import {
     useLocation,
 } from "react-router-dom";
 import { authContext } from "./App";
+
+import {
+    AuthState,
+    onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
 
 import {
     withAuthenticator,
@@ -36,9 +41,9 @@ export default function LoginPage() {
     // };
 
 
-    const [authState, setAuthState] = useState();
+    
     // const [user, setUser] = useState();
-    console.log('login: ', authState);
+    // console.log('login: ', auth);
   
     // useEffect(() => {
     //     onAuthUIStateChange((nextAuthState, authData) => {
@@ -49,19 +54,21 @@ export default function LoginPage() {
 
     const handleAuthChange = (authState, userData) => {
         console.log("chgin b4", authState, userData);
-        setAuthState(authState);
+        auth.setAuthState(authState);
         auth.setUser(userData);
-        console.log("chgin after", authState, userData);
+        // console.log("chgin after", auth);
         return history.replace(from);
       }
 
 
-    return (
+    return auth.authState === AuthState.SignUp ? (
         // <div>
         //     <p>You must log in to view the page at {from.pathname}</p>
         //     <button onClick={login}>Log in</button>
-        //     <AmplifySignUp/>
         // </div>
-            <AmplifySignIn handleAuthStateChange={handleAuthChange}/>
+        <AmplifySignUp handleAuthStateChange={handleAuthChange}/>
+        ) : (
+        <AmplifySignIn handleAuthStateChange={handleAuthChange}/>
+
     );
 }

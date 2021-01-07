@@ -15,6 +15,11 @@ import React, {
   import { authContext } from "./App";
 
   import {
+    AuthState,
+    onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
+
+  import {
     withAuthenticator,
     AmplifyAuthenticator,
     AmplifySignOut,
@@ -25,19 +30,19 @@ import React, {
   export default function AuthButton() {
     let history = useHistory();
     let auth = useContext(authContext);
-    console.log('jjjj: ', auth);
+    // console.log('logout: ', auth);
 
     const handleAuthChange = (authState, userData) => {
         console.log("chgout b4", authState, userData);
-        // setAuthState(authState);
+        auth.setAuthState(authState);
         auth.setUser(userData);
-        console.log("chgout after", authState, userData);
+        // console.log("chgout after", auth);
         return history.push("/");
       }
   
-    return auth.user ? (
+    return auth.user && auth.authState === AuthState.SignedIn ? (
       <p>
-        Welcome!{" "}
+        Welcome!{auth.user}
         {/* <button
           onClick={() => {
             auth.signout(() => history.push("/"));
