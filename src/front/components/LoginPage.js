@@ -7,11 +7,13 @@ import {
     withAuthenticator,
     AmplifyAuthenticator,
     AmplifyFormSection,
-    AmplifyAuthFields,
+    AmplifyForgotPassword,
     AmplifyConfirmSignUp,
     AmplifySignIn,
     AmplifySignUp,
 } from "@aws-amplify/ui-react";
+
+const rce = React.createElement;
 
 export default function LoginPage() {
     let history = useHistory();
@@ -31,14 +33,23 @@ export default function LoginPage() {
 
     switch (auth.authState) {
         case AuthState.SignUp:
-            return <AmplifySignUp handleAuthStateChange={handleAuthChange} />;
+          return /*#__PURE__*/rce(AmplifySignUp, {
+            handleAuthStateChange: handleAuthChange
+          });
+    
         case AuthState.ConfirmSignUp:
-            return (
-                <AmplifyConfirmSignUp
-                    handleAuthStateChange={handleAuthChange}
-                />
-            );
+          return /*#__PURE__*/rce(AmplifyConfirmSignUp, {
+            handleAuthStateChange: handleAuthChange
+          });
+    
+        case AuthState.ForgotPassword:
+          return /*#__PURE__*/rce(AmplifyForgotPassword, {
+            handleAuthStateChange: handleAuthChange
+          });
+    
         default:
-            return <AmplifySignIn handleAuthStateChange={handleAuthChange} />;
-    }
+          return /*#__PURE__*/rce(AmplifySignIn, {
+            handleAuthStateChange: handleAuthChange
+          });
+      }
 }
