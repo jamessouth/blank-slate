@@ -4,11 +4,5 @@ import useAuthState from "../hooks/useAuthState";
 
 export default function ProvideAuth({ children }) {
     const auth = useAuthState();
-    return React.createElement(
-        authContext.Provider,
-        {
-            value: auth,
-        },
-        children
-    );
+    return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }

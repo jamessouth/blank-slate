@@ -13,8 +13,6 @@ import {
     AmplifySignUp,
 } from "@aws-amplify/ui-react";
 
-const rce = React.createElement;
-
 export default function LoginPage() {
     let history = useHistory();
     let location = useLocation();
@@ -33,23 +31,23 @@ export default function LoginPage() {
 
     switch (auth.authState) {
         case AuthState.SignUp:
-          return /*#__PURE__*/rce(AmplifySignUp, {
-            handleAuthStateChange: handleAuthChange
-          });
-    
+            return <AmplifySignUp handleAuthStateChange={handleAuthChange} />;
+
         case AuthState.ConfirmSignUp:
-          return /*#__PURE__*/rce(AmplifyConfirmSignUp, {
-            handleAuthStateChange: handleAuthChange
-          });
-    
+            return (
+                <AmplifyConfirmSignUp
+                    handleAuthStateChange={handleAuthChange}
+                />
+            );
+
         case AuthState.ForgotPassword:
-          return /*#__PURE__*/rce(AmplifyForgotPassword, {
-            handleAuthStateChange: handleAuthChange
-          });
-    
+            return (
+                <AmplifyForgotPassword
+                    handleAuthStateChange={handleAuthChange}
+                />
+            );
+
         default:
-          return /*#__PURE__*/rce(AmplifySignIn, {
-            handleAuthStateChange: handleAuthChange
-          });
-      }
+            return <AmplifySignIn handleAuthStateChange={handleAuthChange} />;
+    }
 }

@@ -65,15 +65,20 @@ module.exports = env => {
                   '@babel/preset-env',
                   {
                     'useBuiltIns': 'usage',
+                    'corejs': '3',
                   },
                 ],
                 [
                   '@babel/preset-react',
                   {
                     'useBuiltIns': true,
+                    'useSpread': true,
                     'development': env.ENV == "dev",
                   },
                 ],
+              ],
+              plugins: [
+                '@babel/plugin-proposal-class-properties'
               ],
               cacheDirectory: true,
             },
