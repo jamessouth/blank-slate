@@ -5,7 +5,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHTMLWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 module.exports = env => {
@@ -36,9 +36,12 @@ module.exports = env => {
     new webpack.HashedModuleIdsPlugin(),
   ];
   
-  // if (env.ENV == 'dev') {
-  //   plugins.push(new webpack.HotModuleReplacementPlugin());
-  // }
+  if (env.ENV == 'prod') {
+    plugins.push(new BundleAnalyzerPlugin({
+      analyzerMode: 'disabled',
+      generateStatsFile: true,
+    }));
+  }
 
   return {
     mode: env.ENV == 'prod' ? 'production' : 'development',
@@ -72,7 +75,6 @@ module.exports = env => {
                   '@babel/preset-react',
                   {
                     'useBuiltIns': true,
-                    'useSpread': true,
                     'development': env.ENV == "dev",
                   },
                 ],

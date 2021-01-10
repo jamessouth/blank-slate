@@ -1,4 +1,4 @@
-import Amplify from "aws-amplify";
+import Amplify, {Auth} from "@aws-amplify/auth";
 import awsExports from "../aws-exports";
 import React, { createContext, useEffect, useState } from "react";
 
