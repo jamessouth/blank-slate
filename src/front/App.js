@@ -22,36 +22,17 @@ Amplify.configure(awsExports);
 export const authContext = createContext();
 
 const App = () => {
-    return (
-        <ProvideAuth>
-            <Router>
-                <div>
-                    <AuthButton />
-
-                    <ul>
-                        <li>
-                            <Link to="/leaderboards">Leaderboards</Link>
-                        </li>
-                        <li>
-                            <Link to="/lobby">Enter</Link>
-                        </li>
-                    </ul>
-
-                    <Switch>
-                        <Route path="/leaderboards">
-                            <h3>Leaderboards</h3>
-                        </Route>
-                        <Route path="/login">
-                            <LoginPage />
-                        </Route>
-                        <PrivateRoute path="/lobby">
-                            <h3>Games</h3>
-                        </PrivateRoute>
-                    </Switch>
-                </div>
-            </Router>
-        </ProvideAuth>
-    );
+  return /*#__PURE__*/React.createElement(ProvideAuth, null, /*#__PURE__*/React.createElement(Router, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(AuthButton, null), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Link, {
+    to: "/leaderboards"
+  }, "Leaderboards")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Link, {
+    to: "/lobby"
+  }, "Enter"))), /*#__PURE__*/React.createElement(Switch, null, /*#__PURE__*/React.createElement(Route, {
+    path: "/leaderboards"
+  }, /*#__PURE__*/React.createElement("h3", null, "Leaderboards")), /*#__PURE__*/React.createElement(Route, {
+    path: "/login"
+  }, /*#__PURE__*/React.createElement(LoginPage, null)), /*#__PURE__*/React.createElement(PrivateRoute, {
+    path: "/lobby"
+  }, /*#__PURE__*/React.createElement("h3", null, "Games"))))));
 };
 
 export default App;

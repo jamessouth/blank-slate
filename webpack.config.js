@@ -63,24 +63,24 @@ module.exports = env => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    'useBuiltIns': 'usage',
-                    'corejs': '3',
-                  },
-                ],
-                [
-                  '@babel/preset-react',
-                  {
-                    'useBuiltIns': true,
-                    'development': env.ENV == "dev",
-                  },
-                ],
-              ],
+              // presets: [
+              //   [
+              //     '@babel/preset-env',
+              //     {
+              //       'useBuiltIns': 'usage',
+              //       'corejs': '3',
+              //     },
+              //   ],
+              //   [
+              //     '@babel/preset-react',
+              //     {
+              //       'useBuiltIns': true,
+              //       'development': env.ENV == "dev",
+              //     },
+              //   ],
+              // ],
               plugins: [
-                '@babel/plugin-proposal-class-properties'
+                // '@babel/plugin-transform-modules-commonjs'
               ],
               cacheDirectory: true,
             },
