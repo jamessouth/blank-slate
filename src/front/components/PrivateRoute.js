@@ -7,11 +7,11 @@ export default function PrivateRoute({
   ...rest
 }) {
   let auth = useContext(authContext);
-  return /*#__PURE__*/React.createElement(Route, {
+  return React.createElement(Route, {
     rest: true,
     render: ({
       location
-    }) => auth.user ? children : /*#__PURE__*/React.createElement(Redirect, {
+    }) => auth.user ? children : React.createElement(Redirect, {
       to: {
         pathname: "/login",
         state: {

@@ -1,4 +1,4 @@
-import Amplify, {Auth} from "@aws-amplify/auth";
+import Amplify, { Auth } from "@aws-amplify/auth";
 import awsExports from "../aws-exports";
 import React, { createContext, useEffect, useState } from "react";
 
@@ -19,20 +19,75 @@ import PrivateRoute from "./components/PrivateRoute";
 
 Amplify.configure(awsExports);
 
+const ce = React.createElement;
+
 export const authContext = createContext();
 
 const App = () => {
-  return /*#__PURE__*/React.createElement(ProvideAuth, null, /*#__PURE__*/React.createElement(Router, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(AuthButton, null), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Link, {
-    to: "/leaderboards"
-  }, "Leaderboards")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Link, {
-    to: "/lobby"
-  }, "Enter"))), /*#__PURE__*/React.createElement(Switch, null, /*#__PURE__*/React.createElement(Route, {
-    path: "/leaderboards"
-  }, /*#__PURE__*/React.createElement("h3", null, "Leaderboards")), /*#__PURE__*/React.createElement(Route, {
-    path: "/login"
-  }, /*#__PURE__*/React.createElement(LoginPage, null)), /*#__PURE__*/React.createElement(PrivateRoute, {
-    path: "/lobby"
-  }, /*#__PURE__*/React.createElement("h3", null, "Games"))))));
+    return ce(
+        ProvideAuth,
+        null,
+        ce(
+            Router,
+            null,
+            ce(
+                "div",
+                null,
+                ce(AuthButton, null),
+                ce(
+                    "ul",
+                    null,
+                    ce(
+                        "li",
+                        null,
+                        ce(
+                            Link,
+                            {
+                                to: "/leaderboards",
+                            },
+                            "Leaderboards"
+                        )
+                    ),
+                    ce(
+                        "li",
+                        null,
+                        ce(
+                            Link,
+                            {
+                                to: "/lobby",
+                            },
+                            "Enter"
+                        )
+                    )
+                ),
+                ce(
+                    Switch,
+                    null,
+                    ce(
+                        Route,
+                        {
+                            path: "/leaderboards",
+                        },
+                        ce("h3", null, "Leaderboards")
+                    ),
+                    ce(
+                        Route,
+                        {
+                            path: "/login",
+                        },
+                        ce(LoginPage, null)
+                    ),
+                    ce(
+                        PrivateRoute,
+                        {
+                            path: "/lobby",
+                        },
+                        ce("h3", null, "Games")
+                    )
+                )
+            )
+        )
+    );
 };
 
 export default App;

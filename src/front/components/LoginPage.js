@@ -38,22 +38,22 @@ export default function LoginPage() {
 
   switch (auth.authState) {
     case AuthState.SignUp:
-      return /*#__PURE__*/React.createElement(AmplifySignUp, {
+      return React.createElement(AmplifySignUp, {
         handleAuthStateChange: handleAuthChange
       });
 
     case AuthState.ConfirmSignUp:
-      return /*#__PURE__*/React.createElement(AmplifyConfirmSignUp, {
+      return React.createElement(AmplifyConfirmSignUp, {
         handleAuthStateChange: handleAuthChange
       });
 
     case AuthState.ForgotPassword:
-      return /*#__PURE__*/React.createElement(AmplifyForgotPassword, {
+      return React.createElement(AmplifyForgotPassword, {
         handleAuthStateChange: handleAuthChange
       });
 
     default:
-      return /*#__PURE__*/React.createElement(AmplifySignIn, {
+      return React.createElement(AmplifySignIn, {
         handleAuthStateChange: handleAuthChange
       });
   }

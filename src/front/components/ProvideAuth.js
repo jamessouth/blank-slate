@@ -6,7 +6,7 @@ export default function ProvideAuth({
   children
 }) {
   const auth = useAuthState();
-  return /*#__PURE__*/React.createElement(authContext.Provider, {
+  return React.createElement(authContext.Provider, {
     value: auth
   }, children);
 }
