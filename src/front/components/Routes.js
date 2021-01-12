@@ -4,13 +4,9 @@ import LoginPage from "./LoginPage";
 import Comp from "./Comp";
 import PrivateRoute from "./PrivateRoute";
 
-import useLocationBlocker from "../hooks/useLocationBlocker";
-
 const ce = React.createElement;
 
 export default function Routes() {
-    //   useLocationBlocker();
-    console.log("ddd: ", useLocation());
     return ce(
         Switch,
         null,
@@ -21,11 +17,18 @@ export default function Routes() {
                 exact: true,
             },
             ce(
-                "ul",
-                null,
-                ce(
-                    "li",
-                    null,
+                "div",
+                {
+                    className: "flex flex-col items-center",
+                },
+                    ce(
+                        Link,
+                        {
+                            to: "/lobby",
+                            className: "border border-blue-300 w-3/5 h-64 mb-28 font-luck decay-mask text-6xl",
+                        },
+                        "ENTER"
+                    ),
                     ce(
                         Link,
                         {
@@ -33,18 +36,6 @@ export default function Routes() {
                         },
                         "Leaderboards"
                     )
-                ),
-                ce(
-                    "li",
-                    null,
-                    ce(
-                        Link,
-                        {
-                            to: "/lobby",
-                        },
-                        "Enter"
-                    )
-                )
             )
         ),
         ce(

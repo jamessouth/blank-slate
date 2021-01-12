@@ -10,6 +10,7 @@ module.exports = {
       },
       fontFamily: {
         'arch': 'Architects Daughter, cursive',
+        'luck': 'Luckiest Guy, cursive',
       },
     },
   },
