@@ -11,13 +11,10 @@ import {
     Redirect,
 } from "react-router-dom";
 
-
-
 import ProvideAuth from "./components/ProvideAuth";
 import AuthButton from "./components/AuthButton";
 
 import Routes from "./components/Routes";
-
 
 Amplify.configure(awsExports);
 
@@ -29,16 +26,6 @@ export default function App() {
     return ce(
         ProvideAuth,
         null,
-        ce(
-            Router,
-            null,
-            ce(
-                "div",
-                null,
-                ce(AuthButton, null),
-                ce(Routes),
-            )
-        )
+        ce(Router, null, ce("div", null, ce(AuthButton, null), ce(Routes)))
     );
-};
-
+}

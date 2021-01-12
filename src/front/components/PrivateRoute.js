@@ -4,22 +4,20 @@ import { authContext } from "../App";
 
 const ce = React.createElement;
 
-export default function PrivateRoute({
-  children,
-  ...rest
-}) {
-  let auth = useContext(authContext);
-  return ce(Route, {
-    ...rest,
-    render: ({
-      location
-    }) => auth.user ? children : ce(Redirect, {
-      to: {
-        pathname: "/login",
-        state: {
-          from: location
-        }
-      }
-    })
-  });
+export default function PrivateRoute({ children, ...rest }) {
+    let auth = useContext(authContext);
+    return ce(Route, {
+        ...rest,
+        render: ({ location }) =>
+            auth.user
+                ? children
+                : ce(Redirect, {
+                      to: {
+                          pathname: "/login",
+                          state: {
+                              from: location,
+                          },
+                      },
+                  }),
+    });
 }
