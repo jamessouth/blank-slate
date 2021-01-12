@@ -11,11 +11,13 @@ import {
     Redirect,
 } from "react-router-dom";
 
+
+
 import ProvideAuth from "./components/ProvideAuth";
 import AuthButton from "./components/AuthButton";
 
-import LoginPage from "./components/LoginPage";
-import PrivateRoute from "./components/PrivateRoute";
+import Routes from "./components/Routes";
+
 
 Amplify.configure(awsExports);
 
@@ -23,7 +25,7 @@ const ce = React.createElement;
 
 export const authContext = createContext();
 
-const App = () => {
+export default function App() {
     return ce(
         ProvideAuth,
         null,
@@ -34,60 +36,9 @@ const App = () => {
                 "div",
                 null,
                 ce(AuthButton, null),
-                ce(
-                    "ul",
-                    null,
-                    ce(
-                        "li",
-                        null,
-                        ce(
-                            Link,
-                            {
-                                to: "/leaderboards",
-                            },
-                            "Leaderboards"
-                        )
-                    ),
-                    ce(
-                        "li",
-                        null,
-                        ce(
-                            Link,
-                            {
-                                to: "/lobby",
-                            },
-                            "Enter"
-                        )
-                    )
-                ),
-                ce(
-                    Switch,
-                    null,
-                    ce(
-                        Route,
-                        {
-                            path: "/leaderboards",
-                        },
-                        ce("h3", null, "Leaderboards")
-                    ),
-                    ce(
-                        Route,
-                        {
-                            path: "/login",
-                        },
-                        ce(LoginPage, null)
-                    ),
-                    ce(
-                        PrivateRoute,
-                        {
-                            path: "/lobby",
-                        },
-                        ce("h3", null, "Games")
-                    )
-                )
+                ce(Routes),
             )
         )
     );
 };
 
-export default App;
