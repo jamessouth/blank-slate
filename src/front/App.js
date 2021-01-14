@@ -26,6 +26,17 @@ export default function App() {
     return ce(
         ProvideAuth,
         null,
-        ce(Router, null, ce("div", null, ce(AuthButton, null), ce(Routes)))
+        ce(
+            Router,
+            null,
+            ce(
+                "div",
+                {
+                    className: "mt-8",
+                },
+                ce(AuthButton, null),
+                ce(Routes)
+            )
+        )
     );
 }
