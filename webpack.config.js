@@ -45,7 +45,7 @@ module.exports = env => {
 
   return {
     mode: env.ENV == 'prod' ? 'production' : 'development',
-    devtool: env.ENV == 'prod' ? false : 'cheap-eval-source-map',
+    devtool: env.ENV == 'prod' ? false : 'source-map',
     entry: {
       main: './src/front/index.js',
     },
@@ -79,9 +79,9 @@ module.exports = env => {
               //     },
               //   ],
               // ],
-              plugins: [
-                // '@babel/plugin-transform-modules-commonjs'
-              ],
+              // plugins: [
+              //   '@babel/plugin-transform-modules-commonjs'
+              // ],
               cacheDirectory: true,
             },
           },
@@ -91,13 +91,13 @@ module.exports = env => {
           include: path.resolve(__dirname, 'src'),
           exclude: /node_modules/,
           use: [
-            env.ENV == "dev" ?
-              {
-                loader: "style-loader",
-                options: {
-                  esModule: false,
-                },
-              } :
+            // env.ENV == "dev" ?
+            //   {
+            //     loader: "style-loader",
+            //     options: {
+            //       esModule: false,
+            //     },
+            //   } :
               MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
