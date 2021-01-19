@@ -12,6 +12,7 @@ export default function AuthButton() {
         console.log("chgout b4", authState, userData);
         auth.setAuthState(authState);
         auth.setUser(userData);
+        localStorage.removeItem("user");
         return history.push("/");
     };
 
