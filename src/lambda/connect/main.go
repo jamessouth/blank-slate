@@ -34,9 +34,8 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 		logger.Log(fmt.Sprintf("Request: %s /%v, Payload: %s",
 			r.ClientInfo.ServiceName, r.Operation, r.Params))
 	})
-	// fmt.Print(req.RequestContext.ConnectionID).WithEndpoint("http://192.168.0.101:8000")
 
-	svc := dynamodb.New(sess, aws.NewConfig().WithLogLevel(aws.LogDebugWithHTTPBody))
+	svc := dynamodb.New(sess, aws.NewConfig().WithLogLevel(aws.LogDebugWithHTTPBody).WithEndpoint("http://192.168.4.27:8000"))
 
 	// svc.Handlers.Send.PushFront(func(r *request.Request) {
 	// 	r.HTTPRequest.Header.Set("CustomHeader", fmt.Sprintf("%d", 10))
