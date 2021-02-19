@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -15,8 +16,9 @@ import (
 
 // GameItem holds values to be put in db
 type GameItem struct {
-	Pk string `json:"pk"`
-	Sk string `json:"sk"`
+	Pk   string `json:"pk"`
+	Sk   string `json:"sk"`
+	Name string `json:"name"`
 }
 
 func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -32,9 +34,12 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 
 	svc := dynamodb.New(sess, aws.NewConfig())
 
+	gameno := fmt.Sprintf("%d", time.Now().UnixNano())
+
 	g, err := dynamodbattribute.MarshalMap(GameItem{
-		Pk: "GAME#",
-		Sk: "GAME#",
+		Pk:   "GAME#" + gameno,
+		Sk:   req.RequestContext.ConnectionID,
+		Name: req.RequestContext.Identity.User,
 	})
 	if err != nil {
 		panic(fmt.Sprintf("failed to marshal Record, %v", err))
