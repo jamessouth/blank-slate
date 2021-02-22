@@ -36,10 +36,12 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 
 	gameno := fmt.Sprintf("%d", time.Now().UnixNano())
 
+	auth := req.RequestContext.Authorizer.(map[string]interface{})
+
 	g, err := dynamodbattribute.MarshalMap(GameItem{
 		Pk:   "GAME#" + gameno,
 		Sk:   req.RequestContext.ConnectionID,
-		Name: req.RequestContext.Identity.User,
+		Name: auth["username"].(string),
 	})
 	if err != nil {
 		panic(fmt.Sprintf("failed to marshal Record, %v", err))
@@ -55,7 +57,7 @@ func handler(req events.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 		Item:                   g,
 		ReturnConsumedCapacity: aws.String("TOTAL"),
 	})
-	fmt.Println("op", op)
+	// fmt.Println("op", op)
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
