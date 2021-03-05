@@ -95,7 +95,7 @@ export default function Lobby() {
         }
     }, [token]);
 
-    function send(text) {
+    function send(obj) {
         // if (!hasJoined) {
         //   ws.send(JSON.stringify({
         //     name: text,
@@ -104,9 +104,7 @@ export default function Lobby() {
         //   setAnswered(true);
         //   setSubmitSignal(false);
         //   setShowSVGTimer(false);
-          ws.send(JSON.stringify({
-            action: text,
-          }));
+          ws.send(JSON.stringify(obj));
         // }
       }
 
@@ -132,7 +130,10 @@ export default function Lobby() {
                     type: "button",
                     onClick: () => {
                         setStartedNewGame(true);
-                        send("lobby");
+                        send({
+                            action: "lobby",
+                            game: "new",
+                        });
                     },
                 },
                 "start a new game"
@@ -146,7 +147,10 @@ export default function Lobby() {
             )
             : ce(
                 GamesList,
-                {games}
+                {
+                    games,
+                    send: val => send(val),
+                }
             )
         );
 }

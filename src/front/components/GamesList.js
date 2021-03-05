@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 const ce = React.createElement;
 
 
-export default function GamesList({games}) {
+export default function GamesList({games, send}) {
     // const [connectedWS, setConnectedWS] = useState(false);
     // const [games, setGames] = useState(null);
     // const [startedNewGame, setStartedNewGame] = useState(false);
@@ -19,12 +19,6 @@ console.log('gamesss: ', Array.isArray(games));
     // useEffect(() => {
 
     // }, []);
-
-    function send(text) {
-        ws.send(JSON.stringify({
-            action: text,
-        }));
-    }
 
     return ce(
         "ul",
@@ -42,7 +36,10 @@ console.log('gamesss: ', Array.isArray(games));
                 {
                     className: "w-full h-full",
                     onClick: () => {
-                        send("lobby");
+                        send({
+                            action: "lobby",
+                            game: `${g.type}#${g.no}`,
+                          });
                     },
                 },
                 ce(
