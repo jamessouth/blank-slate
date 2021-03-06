@@ -38,7 +38,7 @@ console.log('gamesss: ', Array.isArray(games));
                     onClick: () => {
                         send({
                             action: "lobby",
-                            game: `${g.type}#${g.no}`,
+                            game: `${g.no}`,
                           });
                     },
                 },
