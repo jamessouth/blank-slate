@@ -28,7 +28,7 @@ export default function GamesList({games, send}) {
         games.map(g => ce(
             "li",
             {
-                key: g.conn,
+                key: g.no,
                 className: "mb-8",
             },
             ce(
@@ -47,7 +47,7 @@ export default function GamesList({games, send}) {
                     {
                         className: "text-xs"
                     },
-                    `${g.type}#${g.no}`
+                    `${g.no}`
                 ),
                 ce("p", null, g.name)
             )
